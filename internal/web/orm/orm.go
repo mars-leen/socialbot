@@ -5,7 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"socialbot/internal/common/app"
-	"socialbot/internal/common/setting"
+	"socialbot/internal/web/setting"
 	"xorm.io/core"
 )
 

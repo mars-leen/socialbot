@@ -5,14 +5,14 @@ import (
 	"os"
 	"os/signal"
 	"socialbot/internal/common/app"
-	"socialbot/internal/common/logger"
-	"socialbot/internal/common/orm"
-	"socialbot/internal/common/setting"
 	"socialbot/internal/web"
+	"socialbot/internal/web/orm"
+	"socialbot/internal/web/setting"
+	"socialbot/internal/web/wblogger"
 	"syscall"
 )
 
-func init()  {
+func init() {
 	err := setting.LoadAppPath()
 	if err != nil {
 		fmt.Printf("[ERROR] %+v \n", err)
@@ -27,7 +27,7 @@ func init()  {
 		os.Exit(1)
 	}
 
-	err = logger.LoadLog()
+	err = wblogger.LoadLogger()
 	if err != nil {
 		fmt.Printf("[ERROR] %+v \n", err)
 		os.Exit(1)
@@ -38,15 +38,16 @@ func init()  {
 		fmt.Printf("[ERROR] %+v \n", err)
 		os.Exit(1)
 	}
+
 }
 
-func main()  {
+func main() {
 	web.Run()
 	HandleSig()
 	app.RunShutdownCallback()
 }
 
-func HandleSig()  {
+func HandleSig() {
 	sig := make(chan os.Signal)
 	signal.Notify(sig, /*syscall.SIGHUP,*/ syscall.SIGINT, syscall.SIGTERM, /*syscall.SIGQUIT*/)
 	<-sig

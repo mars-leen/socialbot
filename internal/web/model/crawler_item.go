@@ -1,15 +1,17 @@
 package model
 
-type CCrawlerItem struct {
+type CrawlerItem struct {
 	Content     string
 	Cover       string
 	CreateAt    int64
 	Crwid       int
 	Description string
 	Id          int64
+	IsDel       int
 	Title       string
+	UpdateAt    int64
 }
 
-func (CCrawlerItem) TableName() string {
-	return "c_crawler_item"
+func (CrawlerItem) TableName() string {
+	return "crawler_item"
 }

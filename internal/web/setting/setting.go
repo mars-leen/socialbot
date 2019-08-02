@@ -16,6 +16,8 @@ var (
 	AppPath    string
 	ConfigPath string
 	Cfg  *Config
+
+	NodeId int64 = 1
 )
 const defaultConfig = "config.json"
 

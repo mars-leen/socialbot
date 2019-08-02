@@ -8,6 +8,7 @@ type Crawler struct {
 	LastPage      string
 	Name          string
 	Script        string
+	UpdateAt      int64
 }
 
 func (Crawler) TableName() string {

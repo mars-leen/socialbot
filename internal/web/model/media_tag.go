@@ -4,6 +4,7 @@ type MediaTag struct {
 	Cid            int
 	CreateAt       int64
 	Id             int64
+	IsDel          int
 	MediaPublishAt int64
 	MediaStatus    int
 	Mid            int64

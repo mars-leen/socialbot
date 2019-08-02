@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 	"net/http"
 	"socialbot/internal/common/app"
-	"socialbot/internal/common/logger"
-	"socialbot/internal/common/setting"
+	"socialbot/internal/web/setting"
+	"socialbot/internal/web/wblogger"
 	"time"
 )
 
@@ -43,7 +43,7 @@ func Run() {
 	go func() {
 		err := server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			logger.Error(err)
+			wblogger.Log.Error(err)
 		}
 	}()
 
