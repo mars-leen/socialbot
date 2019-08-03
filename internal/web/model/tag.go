@@ -31,7 +31,7 @@ type ConTag struct {
 type TagList []Tag
 
 func (t *Tag) Insert() (rs int64, err error) {
-	t.UpdateAt = time.Now().UnixNano()
+	t.CreateAt = time.Now().UnixNano()
 	rs, err = orm.SocialBotOrm.Insert(t)
 	if err != nil {
 		return 0, errors.Wrap(err, "Insert failed")
@@ -40,6 +40,7 @@ func (t *Tag) Insert() (rs int64, err error) {
 }
 
 func (t *Tag) UpdateById(id int) (rs int64, err error) {
+	t.CreateAt = time.Now().UnixNano()
 	rs, err = orm.SocialBotOrm.Where("id = ? ", id).Update(t)
 	if err != nil {
 		return 0, errors.Wrap(err, fmt.Sprintf("updateById(%d) failed", id))
@@ -58,7 +59,7 @@ func (t *Tag) UpdateColsById(id int, cols ...string) (rs int64, err error) {
 }
 
 func (t *Tag) GetOneById(id int) (rs bool, err error) {
-	rs, err = orm.SocialBotOrm.Where("id=?", id).Get(t)
+	rs, err = orm.SocialBotOrm.Where("id=?", id).Where("is_del=?", 0).Get(t)
 	if err != nil {
 		return rs, errors.Wrap(err, fmt.Sprintf("GetOneById(%d) failed", id))
 	}
@@ -66,7 +67,7 @@ func (t *Tag) GetOneById(id int) (rs bool, err error) {
 }
 
 func (t *Tag) GetColsOneById(id int, cols ...string) (rs bool, err error) {
-	rs, err = orm.SocialBotOrm.Where("id=?", id).Cols(cols...).Get(t)
+	rs, err = orm.SocialBotOrm.Where("id=?", id).Cols(cols...).Where("is_del=?", 0).Get(t)
 	if err != nil {
 		return rs, errors.Wrap(err, fmt.Sprintf("GetColsOneById(%d) cols(%s) failed", id, cols))
 	}

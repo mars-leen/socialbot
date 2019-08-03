@@ -8,6 +8,14 @@ const (
 	JwtAuthUserKey = "userId"
 	SuperAdmin = 3
 
+	// storage
+	DefaultStorageSource = 0
+	StorageMediaDir = "media"
+	SourceTypeImage = 0
+	SourceTypeVideo = 1
+
+
+
 	// crawler
 	ListPageNum = 10
 
@@ -18,22 +26,9 @@ const (
 
 
 	// media
-	MediaTypeImg = 1 //"img"
-	MediaTypeVideo = 2 //"video"
-	MediaTypeArticle = 3 // "article"
-	MediaPublished = 10
-	MediaSourceFromLocal = 0 //local
-	MediaSortNewest = 0
-	MediaTagLimit = 100
-
-	MediaUpAvatarDir = "avatar"
-	MediaUpMediaDir = "media"
-	MediaUpPublicDir = "public"
-
-	// cache
-	LikeMediaCache = "like_media_%d_%d"
-
-	HostQiNiu = 1
-	HostHuaBan =2
+	MediaStatusPublished = 10
+	MediaTypePromotionProduct = 4
+	MediaTypeArticle = 3
+	MediaTypeSocial = 2
 
 )

@@ -25,15 +25,28 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi := g.Group("/v1/adminApi")
 	adminApi.POST("/login", admin.Login)
 	adminApi.Use(middlewares.AuthAdmin())
+	adminApi.POST("/upload/single", admin.UploadSingle)
+
 	adminApi.POST("/category/add", admin.AddCategory)
 	adminApi.POST("/category/update", admin.UpdateCategory)
-	adminApi.POST("/category/list", admin.ListCategory)
+	adminApi.GET("/category/list", admin.ListCategory)
 	adminApi.POST("/category/delete", admin.DeleteCategory)
 	adminApi.GET("/category/listWithTags", admin.ListCategoryWithTags)
+
 	adminApi.POST("/tag/add", admin.AddTag)
 	adminApi.POST("/tag/update", admin.UpdateTag)
-	adminApi.POST("/tag/list", admin.ListTag)
+	adminApi.GET("/tag/list", admin.ListTag)
 	adminApi.POST("/tag/delete", admin.DeleteTag)
+
+	adminApi.POST("/crawler/add", admin.AddCrawler)
+	adminApi.POST("/crawler/update", admin.UpdateCrawler)
+	adminApi.GET("/crawler/list", admin.ListCrawler)
+	adminApi.GET("/crawler/listItem", admin.ListCrawlerItem)
+
+	adminApi.POST("/media/addCommissionProduct", admin.AddCommissionProduct)
+	adminApi.POST("/media/addSocialMediaFromCrawler", admin.AddSocialMediaFromCrawler)
+
+
 
 	/*api.GET("/tag/getLevel", tag.GetLevelTag)
 	api.GET("/tag/getAll", tag.GetAllTag)

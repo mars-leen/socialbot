@@ -11,6 +11,8 @@ var (
 	ReadFileFailed = ERROR(1005, "read file failed!")
 	FrequentOperation = ERROR(1006, "Frequent operation")
 	InvalidOperation = ERROR(1007, "Invalid operation")
+	UploadFailed = ERROR(1008, "upload failed")
+	InvalidFileFormat = ERROR(1009, "invalid file type")
 
 	AccountNotRegError = ERROR(1010, "account not register")
 	InValidAccountError = ERROR(1011, "account is invalid")
@@ -22,7 +24,8 @@ var (
 	// media
 	TagsIsEmptyError = ERROR(1030, "tags is empty")
 	ExceedImgLimitError = ERROR(1031, "img number limits are exceeded")
-	EmptyCoverError = ERROR(1032, "Cover is needed")
+	UploadFileIsEmpty = ERROR(1032, "empty upload")
+	UploadFileNotFound = ERROR(1033, "upload file not found")
 
 	// user
 	NicknameEmpty = ERROR(1100, "Nickname is needed")
