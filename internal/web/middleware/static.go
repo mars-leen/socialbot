@@ -1,23 +1,43 @@
 package middlewares
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"path/filepath"
+	"socialbot/internal/web/setting"
+	"strings"
 )
 
-func FrontView(root string) gin.HandlerFunc {
+func ServeThemeView() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		p := c.Request.URL.Path
-		fmt.Println("---->",p)
-		fpath := filepath.Join(root, filepath.FromSlash(p))
-		_, verr := os.Stat(fpath)
-		if verr != nil && os.IsNotExist(verr) {
-			fpath = filepath.Join(root, "index.html")
+		// filter api
+		if strings.Contains(c.Request.URL.Path, "api") {
+			return
 		}
-		http.ServeFile(c.Writer, c.Request, fpath)
+		// admin theme
+		if strings.Contains(c.Request.URL.Path, "dashboard") {
+			dashboardPath := filepath.Join(setting.AppPath, "views/admin/socailbot-brain/dist")
+			filePath := filepath.Join( dashboardPath, filepath.FromSlash(strings.Replace(c.Request.URL.Path, "/dashboard", "", 1)))
+			_, err := os.Stat(filePath)
+			if err != nil && os.IsNotExist(err) {
+				filePath = filepath.Join(dashboardPath, "index.html")
+			}
+			http.ServeFile(c.Writer, c.Request, filePath)
+			c.Abort()
+			return
+		}
+
+		// front theme
+		frontPath := filepath.Join(setting.AppPath, "views/front/socailbot-face/dist")
+		filePath := filepath.Join( frontPath, filepath.FromSlash(c.Request.URL.Path))
+		_, err := os.Stat(filePath)
+		if err != nil && os.IsNotExist(err) {
+			filePath = filepath.Join(frontPath, "index.html")
+		}
+		http.ServeFile(c.Writer, c.Request, filePath)
 		c.Abort()
+		return
 	}
 }
+

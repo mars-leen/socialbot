@@ -11,6 +11,7 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	g.Use(middlewares.LoggerMiddleware())
 	g.Use(middlewares.RecoveryMiddleware())
 	g.Use(middlewares.CORSMiddleware())
+	g.Use(middlewares.ServeThemeView())
 
 	// storage path
 	//g.Static("/storage", setting.GetUploadStoragePath(""))
@@ -46,6 +47,9 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/media/addCommissionProduct", admin.AddCommissionProduct)
 	adminApi.POST("/media/addSocialMediaFromCrawler", admin.AddSocialMediaFromCrawler)
 
+
+
+	// web view
 
 
 	/*api.GET("/tag/getLevel", tag.GetLevelTag)
