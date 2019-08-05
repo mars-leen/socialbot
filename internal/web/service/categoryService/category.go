@@ -42,3 +42,23 @@ func GetCategoryWithTag() (rs []model.ConCategoryTags, err error) {
 
 	return result, nil
 }
+
+func GetCategoryMapName() (rs map[int]string, err error) {
+	category := model.CategoryList{}
+	err = category.GetList()
+	if err != nil {
+		return rs, err
+	}
+
+	l := len(category)
+	if l == 0 {
+		return map[int]string{}, nil
+	}
+
+	result := make(map[int]string, l)
+	for _, v := range category {
+		result[v.Id] = v.Title
+	}
+
+	return result, nil
+}

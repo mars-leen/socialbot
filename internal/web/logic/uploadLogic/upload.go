@@ -10,6 +10,7 @@ import (
 	"socialbot/internal/web/setting"
 	"socialbot/internal/web/wblogger"
 	"socialbot/pkg/utils"
+	"strconv"
 )
 
 func UploadSingle(c *gin.Context, fileKey string) common.Result {
@@ -58,9 +59,9 @@ func UploadSingle(c *gin.Context, fileKey string) common.Result {
 		return common.UploadFailed
 	}
 
-	return common.SUCCESS(map[string]interface{}{
+	return common.SUCCESS(map[string]string{
 		"url" : configService.GetUploadFullUrl(fileName),
-		"uri": uri,
+		"uri": strconv.FormatInt(uri, 10),
 	})
 }
 

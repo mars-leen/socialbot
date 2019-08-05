@@ -127,11 +127,11 @@ func AdminLogin(accountForm model.AccountForm) common.Result {
 		return common.SystemError
 	}
 	if !has {
-		return common.ParamError
+		return common.AccountNotRegError
 	}
 
 	if userModel.Identity != common.SuperAdmin {
-		return common.ParamError
+		return common.AuthError
 	}
 
 	// check password

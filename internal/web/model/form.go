@@ -9,7 +9,7 @@ type AccountForm struct {
 type CommissionProductForm struct {
 	Id          int    `form:"id" json:"id"`
 	Title       string `form:"title" json:"title" binding:"required"`
-	Cover       string `form:"cover" json:"cover" binding:"required"`
+	Cover       string `form:"cover" json:"cover" `
 	Medias      string `form:"medias" json:"medias" binding:"required"`
 	Tags        string `form:"tags" json:"tags"`
 	Cid         int    `form:"cid" json:"cid" binding:"required"`
@@ -19,8 +19,8 @@ type CommissionProductForm struct {
 	TotalStar   int    `form:"total_star" json:"total_star" binding:"required"`
 	NowStar     int    `form:"now_star" json:"now_star" binding:"required"`
 	Reviews     int    `form:"reviews" json:"reviews"`
-	PromoteLink int    `form:"promote_link" json:"promote_link" binding:"required"`
-	DetailLink  int    `form:"detail_link" json:"detail_link" binding:"required"`
+	PromoteLink string    `form:"promote_link" json:"promote_link" binding:"required"`
+	DetailLink  string    `form:"detail_link" json:"detail_link" binding:"required"`
 }
 
 type SocialProductForm struct {
@@ -42,15 +42,15 @@ type SubmitMediaForm struct {
 }
 
 type CategoryForm struct {
-	Id          int    `form:"id" json:"id" binding:"required"`
+	Id          int    `form:"id" json:"id"`
 	ShortName   string `form:"shortName" json:"shortName" binding:"required"`
 	Title       string `form:"title" json:"title" binding:"required"`
 	Description string `form:"description" json:"description"  binding:"required"`
-	Sort        int    `form:"sort" json:"sort"  binding:"required"`
+	Sort        int    `form:"sort" json:"sort" `
 }
 
 type TagForm struct {
-	Id          int    `form:"id" json:"id" binding:"required"`
+	Id          int    `form:"id" json:"id"`
 	Cid         int    `form:"cid" json:"cid"  binding:"required"`
 	ShortName   string `form:"shortName" json:"shortName" binding:"required"`
 	Title       string `form:"title" json:"title" binding:"required"`

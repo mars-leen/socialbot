@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"socialbot/internal/web/common"
@@ -11,6 +12,7 @@ import (
 func AddCommissionProduct(c *gin.Context) {
 	var form model.CommissionProductForm
 	if err := c.ShouldBind(&form); err != nil {
+		fmt.Printf("%+v \n ,err %v", form, err)
 		c.JSON(http.StatusOK, common.ParamError)
 		return
 	}

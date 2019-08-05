@@ -75,8 +75,9 @@ func AuthAdmin()  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.Request.Header.Get("Authorization")
 		claims, err := jwtauth.ParseToken(tokenString)
+		authError := common.AuthError
 		if err != nil {
-			c.JSON(http.StatusOK, common.AuthError)
+			authError.Out(c)
 			c.Abort()
 			return
 		}
@@ -84,7 +85,7 @@ func AuthAdmin()  gin.HandlerFunc {
 		userId, err := strconv.ParseInt(claims.Subject, 10, 64)
 		if err != nil {
 			wblogger.Log.Error(errors.Wrap(err, fmt.Sprintf("strconv.ParseInt(%+v) failed\n", claims)))
-			c.JSON(http.StatusOK, common.AuthError)
+			authError.Out(c)
 			c.Abort()
 			return
 		}
@@ -99,18 +100,18 @@ func AuthAdmin()  gin.HandlerFunc {
 		exist, err := user.GetOneById(userId)
 		if err != nil {
 			wblogger.Log.Error(err)
-			c.JSON(http.StatusOK, common.AuthError)
+			authError.Out(c)
 			c.Abort()
 			return
 		}
 		if !exist {
-			c.JSON(http.StatusOK, common.AuthError)
+			authError.Out(c)
 			c.Abort()
 			return
 		}
 
 		if user.Identity != common.SuperAdmin {
-			c.JSON(http.StatusOK, common.AuthError)
+			authError.Out(c)
 			c.Abort()
 			return
 		}

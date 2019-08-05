@@ -12,7 +12,7 @@ import (
 func ServeThemeView() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// filter api
-		if strings.Contains(c.Request.URL.Path, "api") {
+		if strings.Contains(c.Request.URL.Path, "v1") {
 			return
 		}
 		// admin theme

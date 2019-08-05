@@ -26,6 +26,7 @@ type ConTag struct {
 	BoardName   string
 	Description string
 	ShortName   string
+	CategoryName string
 }
 
 type TagList []Tag
@@ -76,7 +77,7 @@ func (t *Tag) GetColsOneById(id int, cols ...string) (rs bool, err error) {
 
 
 func (tl *TagList) GetListByCid(cid int) (err error) {
-	err = orm.SocialBotOrm.Where("cid=? ", cid).Where("is_del=?", 0).Find(tl)
+	err = orm.SocialBotOrm.Where("cid=? ", cid).Where("is_del=?", 0).OrderBy("id desc").Find(tl)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("GetListByCid(%d) failed", cid))
 	}
@@ -84,7 +85,7 @@ func (tl *TagList) GetListByCid(cid int) (err error) {
 }
 
 func (tl *TagList) GetList() (err error) {
-	err = orm.SocialBotOrm.Where("is_del=?", 0).Find(tl)
+	err = orm.SocialBotOrm.Where("is_del=?", 0).OrderBy("id desc").Find(tl)
 	if err != nil {
 		return errors.Wrap(err, "get list failed")
 	}

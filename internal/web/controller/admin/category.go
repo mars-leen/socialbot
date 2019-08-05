@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"socialbot/internal/web/common"
@@ -12,17 +13,18 @@ import (
 func AddCategory(c *gin.Context) {
 	var categoryForm model.CategoryForm
 	if err := c.ShouldBind(&categoryForm); err != nil {
-		c.JSON(http.StatusOK, common.ParamError)
+		fmt.Println(categoryForm)
+		common.ParamError.Out(c)
 		return
 	}
-
 	result := categoryLogic.Add(&categoryForm)
-	c.JSON(http.StatusOK, result)
+	result.Out(c)
 }
 
 func UpdateCategory(c *gin.Context) {
 	var categoryForm model.CategoryForm
 	if err := c.ShouldBind(&categoryForm); err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusOK, common.ParamError)
 		return
 	}

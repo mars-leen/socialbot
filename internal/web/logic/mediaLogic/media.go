@@ -23,17 +23,15 @@ import (
 
 func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	// media
-	mediaArr := strings.Split(utils.Trim(form.Medias, ",",","), ",")
+	mediaArr := strings.Split(utils.Trim(form.Medias, ",", ","), ",")
 	l := len(mediaArr)
-	if l==0 {
+	if l == 0 {
 		return common.UploadFileIsEmpty
 	}
 	mediaArrList := utils.Str2Int64(mediaArr)
 
-	// tags
-
 	// get origin media source
-	mediaSourceList,err  := mediaService.GetMapUriMediaSource(mediaArrList)
+	mediaSourceList, err := mediaService.GetMapUriMediaSource(mediaArrList)
 	if err != nil {
 		wblogger.Log.Error(err)
 		return common.SystemError
@@ -43,12 +41,11 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	}
 
 	//  cover
-	v,ok := mediaSourceList[mediaArrList[0]]
+	v, ok := mediaSourceList[mediaArrList[0]]
 	if !ok {
 		return common.UploadFileNotFound
 	}
 	cover := v.Url
-
 
 	session := orm.SocialBotOrm.NewSession()
 	defer session.Close()
@@ -60,10 +57,10 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 
 	// insert media
 	media := model.Media{
-		Title:form.Title,
-		Cover:cover,
-		MediaStatus:common.MediaStatusPublished,
-		MediaType:common.MediaTypePromotionProduct,
+		Title:       form.Title,
+		Cover:       cover,
+		MediaStatus: common.MediaStatusPublished,
+		MediaType:   common.MediaTypePromotionProduct,
 	}
 	_, err = media.Insert(session)
 	if err != nil {
@@ -72,9 +69,28 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 		return common.SystemError
 	}
 
+	// commission product
+	product := model.CommissionProduct{
+		Mid:media.Id,
+		CutOff:form.CutOff,
+		NowPrice:form.NowPrice,
+		OriginPrice:form.OriginPrice,
+		TotalStar:form.TotalStar,
+		NowStar:form.NowStar,
+		Reviews:form.Reviews,
+		DetailLink:form.DetailLink,
+		PromoteLink:form.PromoteLink,
+	}
+	_,err = product.Insert(session)
+	if err != nil {
+		_ = session.Rollback()
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	
 	// update media source
 	mediaSource := model.MediaSource{
-		Mid:media.Id,
+		Mid: media.Id,
 	}
 	_, err = mediaSource.UpdateColsByUriList(mediaArrList, session, "mid")
 	if err != nil {
@@ -91,6 +107,7 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 		return common.SystemError
 	}
 
+	_ = session.Commit()
 	return common.SUCCESS(nil)
 }
 
@@ -102,7 +119,7 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 		return common.SystemError
 	}
 	l := len(mediaArr)
-	if l==0 {
+	if l == 0 {
 		return common.UploadFileIsEmpty
 	}
 
@@ -115,7 +132,7 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 
 	// first image is cover todo video cover
 	var cover string
-	for _, ms := range mediaArr{
+	for _, ms := range mediaArr {
 		if ms.FileType == common.SourceTypeImage {
 			cover = ms.FileName
 			break
@@ -133,10 +150,10 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 
 	// insert media
 	media := model.Media{
-		Title:form.Title,
-		Cover:cover,
-		MediaStatus:common.MediaStatusPublished,
-		MediaType:common.MediaTypePromotionProduct,
+		Title:       form.Title,
+		Cover:       cover,
+		MediaStatus: common.MediaStatusPublished,
+		MediaType:   common.MediaTypePromotionProduct,
 	}
 	_, err = media.Insert(session)
 	if err != nil {
@@ -146,14 +163,14 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 	}
 
 	// update media source
-	for _, value := range mediaArr  {
+	for _, value := range mediaArr {
 		ms := model.MediaSource{
-			Mid:media.Id,
-			SourceType:value.FileType,
+			Mid:        media.Id,
+			SourceType: value.FileType,
 			SourceFrom: value.Source,
-			Url:value.FileName,
+			Url:        value.FileName,
 		}
-		_,err := ms.Insert(session)
+		_, err := ms.Insert(session)
 		if err != nil {
 			wblogger.Log.Error(err)
 			return common.SystemError
@@ -187,21 +204,21 @@ func DecodeMedias(medias string) ([]*model.SubmitMediaForm, error) {
 }
 
 func DownLoadMedias(medias []*model.SubmitMediaForm) error {
-	storage,err := configService.GetStorage()
+	storage, err := configService.GetStorage()
 	if err != nil {
 		return err
 	}
 	f := &http.Client{
-		Timeout:300*time.Second,
+		Timeout: 300 * time.Second,
 	}
 
 	path := storage.UploadLocalPath
-	if path == ""{
+	if path == "" {
 		path = filepath.Join(setting.AppPath, "storage")
 	}
 
-	for _,m := range medias{
-		fileType, filename, err := DownloadFile(f ,m.URL, path, common.StorageMediaDir)
+	for _, m := range medias {
+		fileType, filename, err := DownloadFile(f, m.URL, path, common.StorageMediaDir)
 		if err != nil {
 			return err
 		}
@@ -213,13 +230,13 @@ func DownLoadMedias(medias []*model.SubmitMediaForm) error {
 		m.FileType = ft
 		m.Source = storage.Source
 	}
-	return  nil
+	return nil
 }
 
 func DownloadFile(f *http.Client, requestUrl, storagePath, subPath string) (mediaType string, filename string, err error) {
 	err = os.Mkdir(filepath.Join(storagePath, subPath), os.ModePerm)
 	if err != nil {
-		return "","", errors.Wrap(err, "mkdir all failed")
+		return "", "", errors.Wrap(err, "mkdir all failed")
 	}
 	// Get the data
 	/*c := http.Client{
@@ -236,9 +253,9 @@ func DownloadFile(f *http.Client, requestUrl, storagePath, subPath string) (medi
 		}
 		c.Transport = transport
 	}
-*/
+	*/
 	var resp *http.Response
-	for i:= 0; i<3; i++ {
+	for i := 0; i < 3; i++ {
 		resp, err = f.Get(requestUrl)
 		if err == nil {
 			break
@@ -248,17 +265,17 @@ func DownloadFile(f *http.Client, requestUrl, storagePath, subPath string) (medi
 		}
 	}
 	if err != nil {
-		return "","", errors.Wrap(err, "request failed")
+		return "", "", errors.Wrap(err, "request failed")
 	}
 	defer resp.Body.Close()
 
 	// Check server response
 	if resp.StatusCode != http.StatusOK {
-		return "","", fmt.Errorf("bad status: %s", resp.Status)
+		return "", "", fmt.Errorf("bad status: %s", resp.Status)
 	}
 
 	// Create the file
-	ext,err := utils.GetFileExtFromResp(resp)
+	ext, err := utils.GetFileExtFromResp(resp)
 	if err != nil {
 		return "", "", err
 	}
@@ -268,14 +285,14 @@ func DownloadFile(f *http.Client, requestUrl, storagePath, subPath string) (medi
 
 	out, err := os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
-		return fileType, filename , err
+		return fileType, filename, err
 	}
 	defer out.Close()
 
 	// Writer the body to file
 	_, err = io.Copy(out, resp.Body)
 	if err != nil {
-		return fileType, filename , errors.Wrap(err, "io.copy error")
+		return fileType, filename, errors.Wrap(err, "io.copy error")
 	}
-	return fileType, filename , nil
+	return fileType, filename, nil
 }

@@ -1,6 +1,10 @@
 package common
 
-import "time"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"time"
+)
 
 var (
 	SystemError = ERROR(1000, "system error")
@@ -15,7 +19,7 @@ var (
 	InvalidFileFormat = ERROR(1009, "invalid file type")
 
 	AccountNotRegError = ERROR(1010, "account not register")
-	InValidAccountError = ERROR(1011, "account is invalid")
+	InValidAccountError = ERROR(1011, "account auth failed")
 	RegisteredAccountError = ERROR(1012, "account is registered")
 	InvalidEmailError = ERROR(1013, "invalid email format")
 
@@ -33,7 +37,7 @@ var (
 
 
 type Result interface {
-	Out()
+	Out(c *gin.Context)
 }
 
 type ErrorResult struct {
@@ -42,7 +46,12 @@ type ErrorResult struct {
 	Time int64  `json:"time"`
 }
 
-func (e ErrorResult) Out() {
+func (e ErrorResult) Out(c *gin.Context) {
+	status := http.StatusOK
+	if e.Code ==  1002 {
+		status = http.StatusUnauthorized
+	}
+	c.JSON(status, e)
 }
 
 type SuccessResult struct {
@@ -52,7 +61,8 @@ type SuccessResult struct {
 	Data interface{} `json:"data"`
 }
 
-func (e SuccessResult) Out() {
+func (e SuccessResult) Out(c *gin.Context) {
+	c.JSON(http.StatusOK, e)
 }
 
 func ERROR(code int, msg string) Result {
