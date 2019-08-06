@@ -87,7 +87,7 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
-	
+
 	// update media source
 	mediaSource := model.MediaSource{
 		Mid: media.Id,

@@ -64,3 +64,12 @@ type CrawlerForm struct {
 	LastPage string `form:"last_page" json:"last_page"`
 	Script   string `form:"script" json:"script"  binding:"required"`
 }
+
+
+type ConfigForm struct {
+	Id          int    `form:"id" json:"id"`
+	Key   string `form:"key" json:"key"`
+	Title       string `form:"title" json:"title" binding:"required"`
+	Value string `form:"value" json:"value"  binding:"required"`
+	Sort        int    `form:"sort" json:"sort" `
+}

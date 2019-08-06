@@ -5,6 +5,12 @@ const api = {
     Login: '/v1/adminApi/login',
     Logout: '/v1/adminApi/logout',
 
+    AddServerConfig: '/v1/adminApi/ServerConfig/add',
+    UpdateServerConfig: '/v1/adminApi/ServerConfig/update',
+    ListServerConfig: '/v1/adminApi/ServerConfig/list',
+    DeleteServerConfig: '/v1/adminApi/ServerConfig/delete',
+    ListServerConfigWithTags: '/v1/adminApi/ServerConfig/listWithTags',
+
     AddCategory: '/v1/adminApi/category/add',
     UpdateCategory: '/v1/adminApi/category/update',
     ListCategory: '/v1/adminApi/category/list',

@@ -11,6 +11,8 @@ require (
 	github.com/json-iterator/go v1.1.7
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.8.1
+	github.com/stretchr/testify v1.3.0
+	golang.org/x/time v0.0.0-00010101000000-000000000000
 	xorm.io/core v0.7.0
 )
 
