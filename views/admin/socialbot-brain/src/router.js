@@ -25,19 +25,31 @@ const routes = [
                 component: () => import('./views/config/Config.vue')
             },
             {
-                path: 'category',
-                name: 'category',
+                path: 'config/category',
+                name: 'categoryConfig',
                 component: () => import('./views/config/Category.vue')
             },
             {
-                path: 'tag',
-                name: 'tag',
+                path: 'config/tag',
+                name: 'tagConfig',
                 component: () => import('./views/config/Tag.vue')
             },
+            {
+                path: 'config/server',
+                name: 'serverConfig',
+                component: () => import('./views/config/Server.vue')
+            },
+
             {
                 path: 'add-commission-product',
                 name: 'addCommissionProduct',
                 component: () => import('./views/media/AddCommissionProduct.vue')
+            },
+
+            {
+                path: 'robot/server',
+                name: 'robotServer',
+                component: () => import('./views/robot/Server.vue')
             },
         ],
     },

@@ -8,7 +8,7 @@ import (
 
 func Add(form *model.ConfigForm) common.Result {
 	config := model.Config{
-		Key: form.Key,
+		KeyMark: form.Key,
 		Title:form.Title,
 		Value:form.Value,
 	}
@@ -52,7 +52,7 @@ func Update(form *model.ConfigForm) common.Result {
 		return common.DataIsNotExist
 	}
 
-	config.Key = form.Key
+	config.KeyMark = form.Key
 	config.Title = form.Title
 	config.Value = form.Value
 	_,err = config.UpdateById(form.Id)

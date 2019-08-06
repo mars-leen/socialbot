@@ -5,11 +5,10 @@ const api = {
     Login: '/v1/adminApi/login',
     Logout: '/v1/adminApi/logout',
 
-    AddServerConfig: '/v1/adminApi/ServerConfig/add',
-    UpdateServerConfig: '/v1/adminApi/ServerConfig/update',
-    ListServerConfig: '/v1/adminApi/ServerConfig/list',
-    DeleteServerConfig: '/v1/adminApi/ServerConfig/delete',
-    ListServerConfigWithTags: '/v1/adminApi/ServerConfig/listWithTags',
+    AddServerConfig: '/v1/adminApi/config/addServer',
+    UpdateServerConfig: '/v1/adminApi/config/updateServer',
+    ListServerConfig: '/v1/adminApi/config/listServer',
+    DeleteServerConfig: '/v1/adminApi/config/deleteServer',
 
     AddCategory: '/v1/adminApi/category/add',
     UpdateCategory: '/v1/adminApi/category/update',
@@ -21,6 +20,11 @@ const api = {
     UpdateTag: '/v1/adminApi/tag/update',
     ListTag: '/v1/adminApi/tag/list',
     DeleteTag: '/v1/adminApi/tag/delete',
+
+
+    AddRobotServer: '/v1/adminApi/robot/addServer',
+    DeleteRobotServer: '/v1/adminApi/robot/deleteServer',
+    ListRobotServer: '/v1/adminApi/robot/listServer',
 
     AddCrawler: '/v1/adminApi/crawler/add',
     UpdateCrawler: '/v1/adminApi/crawler/update',

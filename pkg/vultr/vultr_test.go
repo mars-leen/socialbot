@@ -16,3 +16,16 @@ func TestUpdateOrCreateScriptByName(t *testing.T) {
 	}
 	fmt.Println("success")
 }
+
+func TestListServer(t *testing.T) {
+	c := GetClient("")
+	list, err :=  c.GetServers()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%+v \n", list)
+}
+
+func TestCreateServer(t *testing.T) {
+
+}

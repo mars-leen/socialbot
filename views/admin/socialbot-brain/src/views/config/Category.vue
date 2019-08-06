@@ -16,7 +16,7 @@
         </content-item>
         <a-modal title="添加分类" :visible="addCategoryVisible" :footer="null"  @cancel="()=> this.addCategoryVisible = false">
             <a-form id="components-form-demo-normal-login" >
-                <a-form-item label="分类标题">
+                <a-form-item  label="分类标题">
                     <a-input v-model="categoryForm.Title" type="string" >
                     </a-input>
                 </a-form-item>
@@ -156,8 +156,4 @@
 </script>
 
 <style scoped>
-    .add {
-        margin: 0 -10px;
-        border-bottom: 1px solid #ececec;
-    }
 </style>

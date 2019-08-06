@@ -31,7 +31,12 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/config/addServer", admin.AddServer)
 	adminApi.POST("/config/updateServer", admin.UpdateServer)
 	adminApi.GET("/config/listServer", admin.ListServer)
-	adminApi.GET("/config/deleteServer", admin.DeleteServer)
+	adminApi.POST("/config/deleteServer", admin.DeleteServer)
+
+
+	adminApi.POST("/robot/addServer", admin.AddRobotServer)
+	adminApi.GET("/robot/listServer", admin.ListRobotServer)
+	adminApi.POST("/robot/deleteServer", admin.DeleteRobotServer)
 
 
 	adminApi.POST("/category/add", admin.AddCategory)

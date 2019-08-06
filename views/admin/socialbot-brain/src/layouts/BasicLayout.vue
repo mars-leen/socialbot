@@ -90,24 +90,24 @@
                         ]
                     },
                     {
-                        key: 3,
+                        key: 20,
                         icon: "dashboard",
                         title: "配置中心",
                         child: [
                             {
-                                key: 4,
-                                title: "基础配置",
-                                link:"/dashboard/config"
+                                key: 22,
+                                title: "分类配置",
+                                link:"/dashboard/config/category"
                             },
                             {
-                                key: 5,
-                                title: "分类",
-                                link:"/dashboard/category"
+                                key: 23,
+                                title: "标签配置",
+                                link:"/dashboard/config/tag"
                             },
                             {
-                                key: 6,
-                                title: "标签",
-                                link:"/dashboard/tag"
+                                key: 24,
+                                title: "服务器配置",
+                                link:"/dashboard/config/server"
                             }
                         ]
                     },
@@ -120,6 +120,18 @@
                                 key: 41,
                                 title: "添加推广商品",
                                 link:"/dashboard/add-commission-product"
+                            }
+                        ]
+                    },
+                    {
+                        key: 80,
+                        icon: "dashboard",
+                        title: "机器人",
+                        child: [
+                            {
+                                key: 81,
+                                title: "服务器",
+                                link:"/dashboard/robot/server"
                             }
                         ]
                     }

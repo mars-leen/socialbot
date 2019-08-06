@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"socialbot/internal/common/app"
 	"socialbot/internal/web"
+	"socialbot/internal/web/console"
 	"socialbot/internal/web/orm"
 	"socialbot/internal/web/setting"
 	"socialbot/internal/web/wblogger"
@@ -38,6 +39,8 @@ func init() {
 		fmt.Printf("[ERROR] %+v \n", err)
 		os.Exit(1)
 	}
+
+	console.LoadConsole()
 
 }
 

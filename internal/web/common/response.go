@@ -1,43 +1,44 @@
 package common
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 )
 
 var (
-	SystemError = ERROR(1000, "system error")
-	ParamError  = ERROR(1001, "param error")
-	AuthError  = ERROR(1002, "auth error")
-	DataIsNotExist = ERROR(1003, "data is not exist")
-	RepeatOperation = ERROR(1004, "repeat operation")
-	ReadFileFailed = ERROR(1005, "read file failed!")
+	SystemError       = ERROR(1000, "system error")
+	ParamError        = ERROR(1001, "param error")
+	AuthError         = ERROR(1002, "auth error")
+	DataIsNotExist    = ERROR(1003, "data is not exist")
+	RepeatOperation   = ERROR(1004, "repeat operation")
+	ReadFileFailed    = ERROR(1005, "read file failed!")
 	FrequentOperation = ERROR(1006, "Frequent operation")
-	InvalidOperation = ERROR(1007, "Invalid operation")
-	UploadFailed = ERROR(1008, "upload failed")
+	InvalidOperation  = ERROR(1007, "Invalid operation")
+	UploadFailed      = ERROR(1008, "upload failed")
 	InvalidFileFormat = ERROR(1009, "invalid file type")
 
-	AccountNotRegError = ERROR(1010, "account not register")
-	InValidAccountError = ERROR(1011, "account auth failed")
+	AccountNotRegError     = ERROR(1010, "account not register")
+	InValidAccountError    = ERROR(1011, "account auth failed")
 	RegisteredAccountError = ERROR(1012, "account is registered")
-	InvalidEmailError = ERROR(1013, "invalid email format")
+	InvalidEmailError      = ERROR(1013, "invalid email format")
 
 	DownLoadError = ERROR(1020, "download error")
 
 	// media
-	TagsIsEmptyError = ERROR(1030, "tags is empty")
+	TagsIsEmptyError    = ERROR(1030, "tags is empty")
 	ExceedImgLimitError = ERROR(1031, "img number limits are exceeded")
-	UploadFileIsEmpty = ERROR(1032, "empty upload")
-	UploadFileNotFound = ERROR(1033, "upload file not found")
+	UploadFileIsEmpty   = ERROR(1032, "empty upload")
+	UploadFileNotFound  = ERROR(1033, "upload file not found")
 
 	// user
 	NicknameEmpty = ERROR(1100, "Nickname is needed")
 )
 
-
 type Result interface {
 	Out(c *gin.Context)
+	Errorf(f string, v ...interface{}) Result
 }
 
 type ErrorResult struct {
@@ -48,10 +49,15 @@ type ErrorResult struct {
 
 func (e ErrorResult) Out(c *gin.Context) {
 	status := http.StatusOK
-	if e.Code ==  1002 {
+	if e.Code == 1002 {
 		status = http.StatusUnauthorized
 	}
 	c.JSON(status, e)
+}
+
+func (e ErrorResult) Errorf(f string, v ...interface{}) Result {
+	e.Msg = fmt.Sprintf(f, v...)
+	return e
 }
 
 type SuccessResult struct {
@@ -63,6 +69,11 @@ type SuccessResult struct {
 
 func (e SuccessResult) Out(c *gin.Context) {
 	c.JSON(http.StatusOK, e)
+}
+
+func (e SuccessResult) Errorf(f string, v ...interface{}) Result {
+	e.Msg = fmt.Sprintf(f, v...)
+	return e
 }
 
 func ERROR(code int, msg string) Result {

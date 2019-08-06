@@ -8,6 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-xorm/xorm v0.7.5
 	github.com/google/go-cmp v0.3.0 // indirect
+	github.com/jasonlvhit/gocron v0.0.0-20190731160825-18abb4835426
 	github.com/json-iterator/go v1.1.7
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.8.1

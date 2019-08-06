@@ -57,4 +57,7 @@ func Run() {
 		fmt.Println("[INFO] shutdown http server end")
 	})
 
+	// load console
+
+
 }

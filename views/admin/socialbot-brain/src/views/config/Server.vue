@@ -2,27 +2,64 @@
     <div class="Server">
         <content-item>
             <a-button slot="header" type="primary" @click="showHandleServer(false)" icon="plus">添加</a-button>
+            <div slot="body">
+                <a-row :gutter="16">
+                    <a-col v-for="s in server" :key="s.Id" :sm="1" :md="8" class="server-card">
+                        <a-card  :title="s.Title">
+                            <template class="ant-card-actions" slot="actions">
+                                <a-icon type="edit" @click="showHandleServer(true, s)"/>
+                                <a-icon type="delete" @click="deleteServer(s.Id)" />
+                            </template>
+                            <p style="word-wrap: break-word"><strong>ApiKey</strong>: {{s.ApiKey}}</p>
+                            <div><strong>RegionID</strong>: {{s.RegionID}}</div>
+                            <div><strong>PlanId</strong>: {{s.PlanId}}</div>
+                            <div><strong>OsId</strong>: {{s.OsId}}</div>
+                            <div><strong>scriptName</strong>: {{s.ScriptName}}</div>
+                            <div><strong>scriptType</strong>: {{s.ScriptType}}</div>
+                        </a-card>
+                    </a-col>
+                </a-row>
+            </div>
         </content-item>
-        <a-modal title="添加分类" :visible="addServerVisible" :footer="null"  @cancel="()=> this.addServerVisible = false">
-            <a-form id="components-form-demo-normal-login" >
-                <a-form-item label="分类标题">
-                    <a-input v-model="ServerForm.Title" type="string" >
+        <a-modal title="添加分类" :visible="addServerVisible" :footer="null" @cancel="()=> this.addServerVisible = false">
+            <a-form>
+                <a-form-item   label="标题">
+                    <a-input v-model="serverForm.Title" type="string">
                     </a-input>
                 </a-form-item>
-                <a-form-item label="分类简称">
-                    <a-input v-model="ServerForm.ShortName" type="string" >
+                <a-form-item  label="apiKey">
+                    <a-input v-model="serverForm.ApiKey" type="string">
                     </a-input>
                 </a-form-item>
-                <a-form-item label="分类描述">
-                    <a-input v-model="ServerForm.Description" type="string" >
+                <a-form-item  label="地区id">
+                    <a-input v-model="serverForm.RegionID" type="string">
                     </a-input>
                 </a-form-item>
-                <a-form-item label="分类排序">
-                    <a-input  v-model="ServerForm.Sort" type="integer" >
+                <a-form-item  label="计划id">
+                    <a-input v-model="serverForm.PlanId" type="integer">
                     </a-input>
                 </a-form-item>
-                <a-form-item>
-                    <a-button type="primary" html-type="submit" class="login-form-button" :loading="addServerLoading" @click.prevent="handleServer">提交</a-button>
+                <a-form-item  label="系统id">
+                    <a-input v-model="serverForm.OsId" type="string">
+                    </a-input>
+                </a-form-item>
+
+                <a-form-item  label="startScript名称">
+                    <a-input v-model="serverForm.ScriptName" type="string">
+                    </a-input>
+                </a-form-item>
+                <a-form-item  label="startScript类型">
+                    <a-input v-model="serverForm.ScriptType" type="integer">
+                    </a-input>
+                </a-form-item>
+                <a-form-item  label="startScript内容">
+                    <a-textarea v-model="serverForm.ScriptContent" placeholder="script content"
+                                :autosize="{ minRows: 6, maxRows: 16 }"></a-textarea>
+                </a-form-item>
+                <a-form-item  >
+                    <a-button type="primary" html-type="submit" class="login-form-button" :loading="addServerLoading"
+                              @click.prevent="handleServer">提交
+                    </a-button>
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -30,14 +67,24 @@
 </template>
 
 <script>
-    import {Button, Icon, Modal, Form,Input, List} from 'ant-design-vue'
+    import {Button, Icon, Modal, Form, Input, List,Card, Row, Col} from 'ant-design-vue'
     import ContentItem from '../../components/content/Content'
-    import {listServerApi, addServerApi, deleteServerApi, updateServerApi} from "../../api/se"
+    import {
+        listServerConfigApi,
+        addServerConfigApi,
+        deleteServerConfigApi,
+        updateServerConfigApi
+    } from "../../api/server"
+
     export default {
-        name: "Server",
+        name: "ConfigServer",
         components: {
             ContentItem,
             [List.name]: List,
+            [Card.name]: Card,
+            [Row.name]: Row,
+            [Col.name]: Col,
+            [Card.Meta.name]: Card.Meta,
             [List.Item.name]: List.Item,
             [List.Item.Meta.name]: List.Item.Meta,
             [Button.name]: Button,
@@ -46,106 +93,149 @@
             [Form.name]: Form,
             [Form.Item.name]: Form.Item,
             [Input.name]: Input,
+            [Input.TextArea.name]: Input.TextArea,
         },
-        created(){
+        created() {
             this.listServer()
         },
         data() {
             return {
                 addServerVisible: false,
                 addServerLoading: false,
-                Server : [],
-                defaultServerForm:{
-                    Id:0,
-                    Title:"",
-                    ScriptName:"",
-                    ScriptType:"",
-                    ScriptContent:"",
-                    ApiKey:"",
-                    RegionID:0,
-                    PlanId:0,
-                    OsId:0
+                server: [],
+                defaultServerForm: {
+                    Id: 0,
+                    Title: "server",
+                    ScriptName: "socailbot_script",
+                    ScriptType: "boot",
+                    ScriptContent: "#!/bin/sh\n" +
+                        "\n" +
+                        "\n" +
+                        "# NOTE: This is an example that sets up SSH authorization. To use it, you'd need to replace \"ssh-rsa AA... youremail@example.com\" with your SSH public.\n" +
+                        "# You can replace this entire script with anything you'd like, there is no need to keep it\n" +
+                        "\n" +
+                        "mkdir /root/brook\n" +
+                        "cd /root/brook\n" +
+                        "wget https://github.com/txthinking/brook/releases/download/v20190601/brook\n" +
+                        "chmod 777 brook\n" +
+                        "firewall-cmd --permanent --zone=public --add-port=8888/tcp\n" +
+                        "firewall-cmd --reload\n" +
+                        "\n" +
+                        "echo '1' > blocked\n" +
+                        "\n" +
+                        "nohup ./brook -d server -l :8888 -p 543284@Lmq >> run.log 2>&1 \n" +
+                        "&\n" +
+                        "\n" +
+                        "echo '2' > blocked",
+                    ApiKey: "",
+                    RegionID: 1,
+                    PlanId: 200,
+                    OsId: 167
                 },
-                ServerForm:{
-                    Id:0,
-                    Title:"",
-                    ScriptName:"",
-                    ScriptType:"",
-                    ScriptContent:"",
-                    ApiKey:"",
-                    RegionID:0,
-                    PlanId:0,
-                    OsId:0
+                serverForm: {
+                    Id: 0,
+                    Title: "server",
+                    ScriptName: "socailbot_script",
+                    ScriptType: "boot",
+                    ScriptContent: "#!/bin/sh\n" +
+                        "\n" +
+                        "\n" +
+                        "# NOTE: This is an example that sets up SSH authorization. To use it, you'd need to replace \"ssh-rsa AA... youremail@example.com\" with your SSH public.\n" +
+                        "# You can replace this entire script with anything you'd like, there is no need to keep it\n" +
+                        "\n" +
+                        "mkdir /root/brook\n" +
+                        "cd /root/brook\n" +
+                        "wget https://github.com/txthinking/brook/releases/download/v20190601/brook\n" +
+                        "chmod 777 brook\n" +
+                        "firewall-cmd --permanent --zone=public --add-port=8888/tcp\n" +
+                        "firewall-cmd --reload\n" +
+                        "\n" +
+                        "echo '1' > blocked\n" +
+                        "\n" +
+                        "nohup ./brook -d server -l :8888 -p 543284@Lmq >> run.log 2>&1 \n" +
+                        "&\n" +
+                        "\n" +
+                        "echo '2' > blocked",
+                    ApiKey: "",
+                    RegionID: 1,
+                    PlanId: 200,
+                    OsId: 167
                 }
             }
         },
-        methods:{
-            showHandleServer(isUpdate, data){
-                this.addServerVisible =true;
+        methods: {
+            showHandleServer(isUpdate, data) {
+                this.addServerVisible = true;
                 if (!isUpdate) {
-                    this.ServerForm = Object.assign({},this.defaultServerForm);
+                    this.serverForm = Object.assign({}, this.defaultServerForm);
                     return
                 }
-                this.ServerForm = data
+                this.serverForm = data
             },
-            handleServer(){
-                if (this.addServerLoading){
+            handleServer() {
+                if (this.addServerLoading) {
                     return
                 }
                 this.addServerLoading = false;
-                if (this.ServerForm.Id === 0) {
+                if (this.serverForm.Id === 0) {
                     this.addServer()
-                }else{
+                } else {
                     this.updateServer()
                 }
             },
-            listServer(){
-                listServerApi().then(res => {
+            listServer() {
+                listServerConfigApi().then(res => {
                     if (!res) {
                         return
                     }
-                    this.Server = res.data
+                    const result = res.data;
+                    const list = [];
+                    for (let i in result) {
+                        let s = JSON.parse(result[i].Value);
+                        s.Id = result[i].Id;
+                        list.push(s)
+                    }
+                    this.server = list
                 })
             },
-            addServer(){
-                addServerApi(this.createFormData()).then(res=>{
+            addServer() {
+                addServerConfigApi(this.createFormData()).then(res => {
                     this.addServerLoading = false;
-                    if (!res){
+                    if (!res) {
                         return
                     }
-                    this.addServerVisible = false
-                    this.Server.push(this.ServerForm)
+                    this.addServerVisible = false;
+                    this.listServer()
                 })
             },
-            updateServer(){
-                updateServerApi(this.createFormData()).then(res=>{
+            updateServer() {
+                updateServerConfigApi(this.createFormData()).then(res => {
                     this.addServerLoading = false;
-                    if (!res){
+                    if (!res) {
                         return
                     }
-                    this.addServerVisible = false
+                    this.addServerVisible = false;
+                    this.listServer()
                 })
             },
-            deleteServer(id){
+            deleteServer(id) {
                 const form = new FormData;
                 form.append("id", id);
-                deleteServerApi(form).then(res=>{
-                    if (!res){
+                deleteServerConfigApi(form).then(res => {
+                    if (!res) {
                         return
                     }
-                    const index = this.Server.findIndex((c) => {
+                    const index = this.server.findIndex((c) => {
                         return c.Id === id;
                     });
-                    this.Server.splice(index, 1);
+                    this.server.splice(index, 1);
                 })
             },
-            createFormData(){
+            createFormData() {
                 const form = new FormData();
-                form.append("id", this.ServerForm.Id);
-                form.append("title", this.ServerForm.Title);
-                form.append("shortName", this.ServerForm.ShortName);
-                form.append("description", this.ServerForm.Description);
-                form.append("sort", this.ServerForm.Sort)
+                form.append("id", this.serverForm.Id);
+                form.append("title", this.serverForm.Title);
+                form.append("value", JSON.stringify(this.serverForm));
                 return form
             }
         }
@@ -153,8 +243,7 @@
 </script>
 
 <style scoped>
-    .add {
-        margin: 0 -10px;
-        border-bottom: 1px solid #ececec;
+    .server-card {
+        margin-bottom: 16px;
     }
 </style>

@@ -7,19 +7,20 @@ import (
 	"time"
 )
 
-type Config struct {
-	CreateAt int64
-	Id       int
-	IsDel    int
-	KeyMark      string
-	Title    string
-	UpdateAt int64
-	Value    string
+type RobotServer struct {
+	Id               int
+	Subid            string
+	ApiKey           string
+	FullServerInfo   string
+	RobotAgentStatus int
+	UpdateAt         int64
+	CreateAt         int64
+	IsDel            int
 }
 
-type ConfigList []Config
+type RobotServerList []RobotServer
 
-func (c *Config) Insert() (rs int64, err error) {
+func (c *RobotServer) Insert() (rs int64, err error) {
 	c.UpdateAt = time.Now().UnixNano()
 	rs, err = orm.SocialBotOrm.Insert(c)
 	if err != nil {
@@ -28,7 +29,7 @@ func (c *Config) Insert() (rs int64, err error) {
 	return rs, nil
 }
 
-func (c *Config) UpdateById(id int) (rs int64, err error) {
+func (c *RobotServer) UpdateById(id int) (rs int64, err error) {
 	rs, err = orm.SocialBotOrm.Where("id = ? ", id).Update(c)
 	if err != nil {
 		return 0, errors.Wrap(err, fmt.Sprintf("updateById(%d) failed", id))
@@ -36,7 +37,7 @@ func (c *Config) UpdateById(id int) (rs int64, err error) {
 	return rs, nil
 }
 
-func (c *Config) UpdateColsById(id int, cols ...string) (rs int64, err error) {
+func (c *RobotServer) UpdateColsById(id int, cols ...string) (rs int64, err error) {
 	c.UpdateAt = time.Now().UnixNano()
 	cols = append(cols, "create_at")
 	rs, err = orm.SocialBotOrm.Cols(cols...).Where("id = ? ", id).Update(c)
@@ -46,7 +47,7 @@ func (c *Config) UpdateColsById(id int, cols ...string) (rs int64, err error) {
 	return rs, nil
 }
 
-func (c *Config) GetOneById(id int) (rs bool, err error) {
+func (c *RobotServer) GetOneById(id int) (rs bool, err error) {
 	rs, err = orm.SocialBotOrm.Where("id=?", id).Where("is_del=?", 0).Get(c)
 	if err != nil {
 		return rs, errors.Wrap(err, fmt.Sprintf("GetOneById(%d) failed", id))
@@ -54,7 +55,7 @@ func (c *Config) GetOneById(id int) (rs bool, err error) {
 	return rs, nil
 }
 
-func (c *Config) GetColsOneById(id int, cols ...string) (rs bool, err error) {
+func (c *RobotServer) GetColsOneById(id int, cols ...string) (rs bool, err error) {
 	rs, err = orm.SocialBotOrm.Where("id=?", id).Where("is_del=?", 0).Cols(cols...).Get(c)
 	if err != nil {
 		return rs, errors.Wrap(err, fmt.Sprintf("GetColsOneById(%d) cols(%s) failed", id, cols))
@@ -62,16 +63,8 @@ func (c *Config) GetColsOneById(id int, cols ...string) (rs bool, err error) {
 	return rs, nil
 }
 
-func (cl *ConfigList) GetList() (err error) {
-	err = orm.SocialBotOrm.Where("is_del=?", 0).OrderBy("id desc").Find(cl)
-	if err != nil {
-		return errors.Wrap(err, "get list failed")
-	}
-	return nil
-}
-
-func (cl *ConfigList) GetListByKey(key string) (err error) {
-	err = orm.SocialBotOrm.Where("is_del=?", 0).Where("key_mark=?", key).OrderBy("id desc").Find(cl)
+func (cl *RobotServerList) GetList() (err error) {
+	err = orm.SocialBotOrm.Where("is_del=?", 0).Find(cl)
 	if err != nil {
 		return errors.Wrap(err, "get list failed")
 	}

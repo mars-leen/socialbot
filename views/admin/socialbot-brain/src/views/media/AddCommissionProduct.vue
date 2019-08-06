@@ -4,62 +4,62 @@
         <a-form class="add-product" :form="form" @submit="handleSubmit" >
             <a-row :gutter="50">
                 <a-col :sm="1" :md="12">
-                    <a-form-item class="form-group" label="标题">
+                    <a-form-item  label="标题">
                         <a-input v-decorator="['title',{ rules: [{ required: true, message: '标题!' }] }]" type="integer"
                                  placeholder="标题">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="原价">
+                    <a-form-item  label="原价">
                         <a-input v-decorator="['origin_price',{ initialValue:0,rules: [{ required: true, message: '原价!' }] }]"
                                  type="string" placeholder="原价">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="现价">
+                    <a-form-item  label="现价">
                         <a-input v-decorator="['now_price',{ rules: [{ required: true, message: '现价!' }] }]"
                                  type="string" placeholder="现价">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="优惠">
+                    <a-form-item  label="优惠">
                         <a-input v-decorator="['cut_off',{ type:'integer',rules: [{ required: true, message: '优惠!' }] }]"
                                  type="number" placeholder="优惠">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="评价总分">
+                    <a-form-item  label="评价总分">
                         <a-input v-decorator="['total_star',{type:'integer', rules: [{ required: true, message: '评价总分!' }] }]"
                                  type="number" placeholder="评价总分">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="评价分">
+                    <a-form-item  label="评价分">
                         <a-input v-decorator="['now_star',{ type:'integer',rules: [{ required: true, message: '评价分!' }] }]"
                                  type="number" placeholder="评价分">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="用户评价数量">
+                    <a-form-item  label="用户评价数量">
                         <a-input v-decorator="['reviews',{ type:'integer',rules: [{ required: true, message: '用户评价数量!' }] }]"
                                  type="integer" placeholder="用户评价数量">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="商品链接">
+                    <a-form-item  label="商品链接">
                         <a-input v-decorator="['detail_link',{ rules: [{ required: true, message: '商品链接!' }] }]"
                                  type="string" placeholder="商品链接">
                         </a-input>
                     </a-form-item>
                 </a-col>
                 <a-col :sm="1" :md="12">
-                    <a-form-item class="form-group" label="推广链接">
+                    <a-form-item  label="推广链接">
                         <a-input v-decorator="['promote_link',{ rules: [{ required: true, message: '推广链接!' }] }]"
                                  type="string" placeholder="推广链接">
                         </a-input>
                     </a-form-item>
-                    <a-form-item class="form-group" label="选择分类">
+                    <a-form-item  label="选择分类">
                         <a-select  @select="changeCategory" :defaultValue="activeCategory">
                             <a-select-option v-for="cate in category" :key="cate.Id" :value="cate.Id">{{cate.Title}}</a-select-option>
                         </a-select>
                     </a-form-item>
-                    <a-form-item class="form-group" label="选择标签">
+                    <a-form-item  label="选择标签">
                         <a-tag  v-for="tag in tags" :key="tag.Id" :color="tagClass(tag.Id) ? 'red': 'blue'"  @click="toggleTag(tag.Id)" >{{tag.ShortName}}</a-tag>
                     </a-form-item>
-                    <a-form-item class="form-group" label="上传媒体文件">
+                    <a-form-item  label="上传媒体文件">
                         <div class="clearfix">
                             <a-upload :action="action" listType="picture-card" :fileList="fileList"
                                       @change="handleChange" @preview="handlePreview" :headers="headers">

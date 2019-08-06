@@ -3,6 +3,7 @@ import App from './App.vue'
 import {router} from "./router";
 import store from './store/'
 import VueStorage from 'vue-ls'
+import "./assets/css/style.css"
 
 Vue.config.productionTip = false;
 Vue.use(VueStorage);
