@@ -1,9 +1,7 @@
 package admin
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/logic/mediaLogic"
 	"socialbot/internal/web/model"
@@ -12,20 +10,18 @@ import (
 func AddCommissionProduct(c *gin.Context) {
 	var form model.CommissionProductForm
 	if err := c.ShouldBind(&form); err != nil {
-		fmt.Printf("%+v \n ,err %v", form, err)
-		c.JSON(http.StatusOK, common.ParamError)
+		common.ParamError.Errorf("%v", err).Out(c)
 		return
 	}
-	result := mediaLogic.AddCommissionProduct(&form)
-	c.JSON(http.StatusOK, result)
+	mediaLogic.AddCommissionProduct(&form).Out(c)
 }
 
 func AddSocialMediaFromCrawler(c *gin.Context) {
 	var form model.SocialProductForm
 	if err := c.ShouldBind(&form); err != nil {
-		c.JSON(http.StatusOK, common.ParamError)
+		common.ParamError.Errorf("%v", err).Out(c)
 		return
 	}
-	result := mediaLogic.AddSocialMediaFromCrawler(&form)
-	c.JSON(http.StatusOK, result)
+	mediaLogic.AddSocialMediaFromCrawler(&form).Out(c)
 }
+

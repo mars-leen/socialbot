@@ -31,11 +31,7 @@ func UploadSingle(c *gin.Context, fileKey string) common.Result {
 	}
 
 	// todo
-	storage,err := configService.GetStorage()
-	if err!= nil {
-		wblogger.Log.Error(err)
-		return common.UploadFailed
-	}
+	storage := configService.GetStorage()
 
 	// storage path
 	path := storage.UploadLocalPath

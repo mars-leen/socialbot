@@ -128,7 +128,7 @@
                 if (this.addServerLoading) {
                     return
                 }
-                this.addServerLoading = false;
+                this.addServerLoading = true;
                 if (this.serverForm.Id === 0) {
                     this.addServer()
                 }
@@ -150,11 +150,11 @@
             },
             addServer() {
                 addRobotServerApi(this.createFormData()).then(res => {
-                    this.addServerVisible = false;
                     this.addServerLoading = false;
                     if (!res) {
                         return
                     }
+                    this.addServerVisible = false;
                     this.listServer()
                 })
             },

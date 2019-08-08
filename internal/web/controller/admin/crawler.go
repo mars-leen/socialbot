@@ -12,11 +12,10 @@ import (
 func AddCrawler(c *gin.Context) {
 	var CrawlerForm model.CrawlerForm
 	if err := c.ShouldBind(&CrawlerForm); err != nil {
-		c.JSON(http.StatusOK, common.ParamError)
+		common.ParamError.Errorf("%v", err).Out(c)
 		return
 	}
-	result := crawlerLogic.Add(&CrawlerForm)
-	c.JSON(http.StatusOK, result)
+	crawlerLogic.Add(&CrawlerForm).Out(c)
 }
 
 func UpdateCrawler(c *gin.Context) {
@@ -25,23 +24,22 @@ func UpdateCrawler(c *gin.Context) {
 		c.JSON(http.StatusOK, common.ParamError)
 		return
 	}
-	result := crawlerLogic.Update(&CrawlerForm)
-	c.JSON(http.StatusOK, result)
+	crawlerLogic.Update(&CrawlerForm).Out(c)
 }
 
 
 func ListCrawler(c *gin.Context) {
-	c.JSON(http.StatusOK, crawlerLogic.List())
+	crawlerLogic.List().Out(c)
 }
 
 func ListRandCrawlerItem(c *gin.Context) {
 	idStr := c.DefaultPostForm("crwid", "0")
 	crwid,_ := strconv.Atoi(idStr)
-	c.JSON(http.StatusOK, crawlerLogic.ListRandItem(crwid))
+	crawlerLogic.ListRandItem(crwid).Out(c)
 }
 
 func DeleteCrawlerItem(c *gin.Context) {
 	idStr := c.DefaultPostForm("id", "0")
 	id,_ := strconv.Atoi(idStr)
-	c.JSON(http.StatusOK, crawlerLogic.DeleteItem(id))
+	crawlerLogic.DeleteItem(id).Out(c)
 }

@@ -7,6 +7,7 @@ import (
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/logic/CopywriterLogic"
 	"socialbot/internal/web/model"
+	"socialbot/pkg/utils"
 	"strconv"
 )
 
@@ -49,5 +50,15 @@ func ListCopywriter(c *gin.Context) {
 	c.JSON(http.StatusOK, CopywriterLogic.List())
 }
 
+
+func SearchCopywriter(c *gin.Context) {
+	key := c.DefaultPostForm("key", "0")
+	if utils.TrimSpace(key) == ""  {
+		c.JSON(http.StatusOK, common.SUCCESSARR(nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, CopywriterLogic.Search(key))
+}
 
 

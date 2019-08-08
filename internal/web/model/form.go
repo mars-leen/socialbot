@@ -26,11 +26,11 @@ type CommissionProductForm struct {
 type SocialProductForm struct {
 	Id        int    `form:"id" json:"id"`
 	Title     string `form:"title" json:"title" binding:"required"`
-	Cover     string `form:"cover" json:"cover" binding:"required"`
+	Cover     string `form:"cover" json:"cover"`
 	Medias    string `form:"medias" json:"medias" binding:"required"`
-	Tags      string `form:"tags" json:"tags"`
+	Tags      string `form:"tags" json:"tags" binding:"required"`
 	Cid       int    `form:"cid" json:"cid" binding:"required"`
-	NeedFetch bool   `form:"needFetch" json:"needFetch" binding:"required"`
+	NeedFetch bool   `form:"needFetch" json:"needFetch"`
 }
 
 type SubmitMediaForm struct {

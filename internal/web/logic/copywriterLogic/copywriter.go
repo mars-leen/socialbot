@@ -73,3 +73,13 @@ func List() common.Result {
 	}
 	return common.SUCCESSARR(list)
 }
+
+func Search(key string) common.Result {
+	list := model.CopywriterList{}
+	err := list.GetListByLike(key)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	return common.SUCCESSARR(list)
+}

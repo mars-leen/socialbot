@@ -34,3 +34,11 @@ export function listCopywriterApi (parameter) {
         params: parameter,
     })
 }
+
+export function searchCopywriterApi (parameter) {
+    return axios({
+        url: api.ListCopywriter,
+        method: 'get',
+        params: parameter,
+    })
+}

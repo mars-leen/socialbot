@@ -15,25 +15,36 @@
             <div class="title">
                 {{media.Title}}
             </div>
-            <div class="title">
-                <a-input :value="title()" placeholder="Basic usage"/>
-            </div>
-            <div class="desc">
-                <a-input :value="title()" placeholder="Basic usage"/>
-            </div>
             <div class="recommend">
-                <a-checkbox :checked="activeRecommend">是否推荐</a-checkbox>
+                <a-checkbox :value="activeRecommend" :default-checked="activeRecommend">是否推荐</a-checkbox>
             </div>
             <div class="cate">
                 <a-radio-group v-model="activeCate">
                     <a-radio v-for="c in categoryList" :key="c.Id" :value="c.Id">{{c.ShortName}}</a-radio>
                 </a-radio-group>
             </div>
+
             <div class="tag">
                 <span :class="tagClass(tag.Id)" v-for="tag in tagList()" :key="tag.Id" @click="toggleTag(tag)">
                     {{tag.ShortName}}
                 </span>
             </div>
+            <div class="title">
+                <a-select style="width: 100%"
+                          showSearch
+                          :value="search.value"
+                          placeholder="搜索"
+                          :defaultActiveFirstOption="false"
+                          :showArrow="false"
+                          :filterOption="false"
+                          @search="searchCopywriter"
+                          @change="searchCopywriterChange"
+                          notFoundContent="not found">
+                    <a-select-option v-for="d in search.data" :key="d.Id">{{d.Title}}</a-select-option>
+                </a-select>
+                <a-textarea v-model="activeTitle"  placeholder="Basic usage"/>
+            </div>
+
             <div class="submit">
                 <a-button :loading="delLoading" class="btn" type="danger" @click="delContent">删除</a-button>
                 <a-button :loading="pubLoading" class="btn" @click="pubContent">发布</a-button>
@@ -47,8 +58,9 @@
 <script>
     import Vue from 'vue'
     import VueMasonry from 'vue-masonry-css'
-    import {Button, Radio, Tag, Input, Checkbox} from 'ant-design-vue'
+    import {Button, Radio, Tag, Input, Checkbox, Select} from 'ant-design-vue'
     import {deleteCrawlerItemApi, addSocialMediaFromCrawlerApi} from "../../api/robotCrawler";
+    import {searchCopywriterApi} from "../../api/copywriter";
 
     Vue.use(VueMasonry);
 
@@ -75,6 +87,9 @@
         components: {
             [Button.name]: Button,
             [Input.name]: Input,
+            [Input.TextArea.name]: Input.TextArea,
+            [Select.name]: Select,
+            [Select.Option.name]: Select.Option,
             [Radio.name]: Radio,
             [Checkbox.name]: Checkbox,
             [Radio.Group.name]: Radio.Group,
@@ -88,7 +103,12 @@
 
                 isDelEd: false,
                 isPubEd: false,
+                search:{
+                    value:undefined,
+                    data:[],
+                },
 
+                activeTitle:"",
                 activeCate: 1,
                 activeRecommend: false,
                 activeTags: [],
@@ -117,13 +137,14 @@
                 this.delLoading = true;
                 // eslint-disable-next-line no-console
                 console.log(this.media.Id);
-                deleteCrawlerItemApi(this.media.Id).then((res) => {
+                const f = new FormData;
+                f.append("id", this.media.Id);
+                deleteCrawlerItemApi(f).then((res) => {
                     this.delLoading = false;
                     if (!res) {
                         return
                     }
                     this.isDelEd = true
-                    //this.$emit("delete", this.media.Id)
                 })
             },
             pubContent() {
@@ -131,9 +152,23 @@
                     return
                 }
                 this.pubLoading = true;
-                // eslint-disable-next-line no-console
+
                 console.log(this.media.Id);
-                addSocialMediaFromCrawlerApi(this.media.Id, this.activeTitle, this.activeDesc, "", this.activeUrl, this.activeTags, this.activeCate, 1, this.activeRecommend).then((res) => {
+
+
+                const medias = [];
+                for (let i in this.activeUrl) {
+                    medias[i] = {url:this.activeUrl[i]}
+                }
+
+                const f = new FormData;
+                f.append("title", this.activeTitle);
+                f.append("medias", JSON.stringify(medias));
+                f.append("tags", this.activeTags);
+                f.append("cid", this.activeCate);
+                f.append("needFetch", true);
+
+                addSocialMediaFromCrawlerApi(f).then((res) => {
                     this.pubLoading = false;
                     if (!res) {
                         return
@@ -164,22 +199,23 @@
                 let nowCate = this.categoryList[index];
                 return nowCate.Tags
             },
-            title(split) {
-                const index = this.categoryList.findIndex((cate) => {
-                    return cate.Id === this.activeCate;
-                });
-                let title = ""
-                const nowCate = this.categoryList[index];
-                const tags = nowCate.Tags;
-                for (let i in  tags) {
-                    for (let j in this.activeTags) {
-                        if (tags[i].Id === this.activeTags[j]){
-                            title = title + tags[i].Description + split
-                        }
+            searchCopywriter(value) {
+                searchCopywriterApi({key:value}).then(res=>{
+                    if (!res) {
+                        return
                     }
-                }
-                return title
+                    this.search.data = res.data
+                })
             },
+            searchCopywriterChange(value){
+               const index = this.search.data.findIndex((d)=>{
+                   return d.Id === value
+               });
+                this.search.value = this.search.data[index].Title;
+                this.activeTitle = this.search.data[index].Description;
+            }
+
+
         }
     }
 </script>

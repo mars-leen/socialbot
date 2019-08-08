@@ -199,10 +199,7 @@ func DecodeMedias(medias string) ([]*model.SubmitMediaForm, error) {
 }
 
 func DownLoadMedias(medias []*model.SubmitMediaForm) error {
-	storage, err := configService.GetStorage()
-	if err != nil {
-		return err
-	}
+	storage := configService.GetStorage()
 	f := &http.Client{
 		Timeout: 300 * time.Second,
 	}
@@ -229,7 +226,7 @@ func DownLoadMedias(medias []*model.SubmitMediaForm) error {
 }
 
 func DownloadFile(f *http.Client, requestUrl, storagePath, subPath string) (mediaType string, filename string, err error) {
-	err = os.Mkdir(filepath.Join(storagePath, subPath), os.ModePerm)
+	err = os.MkdirAll(filepath.Join(storagePath, subPath), os.ModePerm)
 	if err != nil {
 		return "", "", errors.Wrap(err, "mkdir all failed")
 	}
@@ -276,7 +273,7 @@ func DownloadFile(f *http.Client, requestUrl, storagePath, subPath string) (medi
 	}
 	fileType := utils.GetFileTypeByExt(ext)
 	filename = filepath.Join(subPath, utils.Md5(requestUrl)+ext)
-	fullPath := filepath.Join(storagePath, subPath)
+	fullPath := filepath.Join(storagePath, filename)
 
 	out, err := os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {

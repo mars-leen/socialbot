@@ -5,6 +5,7 @@ import (
 	"socialbot/internal/web/controller/admin"
 	"socialbot/internal/web/controller/front"
 	middlewares "socialbot/internal/web/middleware"
+	"socialbot/internal/web/service/configService"
 )
 
 func RegisterRouter(g *gin.Engine) *gin.Engine{
@@ -14,7 +15,8 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	g.Use(middlewares.ServeThemeView())
 
 	// storage path
-	//g.Static("/storage", setting.GetUploadStoragePath(""))
+	uploadPath := configService.GetStorageUploadPath()
+	g.Static("/storage", uploadPath)
 
 	// front
 	api := g.Group("/v1/api")
@@ -48,6 +50,7 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/copywriter/add", admin.AddCopywriter)
 	adminApi.POST("/copywriter/update", admin.UpdateCopywriter)
 	adminApi.GET("/copywriter/list", admin.ListCopywriter)
+	adminApi.GET("/copywriter/search", admin.SearchCopywriter)
 	adminApi.POST("/copywriter/delete", admin.DeleteCopywriter)
 
 	adminApi.POST("/tag/add", admin.AddTag)

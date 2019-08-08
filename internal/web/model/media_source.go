@@ -72,7 +72,7 @@ func (m *MediaSource) UpdateColsByUriList(uriList []int64, session *xorm.Session
 func (ml *MediaSourceList) GetListByUriList(uriList []int64) error {
 	err := orm.SocialBotOrm.In("uri", uriList).Where("is_del=?", 0).Find(ml)
 	if err != nil {
-		return errors.Wrap(err, "GetListByUriListMap failed")
+		return errors.Wrap(err, "GetListByUriList failed")
 	}
 	return nil
 }
