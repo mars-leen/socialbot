@@ -95,7 +95,7 @@
                 if (this.addCategoryLoading){
                     return
                 }
-                this.addCategoryLoading = false;
+                this.addCategoryLoading = true;
                 if (this.categoryForm.Id === 0) {
                     this.addCategory()
                 }else{

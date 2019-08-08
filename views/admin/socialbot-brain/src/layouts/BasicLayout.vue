@@ -21,7 +21,7 @@
             <a-layout-header style="background: #fff; padding: 0">
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
             </a-layout-header>
-            <a-layout-content :style="{ margin: '10px', background: '#fff', minHeight: '280px', minWidth:'350px',overflowX:'hidden'}">
+            <a-layout-content :style="{ margin: '10px', background: '#fff', minHeight: '280px', minWidth:'350px'}">
                 <router-view></router-view>
             </a-layout-content>
         </a-layout>
@@ -106,6 +106,11 @@
                             },
                             {
                                 key: 24,
+                                title: "文案配置",
+                                link:"/dashboard/config/copywriter"
+                            },
+                            {
+                                key: 25,
                                 title: "服务器配置",
                                 link:"/dashboard/config/server"
                             }
@@ -132,6 +137,11 @@
                                 key: 81,
                                 title: "服务器",
                                 link:"/dashboard/robot/server"
+                            },
+                            {
+                                key: 82,
+                                title: "爬虫内容",
+                                link:"/dashboard/robot/crawler-item"
                             }
                         ]
                     }

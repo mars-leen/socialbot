@@ -38,7 +38,6 @@ type SubmitMediaForm struct {
 	FileType int    `json:"fileType"`
 	FileName string `json:"fileName"`
 	Source   int    `json:"source"`
-	Tags     []int  `json:"tags"`
 }
 
 type CategoryForm struct {
@@ -47,6 +46,12 @@ type CategoryForm struct {
 	Title       string `form:"title" json:"title" binding:"required"`
 	Description string `form:"description" json:"description"  binding:"required"`
 	Sort        int    `form:"sort" json:"sort" `
+}
+
+type CopywriterForm struct {
+	Id          int    `form:"id" json:"id"`
+	Title       string `form:"title" json:"title" binding:"required"`
+	Description string `form:"description" json:"description"  binding:"required"`
 }
 
 type TagForm struct {

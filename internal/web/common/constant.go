@@ -17,12 +17,10 @@ const (
 
 
 	// crawler
-	ListPageNum = 10
-
-	CrawlerContentNew = 0 // 新入库
-	CrawlerContentPublished = 10 // 已发布
-
-	CrawlerImgsLimit = 4 // 发布图片数量最大长度限制
+	CrawlerListPageNum = 1
+	CrawlerItemNew = 0 // 新入库
+	CrawlerItemPublished = 10 // 已发布
+	CrawlerImgsLimit = 10 // 发布图片数量最大长度限制
 
 
 	// media

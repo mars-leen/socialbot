@@ -8,3 +8,4 @@ export function addCommissionProductApi (parameter) {
         data: parameter
     })
 }
+

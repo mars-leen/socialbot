@@ -1,7 +1,6 @@
 <template>
     <div class="Server">
         <content-item>
-            {{date}}
             <a-button slot="header" type="primary" @click="showHandleServer(false)" icon="plus">添加</a-button>
             <div slot="body">
                 <a-row :gutter="16">
@@ -105,6 +104,17 @@
                 }
             }
         },
+        mounted() {
+            let _this = this;
+            this.timer = setInterval(() => {
+                _this.listServer()
+            }, 3000)
+        },
+        beforeDestroy() {
+            if (this.timer) {
+                clearInterval(this.timer);
+            }
+        },
         methods: {
             showHandleServer(isUpdate, data) {
                 this.addServerVisible = true;
@@ -186,17 +196,6 @@
             changeConfig(value){
                 this.serverForm.Cid = value
             },
-        },
-        mounted() {
-            let _this = this;
-            this.timer = setInterval(() => {
-                _this.listServer()
-            }, 3000)
-        },
-        beforeDestroy() {
-            if (this.timer) {
-                clearInterval(this.timer);
-            }
         }
     }
 </script>

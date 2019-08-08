@@ -119,7 +119,7 @@
                 if (this.addTagLoading){
                     return
                 }
-                this.addTagLoading = false;
+                this.addTagLoading = true;
                 if (this.TagForm.Id === 0) {
                     this.addTag()
                 }else{

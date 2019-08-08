@@ -30,6 +30,11 @@ const routes = [
                 component: () => import('./views/config/Category.vue')
             },
             {
+                path: 'config/copywriter',
+                name: 'copywriterConfig',
+                component: () => import('./views/config/Copywriter.vue')
+            },
+            {
                 path: 'config/tag',
                 name: 'tagConfig',
                 component: () => import('./views/config/Tag.vue')
@@ -50,6 +55,11 @@ const routes = [
                 path: 'robot/server',
                 name: 'robotServer',
                 component: () => import('./views/robot/Server.vue')
+            },
+            {
+                path: 'robot/crawler-item',
+                name: 'crawlerItem',
+                component: () => import('./views/robot/CrawlerItem.vue')
             },
         ],
     },

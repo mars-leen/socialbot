@@ -176,7 +176,7 @@
                 if (this.addServerLoading) {
                     return
                 }
-                this.addServerLoading = false;
+                this.addServerLoading = true;
                 if (this.serverForm.Id === 0) {
                     this.addServer()
                 } else {

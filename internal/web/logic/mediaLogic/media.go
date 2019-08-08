@@ -175,12 +175,6 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 			wblogger.Log.Error(err)
 			return common.SystemError
 		}
-		err = tagService.InsertMediaSourceTag(value.Tags, media.Id, ms.Id, form.Cid, session)
-		if err != nil {
-			_ = session.Rollback()
-			wblogger.Log.Error(err)
-			return common.SystemError
-		}
 	}
 
 	// tag
@@ -191,6 +185,7 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 		return common.SystemError
 	}
 
+	_ = session.Commit()
 	return common.SUCCESS(nil)
 }
 

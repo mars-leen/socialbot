@@ -34,8 +34,14 @@ func ListCrawler(c *gin.Context) {
 	c.JSON(http.StatusOK, crawlerLogic.List())
 }
 
-func ListCrawlerItem(c *gin.Context) {
+func ListRandCrawlerItem(c *gin.Context) {
 	idStr := c.DefaultPostForm("crwid", "0")
 	crwid,_ := strconv.Atoi(idStr)
-	c.JSON(http.StatusOK, crawlerLogic.ListItem(crwid))
+	c.JSON(http.StatusOK, crawlerLogic.ListRandItem(crwid))
+}
+
+func DeleteCrawlerItem(c *gin.Context) {
+	idStr := c.DefaultPostForm("id", "0")
+	id,_ := strconv.Atoi(idStr)
+	c.JSON(http.StatusOK, crawlerLogic.DeleteItem(id))
 }

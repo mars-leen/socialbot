@@ -21,6 +21,15 @@ type CrawlerItem struct {
 
 type CrawlerItemList []CrawlerItem
 
+type ConCrawlerItem struct {
+	Id          int64
+	Crwid       int
+	Medias      []string
+	Cover       string
+	Description string
+	Title       string
+}
+
 func (c *CrawlerItem) Insert() (rs int64, err error) {
 	c.CreateAt = time.Now().UnixNano()
 	rs, err = orm.SocialBotOrm.Insert(c)
@@ -56,7 +65,7 @@ func (c *CrawlerItem) GetColsOneById(id int, cols ...string) (rs bool, err error
 	return rs, nil
 }
 
-func (cl *CrawlerItemList) GetListByCrwid(crwid int) (err error) {
+/*func (cl *CrawlerItemList) GetListByCrwid(crwid int, lastId int64, limit int) (err error) {
 	err = orm.SocialBotOrm.Where("crwid=? ", crwid).Where("is_del=?", 0).Find(cl)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("GetListByCrwid(%d) failed", crwid))
@@ -64,10 +73,49 @@ func (cl *CrawlerItemList) GetListByCrwid(crwid int) (err error) {
 	return nil
 }
 
-func (cl *CrawlerItemList) GetList() (err error) {
-	err = orm.SocialBotOrm.Where("is_del=?", 0).Find(cl)
+func (cl *CrawlerItemList) GetList(lastId int64,limit int) (err error) {
+	err = orm.SocialBotOrm.Where("is_del=?", 0).Limit(limit).Find(cl)
 	if err != nil {
 		return errors.Wrap(err, "get list failed")
+	}
+	return nil
+}*/
+
+func (c *CrawlerItem)CountAll(crwid, status int) (int64, error) {
+	where := "item_status = ? AND is_del = 0 "
+	param := []interface{}{status}
+	if crwid == 0 {
+		where = "item_status = ? AND crwid= ? AND is_del = 0 "
+		param = []interface{}{status, crwid}
+	}
+	count, err := orm.SocialBotOrm.Cols("id").Where(where,param...).Count(c)
+	if err != nil {
+		return 0, errors.Wrap(err, "get list failed")
+	}
+	return count, nil
+}
+
+func (cl *CrawlerItemList) GetListByMidList(idList []int64, status int) error {
+	err := orm.SocialBotOrm.Omit("create_at","status", "is_del" ).Where("status = ? AND is_del = 0", status).In("id", idList).Find(cl)
+	if err != nil {
+		return errors.Wrap(err, "get list failed")
+	}
+	return nil
+}
+
+
+func (cl *CrawlerItemList) GetRandList(crwid, status, limit int, ) error {
+	where := "item_status = ? AND is_del = 0 "
+	param := []interface{}{status}
+	if crwid != 0 {
+		where = "item_status = ? AND crwid= ? AND is_del = 0 "
+		param = []interface{}{status, crwid}
+	}
+
+	err := orm.SocialBotOrm.Where(where,param...).OrderBy("RAND()").Limit(limit).Find(cl)
+
+	if err != nil {
+		return errors.Wrap(err, "get GeRandList failed")
 	}
 	return nil
 }

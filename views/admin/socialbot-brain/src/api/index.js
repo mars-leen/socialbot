@@ -16,6 +16,11 @@ const api = {
     DeleteCategory: '/v1/adminApi/category/delete',
     ListCategoryWithTags: '/v1/adminApi/category/listWithTags',
 
+    AddCopywriter: '/v1/adminApi/copywriter/add',
+    UpdateCopywriter: '/v1/adminApi/copywriter/update',
+    ListCopywriter: '/v1/adminApi/copywriter/list',
+    DeleteCopywriter: '/v1/adminApi/copywriter/delete',
+
     AddTag: '/v1/adminApi/tag/add',
     UpdateTag: '/v1/adminApi/tag/update',
     ListTag: '/v1/adminApi/tag/list',
@@ -29,7 +34,9 @@ const api = {
     AddCrawler: '/v1/adminApi/crawler/add',
     UpdateCrawler: '/v1/adminApi/crawler/update',
     ListCrawler: '/v1/adminApi/crawler/list',
-    ListCrawlerItem: '/v1/adminApi/crawler/listItem',
+    ListCrawlerItem: '/v1/adminApi/crawler/listRandItem',
+    DeleteCrawlerItem: '/v1/adminApi/crawler/deleteItem',
+
 
     AddCommissionProduct: '/v1/adminApi/media/addCommissionProduct',
     AddSocialMediaFromCrawler: '/v1/adminApi/media/addSocialMediaFromCrawler',

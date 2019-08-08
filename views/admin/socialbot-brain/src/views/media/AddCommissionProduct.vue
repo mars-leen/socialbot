@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <a-form class="add-product" :form="form" @submit="handleSubmit" >
             <a-row :gutter="50">
                 <a-col :sm="1" :md="12">

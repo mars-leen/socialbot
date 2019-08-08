@@ -45,6 +45,11 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/category/delete", admin.DeleteCategory)
 	adminApi.GET("/category/listWithTags", admin.ListCategoryWithTags)
 
+	adminApi.POST("/copywriter/add", admin.AddCopywriter)
+	adminApi.POST("/copywriter/update", admin.UpdateCopywriter)
+	adminApi.GET("/copywriter/list", admin.ListCopywriter)
+	adminApi.POST("/copywriter/delete", admin.DeleteCopywriter)
+
 	adminApi.POST("/tag/add", admin.AddTag)
 	adminApi.POST("/tag/update", admin.UpdateTag)
 	adminApi.GET("/tag/list", admin.ListTag)
@@ -53,7 +58,8 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/crawler/add", admin.AddCrawler)
 	adminApi.POST("/crawler/update", admin.UpdateCrawler)
 	adminApi.GET("/crawler/list", admin.ListCrawler)
-	adminApi.GET("/crawler/listItem", admin.ListCrawlerItem)
+	adminApi.GET("/crawler/listRandItem", admin.ListRandCrawlerItem)
+	adminApi.POST("/crawler/deleteItem", admin.DeleteCrawlerItem)
 
 	adminApi.POST("/media/addCommissionProduct", admin.AddCommissionProduct)
 	adminApi.POST("/media/addSocialMediaFromCrawler", admin.AddSocialMediaFromCrawler)
