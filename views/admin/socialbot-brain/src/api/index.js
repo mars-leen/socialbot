@@ -1,3 +1,4 @@
+import {listGalleryApi} from "./gallery";
 
 const api = {
     Host: 'http://localhost:8080',
@@ -40,6 +41,9 @@ const api = {
 
     AddCommissionProduct: '/v1/adminApi/media/addCommissionProduct',
     AddSocialMediaFromCrawler: '/v1/adminApi/media/addSocialMediaFromCrawler',
+
+    AddGalleryTagApi: '/v1/adminApi/gallery/addGalleryTag',
+    ListGalleryApi: '/v1/adminApi/gallery/listGallery',
 
 };
 export default api

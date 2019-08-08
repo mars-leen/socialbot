@@ -125,7 +125,13 @@
                                 key: 41,
                                 title: "添加推广商品",
                                 link:"/dashboard/add-commission-product"
-                            }
+                            },
+                            {
+                                key: 42,
+                                title: "媒体床",
+                                link:"/dashboard/media/gallery"
+                            },
+
                         ]
                     },
                     {

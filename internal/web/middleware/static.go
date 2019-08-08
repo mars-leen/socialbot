@@ -15,6 +15,10 @@ func ServeThemeView() gin.HandlerFunc {
 		if strings.Contains(c.Request.URL.Path, "v1") {
 			return
 		}
+		if strings.Contains(c.Request.URL.Path, "storage") {
+			return
+		}
+
 		// admin theme
 		if strings.Contains(c.Request.URL.Path, "dashboard") {
 			dashboardPath := filepath.Join(setting.AppPath, "views/admin/socailbot-brain/dist")

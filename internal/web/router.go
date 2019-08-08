@@ -67,6 +67,8 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/media/addCommissionProduct", admin.AddCommissionProduct)
 	adminApi.POST("/media/addSocialMediaFromCrawler", admin.AddSocialMediaFromCrawler)
 
+	adminApi.GET("/gallery/listGallery", admin.ListGallery)
+	adminApi.POST("/gallery/addGalleryTag", admin.AddGalleryTag)
 
 
 	// web view

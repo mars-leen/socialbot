@@ -3,6 +3,7 @@ package mediaService
 import (
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
+	"socialbot/internal/web/service/tagService"
 )
 
 func InsertTmpMediaSource(source int,  mediaType, url string) (int64, error) {
@@ -40,6 +41,27 @@ func GetMapUriMediaSource(uriList []int64) (map[int64]model.MediaSource, error){
 		result[v.Uri] = v
 	}
 	return result, nil
+}
+
+func GetMapWithMediaSourceTag(list model.MediaSourceTagList) (map[int64][]*model.ConTag, error) {
+	allTag, err := tagService.GetTagsMapWithId()
+	if err != nil {
+		return nil, err
+	}
+	m := make(map[int64][]*model.ConTag)
+	for _,ms := range list{
+
+		tag,ok := allTag[ms.Tid]
+		if !ok {
+			tag = model.ConTag{}
+		}
+		if _, ok := m[ms.Msid];ok{
+			m[ms.Msid] =append(m[ms.Msid], &tag)
+		}else{
+			m[ms.Msid] =[]*model.ConTag{&tag}
+		}
+	}
+	return m, nil
 }
 
 

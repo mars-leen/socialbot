@@ -91,6 +91,7 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	// update media source
 	mediaSource := model.MediaSource{
 		Mid: media.Id,
+		Cid:form.Cid,
 	}
 	_, err = mediaSource.UpdateColsByUriList(mediaArrList, session, "mid")
 	if err != nil {
@@ -166,6 +167,7 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 	for _, value := range mediaArr {
 		ms := model.MediaSource{
 			Mid:        media.Id,
+			Cid:        form.Cid,
 			SourceType: value.FileType,
 			SourceFrom: value.Source,
 			Url:        value.FileName,

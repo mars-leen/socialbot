@@ -96,16 +96,18 @@ func InsertMediaTag(tagStr string, mediaId, publishTime int64, mediaStatus, cid 
 	return nil
 }
 
-func InsertMediaSourceTag(tagList []int, mediaId, MediaSourceId int64, cid int, session *xorm.Session) error {
+func InsertMediaSourceTag(tagList []string, mediaId, MediaSourceId int64, cid int, session *xorm.Session) error {
 	tags, err := GetTagsMapWithId()
 	if err != nil {
 		return err
 	}
-	m := model.MediaSourceTag{}
-	for _, t := range tagList {
+	for _, tt := range tagList {
+
+		 t,_:= strconv.Atoi(tt)
 		if _, ok := tags[t]; !ok {
 			continue
 		}
+		m := model.MediaSourceTag{}
 		m.Tid = t
 		m.Mid = mediaId
 		m.Msid = MediaSourceId

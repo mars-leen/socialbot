@@ -50,6 +50,11 @@ const routes = [
                 name: 'addCommissionProduct',
                 component: () => import('./views/media/AddCommissionProduct.vue')
             },
+            {
+                path: 'media/gallery',
+                name: 'gallery',
+                component: () => import('./views/media/Gallery.vue')
+            },
 
             {
                 path: 'robot/server',

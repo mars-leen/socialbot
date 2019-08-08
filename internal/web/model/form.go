@@ -63,6 +63,7 @@ type TagForm struct {
 	BoardName   string `form:"boardName" json:"boardName" binding:"required"`
 }
 
+
 type CrawlerForm struct {
 	Id       int    `form:"id" json:"id" binding:"required"`
 	Name     string `form:"name" json:"name" binding:"required"`
