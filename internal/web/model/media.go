@@ -24,12 +24,28 @@ type Media struct {
 	PublishAt   int64
 	Title       string
 	Cover       string
+	Recommend   int
 	Uid         int64
 	UpdateAt    int64
 	Uri         int64
 	ViewNum     int
 }
 
+type ConMedia struct {
+	Uri         string
+	Title       string
+	Cover       string
+	MediaMum    int
+	LikeNum     int
+	ViewNum     int
+	CommentNum  int
+	MediaType   int
+	PublishAt   int64
+	LastId      string
+	Tags        []ConTag
+	IsLike       bool
+	Medias      []ConMediaSource
+}
 
 type MediaList []*Media
 
@@ -61,7 +77,6 @@ func (m *Media) UpdateByCols(id int64, cols ...string) (rs int64, err error) {
 	}
 	return rs, nil
 }
-
 
 func (m *Media) IncrById(id int64, col string, session *xorm.Session) (rs int64, err error) {
 	m.UpdateAt = time.Now().UnixNano()
@@ -199,3 +214,19 @@ func (ml *MediaList) GetListSortViews(page, limitNum int) (err error) {
 	}
 	return  err
 }
+
+
+func (ml *MediaList) GetRecommendList(lastId int64, limit int) (err error) {
+	where := "recommend=? AND　is_del=?"
+	param := []interface{}{1,0}
+	if lastId != 0 {
+		where = "recommend=? AND　is_del=? AND id < ?"
+		param = []interface{}{1,0, lastId}
+	}
+	err =  orm.SocialBotOrm.Where(where, param).OrderBy("update_at DESC").Find(ml)
+	if err != nil {
+		return errors.Wrap(err, "GetRecommendList failed ")
+	}
+	return  err
+}
+

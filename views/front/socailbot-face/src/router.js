@@ -3,12 +3,6 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 Vue.use(Router);
 
-
-// media
-const Test = () => import('./views/Test.vue');
-
-//user
-
 const routes = [
   {
     path: '/',
@@ -20,9 +14,9 @@ const routes = [
     }
   },
   {
-    path: '/test',
-    name: 'test',
-    component: Test,
+    path: '/media/category',
+    name: 'mediaCategory',
+    component: () => import('./views/media/Category.vue'),
     meta: {
       title: 'Century.Wedding',
       keepAlive: true,

@@ -6,6 +6,7 @@ import (
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/logic/userLogic"
 	"socialbot/internal/web/model"
+	"socialbot/pkg/utils"
 )
 
 func Login(c *gin.Context) {
@@ -29,3 +30,12 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
+func EditProfile(c *gin.Context)  {
+	nickname := utils.TrimSpace(c.DefaultPostForm("nickname", ""))
+	intro := utils.TrimSpace(c.DefaultPostForm("intro", ""))
+	if nickname == "" {
+		c.JSON(http.StatusOK, common.NicknameEmpty)
+		return
+	}
+	userLogic.EditProfile(c, nickname, intro).Out(c)
+}

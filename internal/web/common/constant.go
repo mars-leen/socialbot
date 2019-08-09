@@ -3,8 +3,8 @@ package common
 const (
 	DefaultPage = 15
 	GalleryPage = 30
-	SortDesc    = 1
-
+	SortNew    = 1
+	sortHot   = 2
 	// account type
 	AccountTypeEmail = "email"
 	// jwt
@@ -12,8 +12,9 @@ const (
 	SuperAdmin     = 3
 
 	// storage
-	DefaultStorageSource = 0
 	StorageMediaDir      = "media"
+	StorageAvatarDir      = "avatar"
+	DefaultStorageSource = 0
 	SourceTypeImage      = 0
 	SourceTypeVideo      = 1
 

@@ -167,6 +167,8 @@
                 f.append("tags", this.activeTags);
                 f.append("cid", this.activeCate);
                 f.append("needFetch", true);
+                f.append("recommend", this.activeRecommend);
+
 
                 addSocialMediaFromCrawlerApi(f).then((res) => {
                     this.pubLoading = false;

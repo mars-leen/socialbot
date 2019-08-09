@@ -24,10 +24,7 @@ type MediaSource struct {
 }
 
 type ConMediaSource struct {
-	Id         int64
-	Uri        int64
-	Mid        int64
-	SourceFrom int
+	Url        string
 	SourceType int
 }
 
@@ -131,7 +128,6 @@ func (ml *MediaSourceList) GetListASC(lastId int64, sort, sourceType, limit int)
 	return nil
 }
 
-
 func (m *MediaSource) UpdateByCols(session *xorm.Session, id int64, cols ...string) (rs int64, err error) {
 	m.UpdateAt = time.Now().UnixNano()
 
@@ -147,4 +143,13 @@ func (m *MediaSource) UpdateByCols(session *xorm.Session, id int64, cols ...stri
 		return rs, errors.Wrap(err, "UpdateByCols failed")
 	}
 	return rs, nil
+}
+
+
+func (ml *MediaSourceList) GetListByMid(mid int64) error {
+	err := orm.SocialBotOrm.Where("mid=? and is_del=?", mid, 0).Find(ml)
+	if err != nil {
+		return errors.Wrap(err, "GetListASC failed")
+	}
+	return nil
 }

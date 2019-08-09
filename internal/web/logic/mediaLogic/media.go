@@ -2,6 +2,7 @@ package mediaLogic
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/pkg/errors"
 	"io"
@@ -14,12 +15,241 @@ import (
 	"socialbot/internal/web/service/configService"
 	"socialbot/internal/web/service/mediaService"
 	"socialbot/internal/web/service/tagService"
+	"socialbot/internal/web/service/userService"
 	"socialbot/internal/web/setting"
 	"socialbot/internal/web/wblogger"
 	"socialbot/pkg/utils"
+	"strconv"
 	"strings"
 	"time"
 )
+
+//detail
+func Detail(c *gin.Context,  uri int64) common.Result {
+	media := model.Media{}
+	isExist, err := media.GetOneByUri(uri)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	if !isExist {
+		return common.DataIsNotExist
+	}
+
+	// add view num
+	go func() {
+		_, err := media.IncrById(media.Id, "view_num", nil)
+		if err != nil {
+			wblogger.Log.Error(err)
+		}
+	}()
+
+	uid, err := userService.GetTokenUserId(c)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	// get media source
+	medias, err := mediaService.GetMediaSourceList(media.Id)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	// get media tags
+	mediaTagList := &model.MediaTagList{}
+	err = mediaTagList.GetMediaTagListByMidList([]int64{media.Id})
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	mediaTagListMap,err := GetMediaTagMidMap(mediaTagList)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	tagsValue, ok := mediaTagListMap[media.Id]
+	if !ok {
+		tagsValue = []model.ConTag{}
+	}
+
+	// isLike
+	isLike, err := GetIsLike(media.Id, uid)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	// add view num
+	return common.SUCCESS(model.ConMedia{
+		Uri:         strconv.FormatInt(media.Uri, 10),
+		Title:       media.Title,
+		Medias:      medias,
+		LikeNum:     media.LikeNum,
+		ViewNum:     media.ViewNum,
+		CommentNum:  media.CommentNum,
+		MediaType:   media.MediaType,
+		PublishAt:   media.PublishAt,
+		Tags:        tagsValue,
+		IsLike:      isLike,
+	})
+}
+
+
+// list
+func ListByRecommend(lastId int64, limit int) common.Result {
+	m := model.MediaList{}
+	err := m.GetRecommendList(lastId, limit)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	l := len(m)
+	if l == 0 {
+		return common.SUCCESSARR(nil)
+	}
+
+	conMediaList := make([]model.ConMedia, l)
+	for i, value := range m {
+		conMediaList[i] = model.ConMedia{
+			Uri:        strconv.FormatInt(value.Uri, 10),
+			Title:      value.Title,
+			Cover:      configService.GetUploadFullUrl(value.Cover),
+			MediaMum:   value.MediaNum,
+			LikeNum:    value.LikeNum,
+			ViewNum:    value.ViewNum,
+			CommentNum: value.CommentNum,
+			MediaType:  value.MediaType,
+			PublishAt:  value.PublishAt,
+			LastId:     strconv.FormatInt(value.Uri, 10),
+		}
+	}
+	return common.SUCCESSARR(conMediaList)
+}
+
+func GetMediaTagMidMap(mtl *model.MediaTagList) (map[int64][]model.ConTag, error) {
+	l := len(*mtl)
+	mediaTagList := make(map[int64][]model.ConTag, l)
+
+	if l == 0 {
+		return mediaTagList, nil
+	}
+	tagsAll, err := tagService.GetTagsMapWithId()
+	if err != nil {
+		return mediaTagList, err
+	}
+
+	for _, value := range *mtl {
+		if  tagValue, ok := tagsAll[value.Tid]; ok {
+			mediaTagList[value.Mid] = append(mediaTagList[value.Mid], model.ConTag{
+				Id:   tagValue.Id,
+				Title: tagValue.Title,
+				ShortName:tagValue.ShortName,
+			})
+		}
+	}
+	return mediaTagList, nil
+}
+
+func GetIsLike(mid, uid int64) (bool, error) {
+	if uid == 0 {
+		return false, nil
+	}
+	userLikeMedia := model.UserLikeMedia{}
+	has, err := userLikeMedia.ExistOneByMidUid(mid, uid)
+	if err != nil {
+		return false, err
+	}
+	return has, nil
+}
+
+func ListByCategory(lastId int64, category, sort int) common.Result {
+	ml :=model.MediaList{}
+	var err error
+	if sort == common.SortNew {
+		err = ml.GetListNewestByCid(lastId, category)
+	} else {
+		err = ml.GetHotByCid(int(lastId), category)
+	}
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	l := len(ml)
+	if l == 0 {
+		return common.SUCCESS(nil)
+	}
+
+	conMediaList := make([]model.ConMedia, l)
+	for i, value := range ml {
+		lastSetId := strconv.FormatInt(lastId+1, 10)
+		if sort == common.SortNew {
+			lastSetId = strconv.FormatInt(value.PublishAt, 10)
+		}
+
+		conMediaList[i] = model.ConMedia{
+			Uri:        strconv.FormatInt(value.Uri, 10),
+			Title:      value.Title,
+			Cover:      configService.GetUploadFullUrl(value.Cover),
+			MediaMum:   value.MediaNum,
+			LikeNum:    value.LikeNum,
+			ViewNum:    value.ViewNum,
+			CommentNum: value.CommentNum,
+			MediaType:  value.MediaType,
+			PublishAt:  value.PublishAt,
+			LastId:     lastSetId,
+		}
+	}
+	return common.SUCCESSARR(conMediaList)
+}
+
+func Like(c *gin.Context, uri int64, delStatus int) common.Result {
+	mid, err := mediaService.GetMediaIdByUri(uri)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	if mid == 0 {
+		return common.DataIsNotExist
+	}
+
+	user, err := userService.MustGetTokenUser(c)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	likeModel := model.UserLikeMedia{}
+	exist, err := likeModel.GetOneByMidUid(mid, user.Id)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	// update status
+	if exist {
+		if likeModel.IsDel == delStatus {
+			return common.RepeatOperation
+		}
+		err = UpdateLike(likeModel, delStatus)
+
+		if err != nil {
+			wblogger.Log.Error(err)
+			return common.SystemError
+		}
+		return common.SUCCESS(nil)
+	}
+
+	// inset one
+	err = InsertLike(mid, user.Id)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	return common.SUCCESS(nil)
+}
 
 func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	// media
@@ -59,6 +289,7 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	media := model.Media{
 		Title:       form.Title,
 		Cover:       cover,
+		MediaNum:    l,
 		MediaStatus: common.MediaStatusPublished,
 		MediaType:   common.MediaTypePromotionProduct,
 	}
@@ -71,17 +302,17 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 
 	// commission product
 	product := model.CommissionProduct{
-		Mid:media.Id,
-		CutOff:form.CutOff,
-		NowPrice:form.NowPrice,
-		OriginPrice:form.OriginPrice,
-		TotalStar:form.TotalStar,
-		NowStar:form.NowStar,
-		Reviews:form.Reviews,
-		DetailLink:form.DetailLink,
-		PromoteLink:form.PromoteLink,
+		Mid:         media.Id,
+		CutOff:      form.CutOff,
+		NowPrice:    form.NowPrice,
+		OriginPrice: form.OriginPrice,
+		TotalStar:   form.TotalStar,
+		NowStar:     form.NowStar,
+		Reviews:     form.Reviews,
+		DetailLink:  form.DetailLink,
+		PromoteLink: form.PromoteLink,
 	}
-	_,err = product.Insert(session)
+	_, err = product.Insert(session)
 	if err != nil {
 		_ = session.Rollback()
 		wblogger.Log.Error(err)
@@ -91,7 +322,7 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	// update media source
 	mediaSource := model.MediaSource{
 		Mid: media.Id,
-		Cid:form.Cid,
+		Cid: form.Cid,
 	}
 	_, err = mediaSource.UpdateColsByUriList(mediaArrList, session, "mid")
 	if err != nil {
@@ -153,8 +384,12 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 	media := model.Media{
 		Title:       form.Title,
 		Cover:       cover,
+		MediaNum:  len(mediaArr),
 		MediaStatus: common.MediaStatusPublished,
 		MediaType:   common.MediaTypePromotionProduct,
+	}
+	if form.Recommend {
+		media.Recommend = 1
 	}
 	_, err = media.Insert(session)
 	if err != nil {
@@ -289,4 +524,64 @@ func DownloadFile(f *http.Client, requestUrl, storagePath, subPath string) (medi
 		return fileType, filename, errors.Wrap(err, "io.copy error")
 	}
 	return fileType, filename, nil
+}
+
+func InsertLike(mid, uid int64) error {
+	session := orm.SocialBotOrm.NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+
+	// add media num
+	media := model.Media{}
+	_, err = media.IncrById(mid, "like_num", session)
+	if err != nil {
+		_ = session.Rollback()
+		return err
+	}
+
+	// insert media user relation
+	likeModel := model.UserLikeMedia{}
+	likeModel.Mid = mid
+	likeModel.Uid = uid
+	_, err = likeModel.Insert(session)
+	if err != nil {
+		_ = session.Rollback()
+		return err
+	}
+
+	_ = session.Commit()
+	return nil
+}
+
+func UpdateLike(likeModel model.UserLikeMedia, delStatus int) error {
+	session := orm.SocialBotOrm.NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+
+	likeModel.IsDel = delStatus
+	_, err = likeModel.UpDelById(likeModel.Id, session)
+	if err != nil {
+		_ = session.Rollback()
+		return err
+	}
+
+	media := model.Media{}
+	if delStatus == 1 {
+		_, err = media.DecrById(likeModel.Mid, "like_num", session)
+	} else {
+		_, err = media.IncrById(likeModel.Mid, "like_num", session)
+	}
+
+	if err != nil {
+		_ = session.Rollback()
+		return err
+	}
+	_ = session.Commit()
+	return nil
 }

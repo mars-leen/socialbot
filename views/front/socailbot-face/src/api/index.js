@@ -1,26 +1,17 @@
 const api = {
-    Login: '/v1/adminApi/login',
-    Logout: '/v1/adminApi/logout',
+    Host: 'http://localhost:8080',
+    Login: '/v1/api/login',
+    Register: '/v1/api/register',
+    EditProfile: '/v1/api/user/editProfile',
 
-    AddCategory: '/v1/adminApi/category/add',
-    UpdateCategory: '/v1/adminApi/category/update',
-    ListCategory: '/v1/adminApi/category/list',
-    DeleteCategory: '/v1/adminApi/category/delete',
-    ListCategoryWithTags: '/v1/adminApi/category/listWithTags',
 
-    AddTag: '/v1/adminApi/tag/add',
-    UpdateTag: '/v1/adminApi/tag/update',
-    ListTag: '/v1/adminApi/tag/list',
-    DeleteTag: '/v1/adminApi/tag/delete',
+    ListCategory: '/v1/api/category/list',
 
-    AddCrawler: '/v1/adminApi/crawler/add',
-    UpdateCrawler: '/v1/adminApi/crawler/update',
-    ListCrawler: '/v1/adminApi/crawler/list',
-    ListCrawlerItem: '/v1/adminApi/crawler/listItem',
-
-    AddCommissionProduct: '/v1/adminApi/media/addCommissionProduct',
-    AddSocialMediaFromCrawler: '/v1/adminApi/media/addSocialMediaFromCrawler',
-
+    HomeRecommend: '/v1/api/media/homeRecommend',
+    ListMediaByCategory: '/v1/api/media/listByCategory',
+    MediaDetail: '/v1/api/media/detail',
+    LikeMedia: '/v1/api/media/like',
 };
+
 export default api
 

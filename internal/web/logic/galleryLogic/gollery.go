@@ -16,7 +16,7 @@ import (
 func List(lastId int64, sort , sourceType int) common.Result {
 	var err error
 	m := model.MediaSourceList{}
-	if sort == common.SortDesc {
+	if sort == common.SortNew {
 		err = m.GetListDESC(lastId, sort, sourceType, common.GalleryPage)
 	}else{
 		err = m.GetListASC(lastId, sort, sourceType, common.GalleryPage)

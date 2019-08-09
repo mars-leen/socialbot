@@ -1,4 +1,3 @@
-import {listGalleryApi} from "./gallery";
 
 const api = {
     Host: 'http://localhost:8080',

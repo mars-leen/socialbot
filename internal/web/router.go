@@ -22,6 +22,18 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	api := g.Group("/v1/api")
 	api.POST("/user/login", front.Login)
 	api.POST("/user/register", front.Register)
+	api.GET("/category/list", front.ListCategory)
+	api.GET("/category/listWithTags", front.ListCategoryWithTags)
+
+
+	api.Use(middlewares.UserInfo())
+	api.GET("/media/homeRecommend", front.HomeRecommendMedias)
+	api.GET("/media/listByCategory", front.ListCategory)
+	api.GET("/media/detail",front.MediaDetail)
+
+	apiAut := api.Use(middlewares.Auth())
+	apiAut.POST("/media/like", front.LikeMedia)
+	apiAut.POST("/user/editProfile", front.EditProfile)
 
 
 	// admin
@@ -69,45 +81,6 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 
 	adminApi.GET("/gallery/listGallery", admin.ListGallery)
 	adminApi.POST("/gallery/addGalleryTag", admin.AddGalleryTag)
-
-
-	// web view
-
-
-	/*api.GET("/tag/getLevel", tag.GetLevelTag)
-	api.GET("/tag/getAll", tag.GetAllTag)
-	api.GET("/tag/getWitCateMap", tag.GetWithCateMap)
-	api.GET("/category/getAll", category.GetAllCategory)
-
-
-	api.Use(middlewares.UserInfo())
-	api.GET("/media/getTop", media.GetTop)
-	api.GET("/media/getListByCategory", media.GetListByCategory)
-	api.GET("/media/getListByTags", media.GetListByTags)
-	api.GET("/media/getDetail", media.GetDetail)
-
-	apiAut := api.Use(middlewares.Auth())
-	apiAut.POST("/media/like", media.Like)
-	apiAut.POST("/user/editProfile", user.EditProfile)
-
-
-	adminApi := g.Group("/v1/adminApi")
-	adminApi.POST("/login", admin.Login)
-	adminApi.Use(middlewares.AuthAdmin())
-	adminApi.GET("/content/getRandList", content.GetContentList)
-	adminApi.POST("/content/delete", content.Delete)
-	adminApi.POST("/content/publish", content.Publish)
-
-
-	g.Static(setting.Cfg.Server.FrontRelativePath, filepath.Join(setting.AppPath, setting.Cfg.Server.FrontRootPath))
-	g.GET("/", func(c *gin.Context) {
-		http.ServeFile(c.Writer, c.Request,  filepath.Join(setting.AppPath, setting.Cfg.Server.FrontRootPath, "index.html"))
-		c.Abort()
-	})
-	g.NoRoute(func(c *gin.Context){
-		http.ServeFile(c.Writer, c.Request,  filepath.Join(setting.AppPath, setting.Cfg.Server.FrontRootPath, "index.html"))
-	})*/
-
 
 	return g
 }

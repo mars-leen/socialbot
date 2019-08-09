@@ -2,9 +2,14 @@ package userLogic
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"path/filepath"
 	"socialbot/internal/web/common"
+	"socialbot/internal/web/logic/uploadLogic"
 	"socialbot/internal/web/model"
 	"socialbot/internal/web/service/configService"
+	"socialbot/internal/web/service/storageService"
+	"socialbot/internal/web/service/userService"
 	"socialbot/internal/web/wblogger"
 	"socialbot/pkg/jwtauth"
 	"socialbot/pkg/utils"
@@ -104,6 +109,56 @@ func Login(accountForm model.AccountForm) common.Result {
 	}
 	return common.SUCCESS(result)
 }
+
+func EditProfile(c *gin.Context,nickname, intro string) common.Result {
+	user, err := userService.MustGetTokenUser(c)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	editCols := make([]string, 0, 3)
+	editCols = append(editCols, "nickname")
+	if intro!= "" && intro != user.Intro {
+		user.Intro = intro
+		editCols = append(editCols, "intro")
+	}
+	if nickname != user.Nickname{
+		user.Nickname = nickname
+		editCols = append(editCols, "nickname")
+	}
+
+
+	filename, err := uploadLogic.UploadAvatar(c)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	if filename != "" {
+		editCols = append(editCols, "avatar")
+		storageService.SyncRemoveSigFile("local", filepath.Join(configService.GetStorageUploadPath(), user.Avatar))
+		user.Avatar = filename
+	}
+
+	if len(editCols) == 0{
+		return common.SUCCESS(nil)
+	}
+
+	_, err = user.UpdateColsById(user.Id, editCols...)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+
+	result := map[string]interface{}{
+		"nickname": user.Nickname,
+		"intro":    user.Intro,
+		"avatar":   configService.GetUploadFullUrl(user.Avatar),
+	}
+	return common.SUCCESS(result)
+}
+
 
 func getDefaultNickName(email string) string {
 	ns := strings.Split(email, "@")
