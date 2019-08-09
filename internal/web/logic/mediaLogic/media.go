@@ -81,6 +81,24 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 		return common.SystemError
 	}
 
+	// commission product
+	comProduct := model.ConComProduct{}
+	if media.MediaType == common.MediaTypePromotionProduct {
+		cp := model.CommissionProduct{}
+		_,err := cp.GetOneByMid(media.Id)
+		if err != nil {
+			wblogger.Log.Error(err)
+			return common.SystemError
+		}
+		comProduct.Link = cp.PromoteLink
+		comProduct.CutOff = cp.CutOff
+		comProduct.OriginPrice = cp.OriginPrice
+		comProduct.NowPrice = cp.NowPrice
+		comProduct.TotalStar = cp.TotalStar
+		comProduct.NowStar = cp.NowStar
+		comProduct.Reviews = cp.Reviews
+	}
+
 	// add view num
 	return common.SUCCESS(model.ConMedia{
 		Uri:         strconv.FormatInt(media.Uri, 10),
@@ -93,6 +111,7 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 		PublishAt:   media.PublishAt,
 		Tags:        tagsValue,
 		IsLike:      isLike,
+		ComProduct:  comProduct,
 	})
 }
 
@@ -178,16 +197,15 @@ func ListByCategory(lastId int64, category, sort int) common.Result {
 	}
 	l := len(ml)
 	if l == 0 {
-		return common.SUCCESS(nil)
+		return common.SUCCESSARR(nil)
 	}
 
 	conMediaList := make([]model.ConMedia, l)
+	lastSetId := strconv.FormatInt(lastId+1, 10)
 	for i, value := range ml {
-		lastSetId := strconv.FormatInt(lastId+1, 10)
 		if sort == common.SortNew {
 			lastSetId = strconv.FormatInt(value.PublishAt, 10)
 		}
-
 		conMediaList[i] = model.ConMedia{
 			Uri:        strconv.FormatInt(value.Uri, 10),
 			Title:      value.Title,
@@ -271,11 +289,17 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	}
 
 	//  cover
-	v, ok := mediaSourceList[mediaArrList[0]]
-	if !ok {
-		return common.UploadFileNotFound
+	var cover string
+	for _,v := range mediaSourceList{
+		if v.SourceType== common.SourceTypeImage {
+			cover = v.Url
+			break
+		}
 	}
-	cover := v.Url
+	if cover == "" {
+		return common.ParamError.Errorf("%s", "first img of uploaded file will be cover")
+	}
+
 
 	session := orm.SocialBotOrm.NewSession()
 	defer session.Close()
@@ -384,6 +408,7 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 	media := model.Media{
 		Title:       form.Title,
 		Cover:       cover,
+		Cid:         form.Cid,
 		MediaNum:  len(mediaArr),
 		MediaStatus: common.MediaStatusPublished,
 		MediaType:   common.MediaTypePromotionProduct,

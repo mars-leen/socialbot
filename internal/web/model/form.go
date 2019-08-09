@@ -35,6 +35,7 @@ type SocialProductForm struct {
 }
 
 type SubmitMediaForm struct {
+	Uri      string  `json:"uri"`
 	URL      string `json:"url"`
 	FileType int    `json:"fileType"`
 	FileName string `json:"fileName"`

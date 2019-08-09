@@ -9,7 +9,7 @@ import (
 )
 
 func MediaDetail(c *gin.Context)  {
-	uriString := c.DefaultPostForm("uri", "0")
+	uriString := c.DefaultQuery("uri", "0")
 	uri, _ := strconv.ParseInt(uriString, 10, 64)
 	if uri == 0 {
 		common.ParamError.Out(c)
@@ -18,11 +18,11 @@ func MediaDetail(c *gin.Context)  {
 	mediaLogic.Detail(c, uri).Out(c)
 }
 
-func ListMedias(c *gin.Context)  {
+func HomeRecommendMedias(c *gin.Context)  {
 	mediaLogic.ListByRecommend(0, 3).Out(c)
 }
 
-func HomeRecommendMedias(c *gin.Context)  {
+func ListMedias(c *gin.Context)  {
 	lastIdString := c.DefaultQuery("lastId", "0")
 	CategoryString := c.DefaultQuery("category", "0")
 	SortString := c.DefaultQuery("sort", "0")

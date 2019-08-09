@@ -28,7 +28,7 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 
 	api.Use(middlewares.UserInfo())
 	api.GET("/media/homeRecommend", front.HomeRecommendMedias)
-	api.GET("/media/listByCategory", front.ListCategory)
+	api.GET("/media/listByCategory", front.ListMedias)
 	api.GET("/media/detail",front.MediaDetail)
 
 	apiAut := api.Use(middlewares.Auth())

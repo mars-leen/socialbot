@@ -3,8 +3,8 @@ package common
 const (
 	DefaultPage = 15
 	GalleryPage = 30
-	SortNew    = 1
-	sortHot   = 2
+	SortNew    = 0
+	sortHot   = 1
 	// account type
 	AccountTypeEmail = "email"
 	// jwt
@@ -19,7 +19,7 @@ const (
 	SourceTypeVideo      = 1
 
 	// crawler
-	CrawlerListPageNum   = 1
+	CrawlerListPageNum   = 30
 	CrawlerItemNew       = 0  // 新入库
 	CrawlerItemPublished = 10 // 已发布
 	CrawlerImgsLimit     = 10 // 发布图片数量最大长度限制

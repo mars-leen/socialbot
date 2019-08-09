@@ -55,7 +55,7 @@ func Auth()  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		value, exist := c.Get(common.JwtAuthUserKey)
 		if !exist {
-			c.JSON(http.StatusOK, common.AuthError)
+			common.AuthError.Out(c)
 			c.Abort()
 			return
 		}
@@ -63,7 +63,7 @@ func Auth()  gin.HandlerFunc {
 		_, ok := value.(model.User)
 		if !ok {
 			wblogger.Log.Error(errors.Errorf("Auth user value.(models.User) value %v \n", value))
-			c.JSON(http.StatusOK, common.SystemError)
+			common.SystemError.Out(c)
 			c.Abort()
 			return
 		}

@@ -32,19 +32,20 @@ type Media struct {
 }
 
 type ConMedia struct {
-	Uri         string
-	Title       string
-	Cover       string
-	MediaMum    int
-	LikeNum     int
-	ViewNum     int
-	CommentNum  int
-	MediaType   int
-	PublishAt   int64
-	LastId      string
-	Tags        []ConTag
-	IsLike       bool
-	Medias      []ConMediaSource
+	Uri        string
+	Title      string
+	Cover      string
+	MediaMum   int
+	LikeNum    int
+	ViewNum    int
+	CommentNum int
+	MediaType  int
+	PublishAt  int64
+	LastId     string
+	Tags       []ConTag
+	IsLike     bool
+	Medias     []ConMediaSource
+	ComProduct ConComProduct
 }
 
 type MediaList []*Media
@@ -59,7 +60,11 @@ func (m *Media) Insert(session *xorm.Session) (rs int64, err error) {
 		return rs, errors.Wrap(err, "snowflake.GetIntUUID failed")
 	}
 	if session != nil {
-		return session.Insert(m)
+		rs, err = session.Insert(m)
+		if err != nil {
+			return rs, errors.Wrap(err, "Insert failed")
+		}
+		return rs, nil
 	}
 
 	rs, err = orm.SocialBotOrm.Insert(m)
@@ -71,7 +76,7 @@ func (m *Media) Insert(session *xorm.Session) (rs int64, err error) {
 
 func (m *Media) UpdateByCols(id int64, cols ...string) (rs int64, err error) {
 	m.UpdateAt = time.Now().UnixNano()
-	rs,err= orm.SocialBotOrm.Cols(cols...).Where("id = ? ", id).Update(m)
+	rs, err = orm.SocialBotOrm.Cols(cols...).Where("id = ? ", id).Update(m)
 	if err != nil {
 		return rs, errors.Wrap(err, "UpdateByCols failed")
 	}
@@ -81,9 +86,13 @@ func (m *Media) UpdateByCols(id int64, cols ...string) (rs int64, err error) {
 func (m *Media) IncrById(id int64, col string, session *xorm.Session) (rs int64, err error) {
 	m.UpdateAt = time.Now().UnixNano()
 	if session != nil {
-		return session.Cols(col).Where("id = ? ", id).Incr(col, 1).Update(m)
+		rs, err = session.Cols(col).Where("id = ? ", id).Incr(col, 1).Update(m)
+		if err != nil {
+			return rs, errors.Wrap(err, "IncrById failed")
+		}
+		return rs, nil
 	}
-	rs,err= orm.SocialBotOrm.Cols(col).Where("id = ? ", id).Incr(col, 1).Update(m)
+	rs, err = orm.SocialBotOrm.Cols(col).Where("id = ? ", id).Incr(col, 1).Update(m)
 	if err != nil {
 		return rs, errors.Wrap(err, "IncrById failed")
 	}
@@ -93,25 +102,29 @@ func (m *Media) IncrById(id int64, col string, session *xorm.Session) (rs int64,
 func (m *Media) DecrById(id int64, col string, session *xorm.Session) (rs int64, err error) {
 	m.UpdateAt = time.Now().UnixNano()
 	if session != nil {
-		return session.Cols(col).Where("id = ? ", id).Decr(col, 1).Update(m)
+		rs, err = session.Where("id = ? ", id).Decr(col, 1).Update(m)
+		if err != nil {
+			return rs, errors.Wrap(err, "DecrById failed")
+		}
+		return rs, nil
 	}
-	rs,err= orm.SocialBotOrm.Cols(col).Where("id = ? ", id).Decr(col, 1).Update(m)
+	rs, err = orm.SocialBotOrm.Cols(col).Where("id = ? ", id).Decr(col, 1).Update(m)
 	if err != nil {
 		return rs, errors.Wrap(err, "DecrById failed")
 	}
 	return rs, nil
 }
 
-func (m *Media) GetOneByUri(uri int64) (rs bool, err error){
-	rs,err= orm.SocialBotOrm.Where("uri=? and media_status = ? ", uri, common.MediaStatusPublished).Where("is_del=?", 0).Get(m)
+func (m *Media) GetOneByUri(uri int64) (rs bool, err error) {
+	rs, err = orm.SocialBotOrm.Where("uri=? and media_status = ? ", uri, common.MediaStatusPublished).Where("is_del=?", 0).Get(m)
 	if err != nil {
 		return rs, errors.Wrap(err, "GetOneByUri failed")
 	}
 	return rs, nil
 }
 
-func (m *Media) GetIdByUri(uri int64) (rs bool, err error){
-	rs,err = orm.SocialBotOrm.Where("uri=?", uri).Where("is_del=?", 0).Get(m)
+func (m *Media) GetIdByUri(uri int64) (rs bool, err error) {
+	rs, err = orm.SocialBotOrm.Where("uri=?", uri).Where("is_del=?", 0).Get(m)
 	if err != nil {
 		return rs, errors.Wrap(err, "GetIdByUri failed")
 	}
@@ -129,20 +142,20 @@ func (ml *MediaList) GetListNewestByCid(lastId int64, category int) (err error) 
 		where = where + " AND cid = ?"
 		param = append(param, category)
 	}
-	err =  orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
+	err = orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
 	if err != nil {
 		return errors.Wrap(err, "GetListNewestByCid failed")
 	}
-	return  err
+	return err
 }
 
 func (ml *MediaList) GetNewCreateByCid(category, limit int) (err error) {
 	where := "media_status = ? and cid = ?"
-	err =  orm.SocialBotOrm.Where(where, common.MediaStatusPublished, category).Limit(limit).OrderBy("create_at desc").Where("is_del=?", 0).Find(ml)
+	err = orm.SocialBotOrm.Where(where, common.MediaStatusPublished, category).Limit(limit).OrderBy("create_at desc").Where("is_del=?", 0).Find(ml)
 	if err != nil {
 		return errors.Wrap(err, "GetNewCreateByCid failed")
 	}
-	return  err
+	return err
 }
 
 func (ml *MediaList) GetHotByCid(page int, category int) (err error) {
@@ -153,11 +166,11 @@ func (ml *MediaList) GetHotByCid(page int, category int) (err error) {
 		where = where + " AND cid = ?"
 		param = append(param, category)
 	}
-	err =  orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage, page * common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
+	err = orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage, page*common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
 	if err != nil {
 		return errors.Wrap(err, "GetHotByCid failed")
 	}
-	return  err
+	return err
 }
 
 func (ml *MediaList) GetListByCidDESC(lastId int64, category int) (err error) {
@@ -171,11 +184,11 @@ func (ml *MediaList) GetListByCidDESC(lastId int64, category int) (err error) {
 		where = where + " AND cid = ?"
 		param = append(param, category)
 	}
-	err =  orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
+	err = orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
 	if err != nil {
 		return errors.Wrap(err, "GetListByCidDESC failed")
 	}
-	return  err
+	return err
 }
 
 func (ml *MediaList) GetListByCidASC(lastId int64, category int) (err error) {
@@ -186,47 +199,45 @@ func (ml *MediaList) GetListByCidASC(lastId int64, category int) (err error) {
 		where = where + " AND cid = ?"
 		param = append(param, category)
 	}
-	err =  orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
+	err = orm.SocialBotOrm.Where(where, param...).Limit(common.DefaultPage).OrderBy(orderBy).Where("is_del=?", 0).Find(ml)
 	if err != nil {
 		return errors.Wrap(err, "GetListByCidASC failed")
 	}
-	return  err
+	return err
 }
 
 func (ml *MediaList) GetListByMidList(midList []int64) (err error) {
-	err =  orm.SocialBotOrm.Omit("create_at","update_at" ).In("id", midList).Where("is_del=?", 0).Find(ml)
+	err = orm.SocialBotOrm.Omit("create_at", "update_at").In("id", midList).Where("is_del=?", 0).Find(ml)
 	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("GetListByMidList failed, list %v",midList))
+		return errors.Wrap(err, fmt.Sprintf("GetListByMidList failed, list %v", midList))
 	}
-	return  err
+	return err
 }
 
 func (ml *MediaList) GetListSortViews(page, limitNum int) (err error) {
 	limit := common.DefaultPage
-	param := []int{page*limit}
+	param := []int{page * limit}
 	if limitNum != 0 {
 		limit = limitNum
 		param = []int{}
 	}
-	err = orm.SocialBotOrm.Omit("create_at","update_at" ).Desc("view_num").Limit(limit, param...).Where("is_del=?", 0).Find(ml)
+	err = orm.SocialBotOrm.Omit("create_at", "update_at").Desc("view_num").Limit(limit, param...).Where("is_del=?", 0).Find(ml)
 	if err != nil {
 		return errors.Wrap(err, "GetListSortViews failed")
 	}
-	return  err
+	return err
 }
 
-
 func (ml *MediaList) GetRecommendList(lastId int64, limit int) (err error) {
-	where := "recommend=? AND　is_del=?"
-	param := []interface{}{1,0}
+	where := "recommend=? AND is_del=?"
+	param := []interface{}{1, 0}
 	if lastId != 0 {
-		where = "recommend=? AND　is_del=? AND id < ?"
-		param = []interface{}{1,0, lastId}
+		where = "recommend=? AND is_del=? AND id < ?"
+		param = []interface{}{1, 0, lastId}
 	}
-	err =  orm.SocialBotOrm.Where(where, param).OrderBy("update_at DESC").Find(ml)
+	err = orm.SocialBotOrm.Where(where, param...).OrderBy("update_at DESC").Find(ml)
 	if err != nil {
 		return errors.Wrap(err, "GetRecommendList failed ")
 	}
-	return  err
+	return err
 }
-

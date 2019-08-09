@@ -105,7 +105,6 @@ func Login(accountForm model.AccountForm) common.Result {
 		"nickname": userModel.Nickname,
 		"intro":    userModel.Intro,
 		"avatar":   configService.GetUploadFullUrl(userModel.Avatar),
-		"identity": userModel.Identity,
 	}
 	return common.SUCCESS(result)
 }
@@ -136,7 +135,9 @@ func EditProfile(c *gin.Context,nickname, intro string) common.Result {
 	}
 	if filename != "" {
 		editCols = append(editCols, "avatar")
-		storageService.SyncRemoveSigFile("local", filepath.Join(configService.GetStorageUploadPath(), user.Avatar))
+		if  user.Avatar != ""{
+			storageService.SyncRemoveSigFile("local", filepath.Join(configService.GetStorageUploadPath(), user.Avatar))
+		}
 		user.Avatar = filename
 	}
 
@@ -150,8 +151,8 @@ func EditProfile(c *gin.Context,nickname, intro string) common.Result {
 		return common.SystemError
 	}
 
-
 	result := map[string]interface{}{
+		"userUri":  user.Uri,
 		"nickname": user.Nickname,
 		"intro":    user.Intro,
 		"avatar":   configService.GetUploadFullUrl(user.Avatar),

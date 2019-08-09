@@ -60,15 +60,19 @@ func UploadSingle(c *gin.Context, fileKey string) common.Result {
 		return common.UploadFailed
 	}
 
-	return common.SUCCESS(map[string]string{
+	return common.SUCCESS(map[string]interface{}{
 		"url": configService.GetUploadFullUrl(fileName),
 		"uri": strconv.FormatInt(uri, 10),
+		"fileType":fileType,
+		"fileName":fileName,
+		"Source": storage.Source,
 	})
+
 }
 
 func UploadAvatar(c *gin.Context) (string, error) {
 	avatar, err := c.FormFile("avatar")
-	if err != nil && err != http.ErrMissingFile {
+	if err != nil && err == http.ErrMissingFile {
 		return "", nil
 	}
 	if err != nil {

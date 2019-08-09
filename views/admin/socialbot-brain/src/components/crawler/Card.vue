@@ -16,7 +16,7 @@
                 {{media.Title}}
             </div>
             <div class="recommend">
-                <a-checkbox :value="activeRecommend" :default-checked="activeRecommend">是否推荐</a-checkbox>
+                <a-checkbox @change="recommend" :default-checked="activeRecommend">是否推荐</a-checkbox>
             </div>
             <div class="cate">
                 <a-radio-group v-model="activeCate">
@@ -152,15 +152,10 @@
                     return
                 }
                 this.pubLoading = true;
-
-                console.log(this.media.Id);
-
-
                 const medias = [];
                 for (let i in this.activeUrl) {
                     medias[i] = {url:this.activeUrl[i]}
                 }
-
                 const f = new FormData;
                 f.append("title", this.activeTitle);
                 f.append("medias", JSON.stringify(medias));
@@ -169,14 +164,12 @@
                 f.append("needFetch", true);
                 f.append("recommend", this.activeRecommend);
 
-
                 addSocialMediaFromCrawlerApi(f).then((res) => {
                     this.pubLoading = false;
                     if (!res) {
                         return
                     }
                     this.isPubEd = true
-                    //this.$emit("delete", this.media.Id)
                 })
 
             },
@@ -215,9 +208,10 @@
                });
                 this.search.value = this.search.data[index].Title;
                 this.activeTitle = this.search.data[index].Description;
+            },
+            recommend(e){
+                this.activeRecommend = e.target.checked
             }
-
-
         }
     }
 </script>

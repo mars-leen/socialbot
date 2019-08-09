@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/setting"
+	"strings"
 )
 
 var (
@@ -34,5 +35,8 @@ func GetStorageUploadPath() string {
 }
 
 func GetUploadFullUrl(base string) string {
-	return storage.ServeHost + storage.UploadLocalServePath + base
+	if base == "" {
+		return base
+	}
+	return strings.ReplaceAll(storage.ServeHost + storage.UploadLocalServePath + base, `\`, `/`)
 }

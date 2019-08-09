@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/go-xorm/xorm"
 	"github.com/pkg/errors"
 	"socialbot/internal/web/orm"
@@ -10,18 +11,31 @@ import (
 type CommissionProduct struct {
 	Content     string
 	CreateAt    int64
-	CutOff      int
 	DetailLink  string
 	Id          int64
 	IsDel       int
 	Mid         int64
-	NowPrice    int
-	NowStar     int
+
+	CutOff      int
 	OriginPrice int
-	PromoteLink string
-	Reviews     int
+	NowPrice    int
 	TotalStar   int
+	NowStar     int
+	Reviews     int
+
+	PromoteLink string
+
 	UpdateAt    int64
+}
+
+type ConComProduct struct {
+	Link   string
+	CutOff      int
+	OriginPrice int
+	NowPrice    int
+	TotalStar   int
+	NowStar     int
+	Reviews     int
 }
 
 func (c *CommissionProduct) Insert(session *xorm.Session) (rs int64, err error) {
@@ -37,6 +51,15 @@ func (c *CommissionProduct) Insert(session *xorm.Session) (rs int64, err error) 
 	rs, err = orm.SocialBotOrm.Insert(c)
 	if err != nil {
 		return rs, errors.Wrap(err, "Insert failed")
+	}
+	return rs, nil
+}
+
+
+func (c *CommissionProduct) GetOneByMid(mid int64) (rs bool, err error) {
+	rs, err = orm.SocialBotOrm.Where("mid=?", mid).Where("is_del=?", 0).Get(c)
+	if err != nil {
+		return rs, errors.Wrap(err, fmt.Sprintf("GetOneByMid(%d) failed", mid))
 	}
 	return rs, nil
 }
