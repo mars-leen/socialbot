@@ -1,21 +1,17 @@
 <template>
-    <div>
-        <nav-bar></nav-bar>
-        <div class="container">
-            <sort @click="getSort"></sort>
-            <van-list class="roll-list"  v-model="mediaList.loading" :finished="mediaList.finished" finished-text="no more"
-                      @load="onLoad(false)">
-                <masonry :cols="{default: 3, 1204: 3, 768: 2, 576: 1}" :gutter="{default: '1rem'}">
-                    <card v-for="(value, index) in mediaList.items" :key="index" :media="value"></card>
-                </masonry>
-            </van-list>
-        </div>
+    <div class="container">
+        <sort @click="getSort"></sort>
+        <van-list class="roll-list"  v-model="mediaList.loading" :finished="mediaList.finished" finished-text="no more"
+                  @load="onLoad(false)">
+            <masonry :cols="{default: 3, 1204: 3, 768: 2, 576: 1}" :gutter="{default: '1rem'}">
+                <card v-for="(value, index) in mediaList.items" :key="index" :media="value"></card>
+            </masonry>
+        </van-list>
     </div>
 </template>
 
 <script>
     import {List} from 'vant';
-    import NavBar from "../../components/navbar/NavBar"
     import Card from "../../components/media/Card"
     import Sort from "../../components/media/Sort"
 
@@ -24,7 +20,7 @@
     export default {
         name: "Category",
         components: {
-            NavBar, Card, Sort, [List.name]: List,
+            Card, Sort, [List.name]: List,
         },
         props:{
             id:{

@@ -1,6 +1,6 @@
 <template>
     <div class="gallery">
-        <masonry :cols="{default: 4, 1200: 4, 768: 3, 576: 1}">
+        <masonry :cols="{default: 4, 1200: 4, 768: 2, 576: 1}" :gutter="{default: '10px', 1200: '10px', 768: '10px'}">
             <gallery-card v-for="g in gallery" :key="g.Id" :category-list="category" :media="g"></gallery-card>
         </masonry>
     </div>
@@ -46,7 +46,6 @@
                         return
                     }
                     this.gallery = res.data;
-                    console.log(this.gallery)
                 })
             },
         },

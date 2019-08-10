@@ -2,13 +2,13 @@
     <div class="card-con">
         <div class="card">
             <div class="card-body">
-                <link-to :to="'/media/detail/' + media.Uri" :keep="false">
+                <router-link :to="'/media/detail/' + media.Uri">
                     <van-image lazy-load class="img" fit="cover" :src="media.Cover">
                         <template v-slot:loading>
                             <van-loading type="spinner" size="20"></van-loading>
                         </template>
                     </van-image>
-                </link-to>
+                </router-link >
                 <span v-if="media.MediaMum > 1" class="media-num">{{media.MediaMum}}</span>
             </div>
             <div class="card-bottom">
@@ -33,13 +33,11 @@
     import Vue from "vue";
     import {Image, Tag, Icon, Lazyload , Loading} from 'vant';
     import TimePrint from "../../components/common/Time"
-    import LinkTo from "../common/LinkTo";
     Vue.use(Lazyload);
 
     export default {
         name: "Card",
         components: {
-            LinkTo,
             TimePrint, [Image.name]: Image, [Tag.name]: Tag, [Icon.name]: Icon, [Tag.name]: Tag, [Loading.name]: Loading
         },
         props: {

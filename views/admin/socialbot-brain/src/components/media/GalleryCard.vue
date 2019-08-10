@@ -1,5 +1,5 @@
 <template>
-    <a-card class="card">
+    <div class="card">
         <img alt="example" class="relative-img" :src="media.Url" slot="cover"/>
         <div class="card-bottom">
             <div class="cate">
@@ -8,15 +8,12 @@
                 </a-radio-group>
             </div>
             <div class="tag">
-                <span :class="tagClass(tag.Id)" v-for="tag in tags " :key="tag.Id" @click="toggleTag(tag)">
+                <span :class="tagClass(tag.Id)" v-for="tag in tagList() " :key="tag.Id" @click="toggleTag(tag)" >
                     {{tag.ShortName}}
                 </span>
             </div>
-            <div class="submit">
-                <a-button :loading="addLoading" class="btn" @click="addTag">发布</a-button>
-            </div>
         </div>
-    </a-card>
+    </div>
 
 </template>
 
@@ -62,7 +59,7 @@
                 activeCategory: 0,
                 activeTags: [],
                 tags: [],
-                category : []
+                category : [],
             }
         },
         created(){
@@ -71,7 +68,7 @@
             }else {
                 this.activeCategory = this.media.Cid;
             }
-            this.tagList()
+            this.defaultActiveTags()
         },
         methods: {
             toggleTag(tag) {
@@ -83,25 +80,32 @@
                 } else {
                     this.activeTags.push(tag.Id);
                 }
+                if (this.activeTags.length >0){
+                    this.addTag()
+                }
             },
             tagClass(tagId) {
                 let isSelected = this.activeTags.includes(tagId);
                 return {'active': isSelected}
             },
+            defaultActiveTags(){
+                if (this.media.Tags.length ===0){
+                    return false
+                }
+                for (let i in this.media.Tags) {
+                    this.activeTags.push(this.media.Tags[i].Id)
+                }
+                return true
+            },
             tagList() {
+                if (this.categoryList.length === 0){
+                    return
+                }
                 const index = this.categoryList.findIndex((cate) => {
                     return cate.Id === this.activeCategory;
                 });
                 let nowCate = this.categoryList[index];
-                this.tags = nowCate.Tags;
-
-                console.log(this.media.Tags, 2222222222);
-                if (this.media.Tags.length > 0) {
-                    for (let i in this.media.Tags) {
-                        this.activeTags.push(this.media.Tags[i].Id)
-                    }
-                }
-
+                return  nowCate.Tags;
             },
             addTag(){
                 if (this.addLoading) {
@@ -116,12 +120,17 @@
                     this.addLoading = false;
                 })
             }
+        },
+        watch:{
+            media(newValue, oldValue){
+
+            }
         }
     }
 </script>
 
 <style scoped>
-    .card {border: 2px solid #ffffff;}
+    .card {margin-bottom: 10px;background: #ffffff;}
     .card-bottom{padding: 10px;}
     .relative-img {
         font-size: 0;
@@ -130,6 +139,7 @@
         display: block;
         width: 100%;
     }
+    .tag{margin-top:8px;}
     .tag span {
         display: inline-block;
         cursor: pointer;
@@ -140,7 +150,6 @@
         font-size: 0.8rem;
         margin-bottom: 0.2rem;
     }
-
     .tag span.active {
         color: #ff6a1e;
     }

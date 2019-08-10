@@ -21,7 +21,7 @@
             <a-layout-header style="background: #fff; padding: 0">
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
             </a-layout-header>
-            <a-layout-content :style="{ margin: '10px', background: '#fff', minHeight: '280px', minWidth:'350px'}">
+            <a-layout-content :style="{ margin: '10px', minHeight: '280px', minWidth:'350px'}">
                 <router-view></router-view>
             </a-layout-content>
         </a-layout>

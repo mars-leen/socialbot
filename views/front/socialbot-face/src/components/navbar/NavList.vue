@@ -1,20 +1,17 @@
 <template>
     <div class="nav-list" ref="navList">
         <div class="nav-links scroll">
-            <link-to v-for="(cate) in categoryList" :key="cate.Id" :to="'/media/category/'+cate.Id" class="nav-item" :style="'background-image:url('+ cate.Cover +')'">
+            <router-link v-for="(cate) in categoryList" :key="cate.Id" :to="'/media/category/'+cate.Id" class="nav-item" :style="'background-image:url('+ cate.Cover +')'">
                 <span class="title">{{cate.ShortName}}</span>
-            </link-to>
+            </router-link>
         </div>
     </div>
 </template>
 
 <script>
     import {listCategoryApi} from "../../api/category"
-    import LinkTo from "../common/LinkTo";
-
     export default {
         name: "NavList",
-        components: {LinkTo},
         data() {
             return {
                 fixNavigationHeight: 82,

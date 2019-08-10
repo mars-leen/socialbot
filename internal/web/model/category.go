@@ -12,6 +12,7 @@ type Category struct {
 	ShortName   string
 	Title       string
 	Description string
+	Cover      string
 	Sort        int
 	UpdateAt    int64
 	CreateAt    int64

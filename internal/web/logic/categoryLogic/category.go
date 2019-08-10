@@ -1,14 +1,25 @@
 package categoryLogic
 
 import (
+	"github.com/gin-gonic/gin"
+	"path/filepath"
 	"socialbot/internal/web/common"
+	"socialbot/internal/web/logic/uploadLogic"
 	"socialbot/internal/web/model"
 	"socialbot/internal/web/service/categoryService"
+	"socialbot/internal/web/service/configService"
+	"socialbot/internal/web/service/storageService"
 	"socialbot/internal/web/wblogger"
 )
 
 
-func Add(form *model.CategoryForm) common.Result {
+func Add(c *gin.Context, form *model.CategoryForm) common.Result {
+	filename,err := uploadLogic.UploadCategoryCover(c)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
 	category := model.Category{
 		Title:form.Title,
 		ShortName:form.ShortName,
@@ -16,7 +27,11 @@ func Add(form *model.CategoryForm) common.Result {
 		Sort:form.Sort,
 	}
 
-	_, err := category.Insert()
+	if filename != "" {
+		category.Cover = filename
+	}
+
+	_, err = category.Insert()
 	if err != nil {
 		wblogger.Log.Error(err)
 		return common.SystemError
@@ -46,7 +61,14 @@ func Delete(id int) common.Result {
 	return common.SUCCESS(nil)
 }
 
-func Update(form *model.CategoryForm) common.Result {
+func Update(c *gin.Context, form *model.CategoryForm) common.Result {
+	filename,err := uploadLogic.UploadCategoryCover(c)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+
 	category := model.Category{}
 	isExist, err := category.GetOneById(form.Id)
 	if err != nil {
@@ -61,6 +83,13 @@ func Update(form *model.CategoryForm) common.Result {
 	category.Description = form.Description
 	category.Title = form.Title
 	category.ShortName = form.ShortName
+	if filename != "" {
+		if category.Cover != "" {
+			storageService.SyncRemoveSigFile("local", filepath.Join(configService.GetStorageUploadPath(), category.Cover))
+		}
+		category.Cover = filename
+	}
+
 	_,err = category.UpdateById(form.Id)
 	if err != nil {
 		wblogger.Log.Error(err)
@@ -76,6 +105,9 @@ func List() common.Result {
 	if err != nil {
 		wblogger.Log.Error(err)
 		return common.SystemError
+	}
+	for i,v := range list  {
+		list[i].Cover = configService.GetUploadFullUrl(v.Cover)
 	}
 	return common.SUCCESSARR(list)
 }

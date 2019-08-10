@@ -163,7 +163,8 @@
                 f.append("cid", this.activeCate);
                 f.append("needFetch", true);
                 f.append("recommend", this.activeRecommend);
-
+                f.append("crawlerItemId", this.media.Id);
+                console.log(this.media.Id);
                 addSocialMediaFromCrawlerApi(f).then((res) => {
                     this.pubLoading = false;
                     if (!res) {

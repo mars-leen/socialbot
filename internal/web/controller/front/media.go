@@ -32,8 +32,6 @@ func ListMedias(c *gin.Context)  {
 	mediaLogic.ListByCategory(lastId, category, sort).Out(c)
 }
 
-
-
 func LikeMedia(c *gin.Context)  {
 	uriString := c.DefaultPostForm("uri", "0")
 	isLikeString := c.DefaultPostForm("isLike", "0")

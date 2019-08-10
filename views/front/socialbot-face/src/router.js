@@ -1,50 +1,49 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './pages/Home.vue'
+import BLayout from './layouts/BasicLayout.vue'
 Vue.use(Router);
-
-
-// media
-const MediaCategory = () => import('./pages/media/Category.vue');
-const MediaDetail = () => import('./pages/media/Detail.vue');
-
-//user
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: Home,
-    meta: {
-      title: 'Century.Wedding',
-      keepAlive: true,
-    }
+    path: '',
+    component: BLayout,
+    children: [
+      {
+        path: '',
+        name: 'home',
+        component:  () => import('./views/Home.vue'),
+        meta: {
+          title: 'Century.Wedding',
+          keepAlive: true,
+          showNavList:true,
+        }
+      },
+      {
+        path: '/media/detail/:uri/:time?',
+        name: 'detailMedia',
+        component: () => import('./views/media/Detail.vue'),
+        props:true,
+        meta: {
+          title: 'detail',
+          keepAlive: false,
+          showNavList:false,
+        }
+      },
+      {
+        path: '/media/category/:id',
+        name: 'categoryMedia',
+        component: () => import('./views/media/Category.vue'),
+        props:true,
+        meta: {
+          title: 'Category',
+          keepAlive: true,
+          showNavList:true,
+        }
+      },
+    ],
   },
 
-  // media
-  {
-    path: '/media/category/:id',
-    name: 'categoryMedia',
-    component: MediaCategory,
-    props:true,
-    meta: {
-      title: 'Category',
-      keepAlive: true,
-    }
-  },
-  {
-    path: '/media/detail/:uri/:time?',
-    name: 'detailMedia',
-    component: MediaDetail,
-    props:true,
-    meta: {
-      title: 'detail',
-      keepAlive: false,
-    }
-  },
-  // user
 ];
-
 
 const router = new Router({
   mode: 'history',
@@ -57,7 +56,6 @@ router.beforeEach((to, from, next) => {
   if (title) {
     document.title = title
   }
-
   next();
 });
 export {

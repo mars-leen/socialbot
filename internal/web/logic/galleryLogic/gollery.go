@@ -82,6 +82,15 @@ func AddTags(msid int64, cid int, tags string ) common.Result {
 		return common.DataIsNotExist
 	}
 
+
+	mst := model.MediaSourceTag{}
+	_, err = mst.DeleteByMsid(msid, nil)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	// get media source tag
 	session := orm.SocialBotOrm.NewSession()
 	defer session.Close()
 	err = session.Begin()

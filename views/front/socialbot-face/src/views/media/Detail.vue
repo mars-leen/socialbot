@@ -1,48 +1,41 @@
 <template>
-        <div class="detail">
-            <nav-bar  :is-show-nav="false"></nav-bar>
-            <div class="container-min">
-                <van-skeleton title :row="18" :loading="loadingDetail">
-                    <h2 v-if="mediaData.Title" class="title">
-                        {{mediaData.Title}}
-                    </h2>go tool pprof
-                    <div class="media">
-                        <template v-for="(m,index) in mediaData.Medias" >
-                            <div v-if="m.SourceType === 0" class="media-item" :key="index">
-                                <van-image class="img"  lazy-load  fit="contain" :src="m.Url" ></van-image>
-                                <van-button v-if="mediaData.ComProduct.Link !== ''" class="buy-now" type="danger" size="small" :url="mediaData.ComProduct.Link">Buy Now</van-button>
-                            </div>
-                            <div v-if="m.SourceType === 1" class="media-item" :key="index">
-                                <video class="video"  :src="m.Url" controls="controls"></video>
-                                <van-button v-if="mediaData.ComProduct.Link !== ''" class="buy-now" type="danger" size="small" :url="mediaData.ComProduct.Link">Buy Now</van-button>
-                            </div>
-                        </template>
+    <div class="container-min">
+        <van-skeleton title :row="18" :loading="loadingDetail">
+            <h2 v-if="mediaData.Title" class="title">{{mediaData.Title}}</h2>
+            <div class="media">
+                <template v-for="(m,index) in mediaData.Medias" >
+                    <div v-if="m.SourceType === 0" class="media-item" :key="index">
+                        <van-image class="img"  fit="contain" :src="m.Url" ></van-image>
+                        <van-button v-if="mediaData.ComProduct.Link !== ''" class="buy-now" type="danger" size="small" :url="mediaData.ComProduct.Link">Buy Now</van-button>
                     </div>
-                    <div class="extra">
+                    <div v-if="m.SourceType === 1" class="media-item" :key="index">
+                        <video class="video"  :src="m.Url" controls="controls"></video>
+                        <van-button v-if="mediaData.ComProduct.Link !== ''" class="buy-now" type="danger" size="small" :url="mediaData.ComProduct.Link">Buy Now</van-button>
+                    </div>
+                </template>
+            </div>
+            <div class="extra">
                     <span class="item">
                         <van-icon name="like-o"></van-icon> <span class="small">{{mediaData.LikeNum}}</span>
                     </span>
-                        <span class="item">
+                <span class="item">
                         <van-icon name="fire-o"></van-icon> <span class="small">{{mediaData.ViewNum}}</span>
                      </span>
-                        <span class="item">
+                <span class="item">
                         <van-icon name="underway-o"></van-icon>
                         <time-print class="small" :time="mediaData.PublishAt"></time-print>
                     </span>
-                    </div>
-                    <div class="action">
-                        <van-icon class="like active" :name="likeState()" @click="likeAction"></van-icon>
-                    </div>
-                </van-skeleton>
             </div>
-        </div>
+            <div class="action">
+                <van-icon class="like active" :name="likeState()" @click="likeAction"></van-icon>
+            </div>
+        </van-skeleton>
+    </div>
 </template>
 
 <script>
-    import NavBar from "../../components/navbar/NavBar"
     import TimePrint from "../../components/common/Time"
     import {Tag, Icon, Skeleton, Image, Loading, Button} from 'vant';
-
     import {mediaDetailApi, likeMediaApi} from "../../api/media";
     import {mapGetters,mapMutations} from 'vuex'
 
@@ -50,7 +43,7 @@
         name: "Detail",
         components: {
             // eslint-disable-next-line vue/no-unused-components
-            NavBar, TimePrint, [Tag.name]: Tag, [Icon.name]: Icon,[Skeleton.name]:Skeleton,[Image.name]: Image, [Loading.name]: Loading, [Button.name]: Button
+            TimePrint, [Tag.name]: Tag, [Icon.name]: Icon,[Skeleton.name]:Skeleton,[Image.name]: Image, [Loading.name]: Loading, [Button.name]: Button
         },
         props:{
             uri:{

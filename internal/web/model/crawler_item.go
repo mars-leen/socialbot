@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"github.com/go-xorm/xorm"
 	"github.com/pkg/errors"
 	"socialbot/internal/web/orm"
 	"time"
@@ -13,6 +14,7 @@ type CrawlerItem struct {
 	Content     string
 	Cover       string
 	Description string
+	ItemStatus  int
 	Title       string
 	UpdateAt    int64
 	CreateAt    int64
@@ -39,9 +41,18 @@ func (c *CrawlerItem) Insert() (rs int64, err error) {
 	return rs, nil
 }
 
-func (c *CrawlerItem) UpdateColsById(id int, cols ...string) (rs int64, err error) {
+func (c *CrawlerItem) UpdateColsById(id int64,session *xorm.Session, cols ...string) (rs int64, err error) {
 	c.UpdateAt = time.Now().UnixNano()
 	cols = append(cols, "create_at")
+
+	if session != nil{
+		rs, err = session.Cols(cols...).Where("id = ? ", id).Update(c)
+		if err != nil {
+			return 0, errors.Wrap(err, fmt.Sprintf("UpdateColsById(%d) cols(%s) failed", id, cols))
+		}
+		return rs, nil
+	}
+
 	rs, err = orm.SocialBotOrm.Cols(cols...).Where("id = ? ", id).Update(c)
 	if err != nil {
 		return 0, errors.Wrap(err, fmt.Sprintf("UpdateColsById(%d) cols(%s) failed", id, cols))
@@ -49,7 +60,7 @@ func (c *CrawlerItem) UpdateColsById(id int, cols ...string) (rs int64, err erro
 	return rs, nil
 }
 
-func (c *CrawlerItem) GetOneById(id int) (rs bool, err error) {
+func (c *CrawlerItem) GetOneById(id int64) (rs bool, err error) {
 	orm.SocialBotOrm.ShowSQL()
 	rs, err = orm.SocialBotOrm.Where("id=?", id).Where("is_del=?", 0).Get(c)
 	orm.SocialBotOrm.ShowSQL(false)

@@ -4,11 +4,11 @@
             <a-row :gutter="50">
                 <a-col :sm="1" :md="12">
                     <a-form-item  label="标题">
-                        <a-input v-decorator="['title',{ rules: [{ required: true, message: '标题!' }] }]" type="integer"
+                        <a-textarea v-decorator="['title',{ rules: [{ required: true, message: '标题!' }] }]" type="integer"
                                  placeholder="标题">
-                        </a-input>
+                        </a-textarea>
                     </a-form-item>
-                    <a-form-item  label="原价">
+                    <!--<a-form-item  label="原价">
                         <a-input v-decorator="['origin_price',{ initialValue:0,rules: [{ required: true, message: '原价!' }] }]"
                                  type="string" placeholder="原价">
                         </a-input>
@@ -37,26 +37,26 @@
                         <a-input v-decorator="['reviews',{ type:'integer',rules: [{ required: true, message: '用户评价数量!' }] }]"
                                  type="integer" placeholder="用户评价数量">
                         </a-input>
-                    </a-form-item>
+                    </a-form-item>-->
                     <a-form-item  label="商品链接">
                         <a-input v-decorator="['detail_link',{ rules: [{ required: true, message: '商品链接!' }] }]"
                                  type="string" placeholder="商品链接">
                         </a-input>
                     </a-form-item>
-                </a-col>
-                <a-col :sm="1" :md="12">
                     <a-form-item  label="推广链接">
                         <a-input v-decorator="['promote_link',{ rules: [{ required: true, message: '推广链接!' }] }]"
                                  type="string" placeholder="推广链接">
                         </a-input>
                     </a-form-item>
                     <a-form-item  label="选择分类">
-                        <a-select  @select="changeCategory" :defaultValue="activeCategory">
+                        <a-select  v-model="activeCategory">
                             <a-select-option v-for="cate in category" :key="cate.Id" :value="cate.Id">{{cate.Title}}</a-select-option>
                         </a-select>
                     </a-form-item>
+                </a-col>
+                <a-col :sm="1" :md="12">
                     <a-form-item  label="选择标签">
-                        <a-tag  v-for="tag in tags" :key="tag.Id" :color="tagClass(tag.Id) ? 'red': 'blue'"  @click="toggleTag(tag.Id)" >{{tag.ShortName}}</a-tag>
+                        <a-tag  v-for="tag in tagList()" :key="tag.Id" :color="tagClass(tag.Id) ? 'red': 'blue'"  @click="toggleTag(tag.Id)" >{{tag.ShortName}}</a-tag>
                     </a-form-item>
                     <a-form-item  label="上传媒体文件">
                         <div class="clearfix">
@@ -96,6 +96,7 @@
             [Col.name]: Col,
             [Button.name]: Button,
             [Input.name]: Input,
+            [Input.TextArea.name]: Input.TextArea,
             [Form.name]: Form,
             [Form.Item.name]: Form.Item,
             [Icon.name]: Icon,
@@ -109,10 +110,9 @@
             fileList: [],
             headers: {},
             category: [],
-            tags: [],
             activeMedias: [],
             activeTags:[],
-            activeCategory: 1,
+            activeCategory: 0,
         }),
         created() {
             this.listCategory();
@@ -158,7 +158,6 @@
                 });
             },
 
-
             handleChange({fileList}) {
                 const ms = [];
                 for (let i in fileList) {
@@ -189,15 +188,19 @@
                         return
                     }
                     this.category = res.data;
-                    this.changeCategory(this.activeCategory)
+                    if ( this.category.length >0){
+                        this.activeCategory = this.category[0].Id
+                    }
                 })
             },
-            changeCategory(value) {
-                this.activeCategory = value;
+            tagList() {
+                if (this.activeCategory ===0){
+                    return []
+                }
                 const index = this.category.findIndex((c) => {
-                    return c.Id === value
+                    return c.Id === this.activeCategory
                 });
-                this.tags = this.category[index].Tags;
+                return this.category[index].Tags;
             },
             toggleTag(tagId) {
                 const index = this.activeTags.findIndex((t) => {

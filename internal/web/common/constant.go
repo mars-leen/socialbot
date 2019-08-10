@@ -14,6 +14,7 @@ const (
 	// storage
 	StorageMediaDir      = "media"
 	StorageAvatarDir      = "avatar"
+	StoragePublicDir      = "public"
 	DefaultStorageSource = 0
 	SourceTypeImage      = 0
 	SourceTypeVideo      = 1

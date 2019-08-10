@@ -32,6 +32,7 @@ type SocialProductForm struct {
 	Cid       int    `form:"cid" json:"cid" binding:"required"`
 	NeedFetch bool   `form:"needFetch" json:"needFetch"`
 	Recommend bool   `form:"recommend" json:"recommend"`
+	CrawlerItemId int64 `form:"crawlerItemId" json:"crawlerItemId"`
 }
 
 type SubmitMediaForm struct {

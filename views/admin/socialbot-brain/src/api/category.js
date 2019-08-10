@@ -5,7 +5,10 @@ export function addCategoryApi (parameter) {
     return axios({
         url: api.AddCategory,
         method: 'post',
-        data: parameter
+        data: parameter,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
     })
 }
 
@@ -14,7 +17,10 @@ export function updateCategoryApi (parameter) {
     return axios({
         url: api.UpdateCategory,
         method: 'post',
-        data: parameter
+        data: parameter,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
     })
 }
 

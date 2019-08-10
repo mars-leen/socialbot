@@ -120,3 +120,40 @@ func UploadAvatar(c *gin.Context) (string, error) {
 	}
 	return fileName, nil
 }
+
+
+func UploadCategoryCover(c *gin.Context) (string, error) {
+	cover, err := c.FormFile("cover")
+	if err != nil && err == http.ErrMissingFile {
+		return "", nil
+	}
+	if err != nil {
+		return "", errors.Wrap(err, "upload avatar failed")
+	}
+
+	exit, err := utils.GetFileExt(cover)
+	if err != nil {
+		return "", err
+	}
+
+	Type := utils.GetFileTypeByExt(exit)
+	if Type != "IMG" {
+		return "", fmt.Errorf("inviald img")
+	}
+
+	randName, err := snowflake.GetStringUUID(setting.NodeId)
+	if err != nil {
+		return "", err
+	}
+
+	storagePath := configService.GetStorageUploadPath()
+	fileName := filepath.Join(common.StoragePublicDir, randName+exit)
+	fullPath := filepath.Join(storagePath, fileName)
+
+	err = utils.SaveUploadedFile(cover, fullPath)
+	if err != nil {
+		return "", errors.Wrap(err, "SaveUploadedFile failed")
+	}
+
+	return fileName, nil
+}

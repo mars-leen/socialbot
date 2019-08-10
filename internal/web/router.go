@@ -39,6 +39,9 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	// admin
 	adminApi := g.Group("/v1/adminApi")
 	adminApi.POST("/login", admin.Login)
+
+	adminApi.GET("/reverse", admin.Reverse)
+
 	adminApi.Use(middlewares.AuthAdmin())
 	adminApi.POST("/upload/single", admin.UploadSingle)
 
@@ -46,6 +49,7 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/config/updateServer", admin.UpdateServer)
 	adminApi.GET("/config/listServer", admin.ListServer)
 	adminApi.POST("/config/deleteServer", admin.DeleteServer)
+
 
 
 	adminApi.POST("/robot/addServer", admin.AddRobotServer)

@@ -12,14 +12,13 @@
             <div class="list" slot="body">
                 <a-list itemLayout="horizontal" :dataSource="Tag" >
                     <a-list-item slot="renderItem" slot-scope="item,index">
-                        <a-list-item-meta :description="item.Title">
-                            <h4 slot="title">{{item.ShortName}}</h4>
+                        <a-list-item-meta :description="item.Description">
+                            <h4 slot="title">图板：{{item.BoardName}}</h4>
+                            <h4 slot="title">简称：{{item.ShortName}}</h4>
+                            <h4 slot="title">标题：{{item.Title}}</h4>
                         </a-list-item-meta>
                         <a slot="actions" @click="showHandleTag(true, item)">编辑</a>
                         <a slot="actions" @click="deleteTag(item.Id)">删除</a>
-                        <div >
-                            {{item.Description}}
-                        </div>
                     </a-list-item>
                 </a-list>
             </div>
@@ -111,8 +110,10 @@
                 if (!isUpdate) {
                     this.DefaultTagForm.Cid = this.activeCategory;
                     this.TagForm = Object.assign({},this.DefaultTagForm);
+                    console.log("add",data);
                     return
                 }
+                console.log("update",data);
                 this.TagForm = data
             },
             handleTag(){
@@ -125,6 +126,7 @@
                 }else{
                     this.updateTag()
                 }
+
             },
             listTag(){
                 listTagApi({cid:this.activeCategory}).then(res => {
@@ -141,7 +143,7 @@
                         return
                     }
                     this.addTagVisible = false
-                    this.Tag.splice(0,0, this.TagForm)
+                    this.listTag()
                 })
             },
             updateTag(){
@@ -151,6 +153,7 @@
                         return
                     }
                     this.addTagVisible = false
+                    this.listTag()
                 })
             },
             deleteTag(id){
@@ -181,7 +184,7 @@
                     if (!res) {
                         return
                     }
-                    this.category = res.data
+                    this.category = res.data;
                     this.category.splice(0,0,{
                         Id:0,
                         Title:"选择分类"

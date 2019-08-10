@@ -14,3 +14,20 @@ func TestAppAbsPath(t *testing.T) {
 	defer f.Close()
 	fmt.Println(names)
 }
+
+func TestDeleteStringFromSlice(t *testing.T) {
+	//res := DeleteStringFromSlice("b", []string{"a","b", "c"})
+	res := DeleteSlice2(3, []int{1,2,3,4,5})
+	fmt.Println(res)
+}
+
+func DeleteSlice2(dst int, a []int) []int {
+	j := 0
+	for _, val := range a {
+		if val == dst {
+			a[j] = val
+			j++
+		}
+	}
+	return a[:j]
+}

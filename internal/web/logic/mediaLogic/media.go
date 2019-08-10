@@ -435,8 +435,17 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 		_, err := ms.Insert(session)
 		if err != nil {
 			wblogger.Log.Error(err)
+			_ = session.Rollback()
 			return common.SystemError
 		}
+	}
+
+	ci := model.CrawlerItem{ItemStatus:common.CrawlerItemPublished}
+	_, err =ci.UpdateColsById(form.CrawlerItemId, session, "item_status")
+	if err != nil {
+		wblogger.Log.Error(err)
+		_ = session.Rollback()
+		return common.SystemError
 	}
 
 	// tag

@@ -128,6 +128,35 @@ func Str2Int64(str []string) []int64 {
 	return list
 }
 
+func StringInArray(dst string, arr []string) bool {
+	for _,v := range arr{
+		if dst ==v {
+			return true
+		}
+	}
+	return false
+}
+
+
+func DeleteStringFromSlice(dst string, arr []string) []string{
+	if len(arr) ==1 {
+		if arr[0] == dst {
+			return []string{}
+		}else{
+			return arr
+		}
+	}
+	j := 0
+	for _, val := range arr {
+		if val == dst {
+			arr[j] = val
+			j++
+		}
+	}
+	return arr[:j]
+}
+
+
 // file
 func GetFileExt(file *multipart.FileHeader) (ext string, err error) {
 	ext = filepath.Ext(file.Filename)

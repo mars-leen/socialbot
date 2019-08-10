@@ -9,8 +9,12 @@ const (
 )
 
 var (
-	host       = ""
+	host   = "http://localhost:8080"
+	hostName       = "century"
 )
-func GetHostName() string {
+func GetHost() string {
 	return host
+}
+func GetHostName() string {
+	return hostName
 }

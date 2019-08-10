@@ -3,11 +3,13 @@
         <content-item>
             <a-button slot="header" type="primary" @click="showHandleCategory(false)" icon="plus">添加</a-button>
             <div class="list" slot="body">
-                <a-list itemLayout="horizontal" :dataSource="category" >
-                    <a-list-item slot="renderItem" slot-scope="item,index">
+                <a-list  itemLayout="vertical"  :dataSource="category" >
+                    <a-list-item  slot="renderItem" slot-scope="item,index">
                         <a-list-item-meta :description="item.Description">
-                            <h4 slot="title">{{item.Title}}({{item.ShortName}})</h4>
+                            <h4 slot="title">简称：{{item.ShortName}} </h4>
+                            <h4 slot="title">标题：{{item.Title}}</h4>
                         </a-list-item-meta>
+                        <img v-if="item.Cover" slot="extra"  alt="cover" :src="item.Cover" />
                         <a slot="actions" @click="showHandleCategory(true, item)">编辑</a>
                         <a slot="actions" @click="deleteCategory(item.Id)">删除</a>
                     </a-list-item>
@@ -32,6 +34,15 @@
                     <a-input  v-model="categoryForm.Sort" type="integer" >
                     </a-input>
                 </a-form-item>
+                <a-form-item label="封面">
+                    <div class="cover" v-if="categoryForm.Cover">{{categoryForm.Cover}}</div>
+                    <a-upload :fileList="fileList" :beforeUpload ="handleCover" :remove="handleRemove" :multiple="false">
+                        <a-button v-if="fileList.length<1"><a-icon type="upload" />
+                            <span v-if="categoryForm.Cover">替换</span>
+                            <span v-else>上传</span>
+                        </a-button>
+                    </a-upload>
+                </a-form-item>
                 <a-form-item>
                     <a-button type="primary" html-type="submit" class="login-form-button" :loading="addCategoryLoading" @click.prevent="handleCategory">提交</a-button>
                 </a-form-item>
@@ -41,13 +52,14 @@
 </template>
 
 <script>
-    import {Button, Icon, Modal, Form,Input, List} from 'ant-design-vue'
+    import {Button, Icon, Modal, Form,Input, List, Upload} from 'ant-design-vue'
     import ContentItem from '../../components/content/Content'
     import {listCategoryApi, addCategoryApi, deleteCategoryApi, updateCategoryApi} from "../../api/category"
     export default {
         name: "Category",
         components: {
             ContentItem,
+            [Upload.name]: Upload,
             [List.name]: List,
             [List.Item.name]: List.Item,
             [List.Item.Meta.name]: List.Item.Meta,
@@ -66,12 +78,14 @@
                 addCategoryVisible: false,
                 addCategoryLoading: false,
                 category : [],
+                fileList:[],
                 defaultCategoryForm:{
                     Id:0,
                     Title:"",
                     ShortName:"",
                     Description:"",
                     Sort:0,
+                    Cover:"",
                 },
                 categoryForm:{
                     Id:0,
@@ -79,6 +93,7 @@
                     ShortName:"",
                     Description:"",
                     Sort:0,
+                    Cover:"",
                 }
             }
         },
@@ -87,6 +102,7 @@
                 this.addCategoryVisible =true;
                 if (!isUpdate) {
                     this.categoryForm = Object.assign({},this.defaultCategoryForm);
+                    this.fileList = [];
                     return
                 }
                 this.categoryForm = data
@@ -116,8 +132,8 @@
                     if (!res){
                         return
                     }
-                    this.addCategoryVisible = false
-                    this.category.push(this.categoryForm)
+                    this.addCategoryVisible = false;
+                    this.listCategory();
                 })
             },
             updateCategory(){
@@ -126,7 +142,8 @@
                     if (!res){
                         return
                     }
-                    this.addCategoryVisible = false
+                    this.addCategoryVisible = false;
+                    this.listCategory();
                 })
             },
             deleteCategory(id){
@@ -148,9 +165,22 @@
                 form.append("title", this.categoryForm.Title);
                 form.append("shortName", this.categoryForm.ShortName);
                 form.append("description", this.categoryForm.Description);
-                form.append("sort", this.categoryForm.Sort)
+                form.append("sort", this.categoryForm.Sort);
+                if (this.fileList.length >0){
+                    form.append("cover", this.fileList[0]);
+                }
                 return form
-            }
+            },
+            handleCover(file){
+                this.fileList = [...this.fileList, file]
+                return false;
+            },
+            handleRemove(file) {
+                const index = this.fileList.indexOf(file);
+                const newFileList = this.fileList.slice();
+                newFileList.splice(index, 1);
+                this.fileList = newFileList
+            },
         }
     }
 </script>

@@ -1,8 +1,11 @@
 package crawlerLogic
 
 import (
+	"fmt"
+	"net/url"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
+	"socialbot/internal/web/service/configService"
 	"socialbot/internal/web/wblogger"
 	"strings"
 )
@@ -83,7 +86,7 @@ func ListRandItem(crwid int) common.Result{
 }
 
 
-func DeleteItem(id int) common.Result {
+func DeleteItem(id int64) common.Result {
 	CrawlerItem := model.CrawlerItem{}
 	isExist, err := CrawlerItem.GetOneById(id)
 	if err != nil {
@@ -95,19 +98,19 @@ func DeleteItem(id int) common.Result {
 	}
 
 	CrawlerItem.IsDel = 1
-	_, err = CrawlerItem.UpdateColsById(id, "is_del")
+	_, err = CrawlerItem.UpdateColsById(id, nil,"is_del")
 	if err != nil {
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
-
 	return common.SUCCESS(nil)
 }
 
 func FormatContent(content string) []string {
 	list := strings.Split(content, ",")
 	for i,v := range list  {
-		list[i] = v + "?imageMogr2/thumbnail/!88p"
+		u,_ := url.Parse(v)
+		list[i] = fmt.Sprintf("%s/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",configService.GetHost(),u.Scheme,u.Host,u.Path, "imageMogr2/thumbnail/!88p")
 	}
 	return list
 }

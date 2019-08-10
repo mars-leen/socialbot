@@ -17,8 +17,8 @@ func AddCategory(c *gin.Context) {
 		common.ParamError.Out(c)
 		return
 	}
-	result := categoryLogic.Add(&categoryForm)
-	result.Out(c)
+	categoryLogic.Add(c, &categoryForm).Out(c)
+
 }
 
 func UpdateCategory(c *gin.Context) {
@@ -28,9 +28,7 @@ func UpdateCategory(c *gin.Context) {
 		c.JSON(http.StatusOK, common.ParamError)
 		return
 	}
-
-	result := categoryLogic.Update(&categoryForm)
-	c.JSON(http.StatusOK, result)
+	categoryLogic.Update(c, &categoryForm).Out(c)
 }
 
 func DeleteCategory(c *gin.Context) {
