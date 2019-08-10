@@ -18,3 +18,4 @@ log/
 vendor/
 config/config.json
 
+internal/web/service/configService/crawler.go
