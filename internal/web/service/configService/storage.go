@@ -10,7 +10,7 @@ import (
 var (
 	storage = &Storage{
 		Source:               common.DefaultStorageSource,
-		ServeHost:            "http://localhost:8080",
+		ServeHost:            "http://localhost:8081",
 		UploadLocalPath:      "",
 		UploadLocalServePath: "/storage/",
 	}

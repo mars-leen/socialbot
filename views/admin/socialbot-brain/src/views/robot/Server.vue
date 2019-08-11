@@ -104,17 +104,17 @@
                 }
             }
         },
-        mounted() {
+        /*mounted() {
             let _this = this;
             this.timer = setInterval(() => {
                 _this.listServer()
             }, 3000)
-        },
-        beforeDestroy() {
+        },*/
+        /*beforeDestroy() {
             if (this.timer) {
                 clearInterval(this.timer);
             }
-        },
+        },*/
         methods: {
             showHandleServer(isUpdate, data) {
                 this.addServerVisible = true;

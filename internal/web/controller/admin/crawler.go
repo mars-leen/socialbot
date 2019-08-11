@@ -9,6 +9,8 @@ import (
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/logic/crawlerLogic"
 	"socialbot/internal/web/model"
+	"socialbot/internal/web/service/configService"
+	"socialbot/internal/web/wblogger"
 	"strconv"
 )
 
@@ -46,16 +48,12 @@ func DeleteCrawlerItem(c *gin.Context) {
 	id,_ := strconv.ParseInt(idStr, 10, 64)
 	crawlerLogic.DeleteItem(id).Out(c)
 }
-
 //http://localhost:8080/v1/adminApi/reverse?scheme=https&host=qnm.hunliji.com&path=/o_1d8ke0df31ftk1tj81p49kh315r9p.jpg&param=imageMogr2/thumbnail/!88p
-//http://hbimg.huabanimg.com/8ffd2882c52c1783ac4798e55353b754b98c3ca8af21b-Ixm0Xu_fw658
-//http://localhost:8080/v1/adminApi/reverse?scheme=http&host=hbimg.huabanimg.com&path=/8ffd2882c52c1783ac4798e55353b754b98c3ca8af21b-Ixm0Xu_fw658
-
+//http://localhost:8080/v1/adminApi/reverse?scheme=http&host=139.199.132.157:8877&path=/api
 func Reverse(c *gin.Context) {
-	// we need to buffer the body if we want to read it here and send it
-	// in the request.
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
+		wblogger.Log.Error(err)
 		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -71,24 +69,29 @@ func Reverse(c *gin.Context) {
 
 	proxyReq, err := http.NewRequest(c.Request.Method, fullUrl, bytes.NewReader(body))
 	if err != nil {
+		wblogger.Log.Error(err)
 		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	for key, value := range Header {
+	header := configService.GetHeader(c.Query("host"))
+	for key, value := range header {
 		proxyReq.Header.Set(key, value)
 	}
 
 	client := &http.Client{}
 	resp, err := client.Do(proxyReq)
 	if err != nil {
+		wblogger.Log.Error(err)
 		http.Error(c.Writer, err.Error(), http.StatusBadGateway)
 		return
 	}
+
 	defer resp.Body.Close()
 	bodyContent, _ := ioutil.ReadAll(resp.Body)
 	_, err = c.Writer.Write(bodyContent)
 	if err != nil {
+		wblogger.Log.Error(err)
 		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 		return
 	}

@@ -70,7 +70,7 @@ func (cl *CopywriterList) GetList() (err error) {
 }
 
 func (cl *CopywriterList) GetListByLike(str string) (err error) {
-	where := fmt.Sprintf("title LIKE BINARY '%s'", str)
+	where := "title LIKE BINARY '%"+str+"%'"
 	err = orm.SocialBotOrm.Where("is_del=?", 0).Where(where).Find(cl)
 	if err != nil {
 		return errors.Wrap(err, "get list failed")

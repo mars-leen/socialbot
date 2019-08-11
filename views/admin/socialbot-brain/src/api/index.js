@@ -1,6 +1,6 @@
 
 const api = {
-    Host: 'http://localhost:8080',
+    Host: 'http://localhost:8081',
     UploadSingle: '/v1/adminApi/upload/single',
     Login: '/v1/adminApi/login',
     Logout: '/v1/adminApi/logout',
@@ -19,6 +19,7 @@ const api = {
     AddCopywriter: '/v1/adminApi/copywriter/add',
     UpdateCopywriter: '/v1/adminApi/copywriter/update',
     ListCopywriter: '/v1/adminApi/copywriter/list',
+    SearchCopywriter: '/v1/adminApi/copywriter/search',
     DeleteCopywriter: '/v1/adminApi/copywriter/delete',
 
     AddTag: '/v1/adminApi/tag/add',

@@ -8,7 +8,7 @@ import (
 )
 
 func LoadConsole()  {
-	gocron.Every(3).Seconds().Do(func() {
+	gocron.Every(60).Seconds().Do(func() {
 		_ = serverService.UpdateListRobotServerInfo()
 	})
 	app.RegShutdownCallback(func() {

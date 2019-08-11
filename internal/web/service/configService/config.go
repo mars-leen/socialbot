@@ -9,7 +9,7 @@ const (
 )
 
 var (
-	host   = "http://localhost:8080"
+	host   = "http://localhost:8081"
 	hostName       = "century"
 )
 func GetHost() string {

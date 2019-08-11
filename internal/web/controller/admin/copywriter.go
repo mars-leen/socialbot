@@ -52,13 +52,12 @@ func ListCopywriter(c *gin.Context) {
 
 
 func SearchCopywriter(c *gin.Context) {
-	key := c.DefaultPostForm("key", "0")
+	key := c.DefaultQuery("key", "")
 	if utils.TrimSpace(key) == ""  {
-		c.JSON(http.StatusOK, common.SUCCESSARR(nil))
+		common.SUCCESSARR(nil).Out(c)
 		return
 	}
-
-	c.JSON(http.StatusOK, CopywriterLogic.Search(key))
+	CopywriterLogic.Search(key).Out(c)
 }
 
 
