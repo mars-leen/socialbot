@@ -18,10 +18,9 @@ func ServeThemeView() gin.HandlerFunc {
 		if strings.Contains(c.Request.URL.Path, "storage") {
 			return
 		}
-
 		// admin theme
 		if strings.Contains(c.Request.URL.Path, "dashboard") {
-			dashboardPath := filepath.Join(setting.AppPath, "views/admin/socailbot-brain/dist")
+			dashboardPath := filepath.Join(setting.AppPath, "views/admin/socialbot-brain/dist")
 			filePath := filepath.Join( dashboardPath, filepath.FromSlash(strings.Replace(c.Request.URL.Path, "/dashboard", "", 1)))
 			_, err := os.Stat(filePath)
 			if err != nil && os.IsNotExist(err) {
@@ -33,7 +32,7 @@ func ServeThemeView() gin.HandlerFunc {
 		}
 
 		// front theme
-		frontPath := filepath.Join(setting.AppPath, "views/front/socailbot-face/dist")
+		frontPath := filepath.Join(setting.AppPath, "views/front/socialbot-face/dist")
 		filePath := filepath.Join( frontPath, filepath.FromSlash(c.Request.URL.Path))
 		_, err := os.Stat(filePath)
 		if err != nil && os.IsNotExist(err) {

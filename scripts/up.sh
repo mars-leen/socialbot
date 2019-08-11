@@ -24,23 +24,21 @@ fi
 if [[ $1 == ${b} ]]
 then
    echo "upload front view"
-   if [[ ! -d /www/new.century.wedding/views/front ]]; then
-      mkdir -p /www/new.century.wedding/views/front
+   if [[ ! -d /www/new.century.wedding/views/front/socialbot-face ]]; then
+      mkdir -p /www/new.century.wedding/views/front/socialbot-face
     fi
     rz -E
-    tar -xvf dist.tar -C /www/new.century.wedding/views/front/
-    mv /www/new.century.wedding/views/front/dist /www/new.century.wedding/views/front/socialbot-face
+    tar -xvf dist.tar -C /www/new.century.wedding/views/front/socialbot-face
     rm -rf dist.tar
 fi
 
 if [[ $1 == ${c} ]]
 then
     echo "upload front view"
-    if [[ ! -d /www/new.century.wedding/views/admin ]]; then
-      mkdir -p /www/new.century.wedding/views/admin
+    if [[ ! -d /www/new.century.wedding/views/admin/socialbot-brain ]]; then
+      mkdir -p /www/new.century.wedding/views/admin/socialbot-brain
     fi
     rz -E
-    tar -xvf dist.tar -C /www/new.century.wedding/views/admin/
-    mv /www/new.century.wedding/views/admin/dist /www/new.century.wedding/views/admin/socialbot-brain
+    tar -xvf dist.tar -C /www/new.century.wedding/views/admin/socialbot-brain
     rm -rf dist.tar
 fi

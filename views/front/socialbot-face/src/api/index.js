@@ -1,5 +1,5 @@
 const api = {
-    Host: 'http://localhost:8080',
+    Host: 'http://localhost:8081',
     Login: '/v1/api/user/login',
     Register: '/v1/api/user/register',
     EditProfile: '/v1/api/user/editProfile',
