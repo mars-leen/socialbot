@@ -116,7 +116,7 @@
         }),
         created() {
             this.listCategory();
-            this.headers = {'Authorization': this.$store.getters.Token};
+            this.headers = {'Authorization': this.$store.getters.Token()};
         },
         beforeCreate() {
             this.form = this.$form.createForm(this);
