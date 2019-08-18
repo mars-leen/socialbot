@@ -1,13 +1,14 @@
 <template>
-    <div class="crawler-item">
-        <crawler-card v-for="c in crawlerItem" :key="c.Id" :media="c" :category-list="category"></crawler-card>
-    </div>
+    <a-spin :spinning="spinning" :size="large">
+        <div class="crawler-item">
+            <crawler-card v-for="c in crawlerItem" :key="c.Id" :media="c" :category-list="category"></crawler-card>
+            <a-back-top :visibilityHeight="10"  @click="top"/>
+        </div>
+    </a-spin>
 </template>
 
 <script>
-
-
-    import {Button, Icon, Modal, Form, Input, List, Row, Col, Select, Tag, Spin} from 'ant-design-vue'
+    import {Button, Icon, Modal, Form, Input, List, Row, Col, Select, Tag, Spin, BackTop} from 'ant-design-vue'
     import CrawlerCard from "../../components/crawler/Card"
     import {
         listRandCrawlerItemApi,
@@ -21,6 +22,7 @@
             [List.name]: List,
             [Spin.name]: Spin,
             [Tag.name]: Tag,
+            [BackTop.name]: BackTop,
 
             [Select.name]: Select,
             [Select.Option.name]: Select.Option,
@@ -44,13 +46,16 @@
         },
         data() {
             return {
+                spinning:false,
                 crawlerItem: [],
                 category:[],
             }
         },
         methods: {
             listCrawlerItem(){
+                this.spinning = true;
                 listRandCrawlerItemApi().then(res => {
+                    this.spinning = false;
                     if (!res) {
                         return
                     }
@@ -65,9 +70,13 @@
                     this.category = res.data;
                 })
             },
+            top(){
+                this.listCrawlerItem()
+            },
         }
     }
 </script>
 
 <style scoped>
+    .crawler-item {min-height: 350px;width: 100%;}
 </style>

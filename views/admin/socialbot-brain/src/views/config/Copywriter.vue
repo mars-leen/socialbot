@@ -20,9 +20,9 @@
                     <a-input v-model="CopywriterForm.Title" type="string" >
                     </a-input>
                 </a-form-item>
-                <a-form-item label="分类描述">
-                    <a-input v-model="CopywriterForm.Description" type="string" >
-                    </a-input>
+                <a-form-item label="描述">
+                    <a-textarea v-model="CopywriterForm.Description" type="string" :autosize="{ minRows: 5}" >
+                    </a-textarea>
                 </a-form-item>
                 <a-form-item>
                     <a-button type="primary" html-type="submit" class="login-form-button" :loading="addCopywriterLoading" @click.prevent="handleCopywriter">提交</a-button>
@@ -36,9 +36,11 @@
     import {Button, Icon, Modal, Form,Input, List} from 'ant-design-vue'
     import ContentItem from '../../components/content/Content'
     import {listCopywriterApi, addCopywriterApi, deleteCopywriterApi, updateCopywriterApi} from "../../api/copywriter"
+    import ATextarea from "ant-design-vue/es/input/TextArea";
     export default {
         name: "Copywriter",
         components: {
+            ATextarea,
             ContentItem,
             [List.name]: List,
             [List.Item.name]: List.Item,
@@ -49,6 +51,7 @@
             [Form.name]: Form,
             [Form.Item.name]: Form.Item,
             [Input.name]: Input,
+            [Input.TextArea.name]: Input.TextArea,
         },
         created(){
             this.listCopywriter()
@@ -105,7 +108,7 @@
                         return
                     }
                     this.addCopywriterVisible = false;
-                    this.Copywriter.push(this.CopywriterForm)
+                    this.listCopywriter()
                 })
             },
             updateCopywriter(){
@@ -115,6 +118,7 @@
                         return
                     }
                     this.addCopywriterVisible = false
+                    this.listCopywriter()
                 })
             },
             deleteCopywriter(id){

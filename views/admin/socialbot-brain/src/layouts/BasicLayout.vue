@@ -18,7 +18,7 @@
             </a-menu>
         </a-layout-sider>
         <a-layout>
-            <a-layout-header style="background: #fff; padding: 0">
+            <a-layout-header style="background: #fff; padding: 0;">
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
             </a-layout-header>
             <a-layout-content :style="{ margin: '10px', minHeight: '280px', minWidth:'350px'}">
@@ -32,7 +32,7 @@
 </template>
 <style>
     #basic-layout {
-        height: 100%;
+      /*  height: 100%;*/
     }
 
     #basic-layout .trigger {
