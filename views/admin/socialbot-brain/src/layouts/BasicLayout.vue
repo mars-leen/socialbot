@@ -22,7 +22,10 @@
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
             </a-layout-header>
             <a-layout-content :style="{ margin: '10px', minHeight: '280px', minWidth:'350px'}">
-                <router-view></router-view>
+                <keep-alive>
+                    <router-view  v-if="$route.meta.keepAlive"></router-view>
+                </keep-alive>
+                <router-view v-if="!$route.meta.keepAlive"></router-view>
             </a-layout-content>
         </a-layout>
     </a-layout>

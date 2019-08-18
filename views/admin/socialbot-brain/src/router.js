@@ -15,7 +15,7 @@ const routes = [
                 name: 'default',
                 component: () => import('./views/dashboard/Workplace.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -24,7 +24,7 @@ const routes = [
                 name: 'workplace',
                 component: () => import('./views/dashboard/Workplace.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -33,7 +33,7 @@ const routes = [
                 name: 'config',
                 component: () => import('./views/config/Config.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -42,7 +42,7 @@ const routes = [
                 name: 'categoryConfig',
                 component: () => import('./views/config/Category.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -51,7 +51,7 @@ const routes = [
                 name: 'copywriterConfig',
                 component: () => import('./views/config/Copywriter.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -60,7 +60,7 @@ const routes = [
                 name: 'tagConfig',
                 component: () => import('./views/config/Tag.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -69,7 +69,7 @@ const routes = [
                 name: 'serverConfig',
                 component: () => import('./views/config/Server.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -79,7 +79,7 @@ const routes = [
                 name: 'addCommissionProduct',
                 component: () => import('./views/media/AddCommissionProduct.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -88,7 +88,7 @@ const routes = [
                 name: 'gallery',
                 component: () => import('./views/media/Gallery.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },
@@ -98,7 +98,7 @@ const routes = [
                 name: 'robotServer',
                 component: () => import('./views/robot/Server.vue'),
                 meta: {
-                    keepAlive: true,
+                    keepAlive: false,
                     needLogin:true,
                 }
             },

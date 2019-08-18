@@ -1,6 +1,7 @@
 
 const api = {
-    Host: 'http://149.28.210.141:8081',
+    //Host: 'http://149.28.210.141:8081',
+    Host: 'http://localhost:8081',
     UploadSingle: '/v1/adminApi/upload/single',
     Login: '/v1/adminApi/login',
     Logout: '/v1/adminApi/logout',

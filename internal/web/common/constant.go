@@ -20,7 +20,7 @@ const (
 	SourceTypeVideo      = 1
 
 	// crawler
-	CrawlerListPageNum   = 30
+	CrawlerListPageNum   = 6
 	CrawlerItemNew       = 0  // 新入库
 	CrawlerItemPublished = 10 // 已发布
 	CrawlerImgsLimit     = 10 // 发布图片数量最大长度限制
