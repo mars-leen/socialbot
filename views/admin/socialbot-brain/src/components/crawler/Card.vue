@@ -189,6 +189,9 @@
                 return {'active': isSelected}
             },
             tagList() {
+                if (this.categoryList.length === 0){
+                    return
+                }
                 const index = this.categoryList.findIndex((cate) => {
                     return cate.Id === this.activeCate;
                 });
