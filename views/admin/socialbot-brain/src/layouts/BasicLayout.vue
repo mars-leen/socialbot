@@ -21,7 +21,7 @@
             <a-layout-header style="background: #fff; padding: 0;">
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
             </a-layout-header>
-            <a-layout-content :style="{ margin: '10px', minHeight: '280px', minWidth:'350px'}">
+            <a-layout-content :style="{ margin: '10px', minHeight: '700px', minWidth:'350px',background:'#ffffff'}">
                 <keep-alive>
                     <router-view  v-if="$route.meta.keepAlive"></router-view>
                 </keep-alive>
@@ -98,6 +98,11 @@
                         title: "配置中心",
                         child: [
                             {
+                                key: 21,
+                                title: "基础配置",
+                                link:"/dashboard/config"
+                            },
+                            {
                                 key: 22,
                                 title: "分类配置",
                                 link:"/dashboard/config/category"
@@ -116,7 +121,12 @@
                                 key: 25,
                                 title: "服务器配置",
                                 link:"/dashboard/config/server"
-                            }
+                            },
+                            {
+                                key: 26,
+                                title: "反向代理配置",
+                                link:"/dashboard/config/reverse"
+                            },
                         ]
                     },
                     {

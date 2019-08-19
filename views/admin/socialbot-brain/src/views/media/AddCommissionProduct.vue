@@ -92,8 +92,9 @@
             AFormItem,
             [Upload.name]: Upload,
             [Row.name]: Row,
-            [Tag.name]: Tag,
             [Col.name]: Col,
+            [Tag.name]: Tag,
+
             [Button.name]: Button,
             [Input.name]: Input,
             [Input.TextArea.name]: Input.TextArea,

@@ -5,9 +5,11 @@ import (
 	"net/url"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
+	"socialbot/internal/web/service/configService"
 	"socialbot/internal/web/wblogger"
 	"strings"
 )
+
 
 func Add(form *model.CrawlerForm) common.Result {
 	crawler := model.Crawler{
@@ -83,7 +85,6 @@ func ListRandItem(crwid int) common.Result{
 	return common.SUCCESS(conMediaList)
 }
 
-
 func DeleteItem(id int64) common.Result {
 	CrawlerItem := model.CrawlerItem{}
 	isExist, err := CrawlerItem.GetOneById(id)
@@ -104,11 +105,22 @@ func DeleteItem(id int64) common.Result {
 	return common.SUCCESS(nil)
 }
 
-func FormatContent(content string) []string {
+func FormatContent(content string) []model.CrawlerMedia {
 	list := strings.Split(content, ",")
+	l := len(list)
+	result := make([]model.CrawlerMedia, l)
 	for i,v := range list  {
 		u,_ := url.Parse(v)
-		list[i] = fmt.Sprintf("/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",u.Scheme,u.Host,u.Path, "imageMogr2/thumbnail/!88p")
+		r, _ := configService.GetReverseHost(u.Host)
+		if r == nil || r.EnableReserve != true{
+			result[i].Show = v
+			result[i].Download = v
+			continue
+		}
+		if !r.ReserveRule.ImgThumbInPath {
+			result[i].Show = fmt.Sprintf("/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",u.Scheme,u.Host,u.Path,r.ReserveRule.ImgShowRule)
+			result[i].Download = fmt.Sprintf("/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",u.Scheme,u.Host,u.Path, r.ReserveRule.ImgDownloadRule)
+		}
 	}
-	return list
+	return result
 }

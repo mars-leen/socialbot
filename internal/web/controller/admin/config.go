@@ -10,6 +10,35 @@ import (
 	"strconv"
 )
 
+func BaseConfig(c *gin.Context)  {
+	configLogic.Base().Out(c)
+}
+
+func AddConfig(c *gin.Context)  {
+	var form model.ConfigForm
+	if err := c.ShouldBind(&form); err != nil {
+		fmt.Println(form, err)
+		common.ParamError.Out(c)
+		return
+	}
+	result := configLogic.Add(&form)
+	result.Out(c)
+}
+
+func UpdateConfig(c *gin.Context)  {
+	var form model.ConfigForm
+	if err := c.ShouldBind(&form); err != nil {
+		common.ParamError.Out(c)
+		return
+	}
+	result := configLogic.UpdateByKey(&form)
+	result.Out(c)
+}
+
+func ListConfig(c *gin.Context) {
+	configLogic.List("").Out(c)
+}
+
 func AddServer(c *gin.Context)  {
 	var form model.ConfigForm
 	if err := c.ShouldBind(&form); err != nil {
@@ -46,5 +75,44 @@ func UpdateServer(c *gin.Context)  {
 
 func ListServer(c *gin.Context) {
 	configLogic.List(configService.ServerKey).Out(c)
+}
+
+
+func AddReverseHost(c *gin.Context)  {
+	var form model.ConfigForm
+	if err := c.ShouldBind(&form); err != nil {
+		fmt.Println(form, err)
+		common.ParamError.Out(c)
+		return
+	}
+	form.Key = configService.ReserveHostKey
+	result := configLogic.Add(&form)
+	result.Out(c)
+}
+
+func DeleteReverseHost(c *gin.Context)  {
+	idStr := c.DefaultPostForm("id", "0")
+	id,_ := strconv.Atoi(idStr)
+	if id == 0  {
+		common.ParamError.Out(c)
+		return
+	}
+	result := configLogic.Delete(id)
+	result.Out(c)
+}
+
+func UpdateReverseHost(c *gin.Context)  {
+	var form model.ConfigForm
+	if err := c.ShouldBind(&form); err != nil {
+		fmt.Println(form, err)
+		common.ParamError.Out(c)
+		return
+	}
+	result := configLogic.Update(&form)
+	result.Out(c)
+}
+
+func ListReverseHost(c *gin.Context) {
+	configLogic.List(configService.ReserveHostKey).Out(c)
 }
 

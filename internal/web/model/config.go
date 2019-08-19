@@ -38,7 +38,7 @@ func (c *Config) UpdateById(id int) (rs int64, err error) {
 
 func (c *Config) UpdateColsById(id int, cols ...string) (rs int64, err error) {
 	c.UpdateAt = time.Now().UnixNano()
-	cols = append(cols, "create_at")
+	cols = append(cols, "update_at")
 	rs, err = orm.SocialBotOrm.Cols(cols...).Where("id = ? ", id).Update(c)
 	if err != nil {
 		return 0, errors.Wrap(err, fmt.Sprintf("UpdateColsById(%d) cols(%s) failed", id, cols))
@@ -50,6 +50,22 @@ func (c *Config) GetOneById(id int) (rs bool, err error) {
 	rs, err = orm.SocialBotOrm.Where("id=?", id).Where("is_del=?", 0).Get(c)
 	if err != nil {
 		return rs, errors.Wrap(err, fmt.Sprintf("GetOneById(%d) failed", id))
+	}
+	return rs, nil
+}
+
+func (c *Config) GetOneByKeyKeyMark(key string) (rs bool, err error) {
+	rs, err = orm.SocialBotOrm.Where("key_mark=?", key).Where("is_del=?", 0).Get(c)
+	if err != nil {
+		return rs, errors.Wrap(err, fmt.Sprintf("GetOneByKeyKeyMark(%s) failed", key))
+	}
+	return rs, nil
+}
+
+func (c *Config) GetOneByKeAndTitle(key,title string) (rs bool, err error) {
+	rs, err = orm.SocialBotOrm.Where("key_mark=? AND title=?", key, title).Where("is_del=?", 0).Get(c)
+	if err != nil {
+		return rs, errors.Wrap(err, fmt.Sprintf("GetOneByKeAndTitle(%s,%s) failed", key,title))
 	}
 	return rs, nil
 }

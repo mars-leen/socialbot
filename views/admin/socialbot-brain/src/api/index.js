@@ -4,10 +4,20 @@ const api = {
     Login: '/v1/adminApi/login',
     Logout: '/v1/adminApi/logout',
 
+    AddConfig: '/v1/adminApi/config/add',
+    UpdateConfig: '/v1/adminApi/config/update',
+    BaseConfig: '/v1/adminApi/config/base',
+
     AddServerConfig: '/v1/adminApi/config/addServer',
     UpdateServerConfig: '/v1/adminApi/config/updateServer',
     ListServerConfig: '/v1/adminApi/config/listServer',
     DeleteServerConfig: '/v1/adminApi/config/deleteServer',
+
+    AddReverseConfig: '/v1/adminApi/config/addReverseHost',
+    UpdateReverseConfig: '/v1/adminApi/config/updateReverseHost',
+    ListReverseConfig: '/v1/adminApi/config/listReverseHost',
+    DeleteReverseConfig: '/v1/adminApi/config/deleteReverseHost',
+
 
     AddCategory: '/v1/adminApi/category/add',
     UpdateCategory: '/v1/adminApi/category/update',

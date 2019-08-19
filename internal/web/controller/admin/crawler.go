@@ -48,8 +48,7 @@ func DeleteCrawlerItem(c *gin.Context) {
 	id,_ := strconv.ParseInt(idStr, 10, 64)
 	crawlerLogic.DeleteItem(id).Out(c)
 }
-//http://localhost:8080/v1/adminApi/reverse?scheme=https&host=qnm.hunliji.com&path=/o_1d8ke0df31ftk1tj81p49kh315r9p.jpg&param=imageMogr2/thumbnail/!88p
-//http://localhost:8081/v1/adminApi/reverse?scheme=http&host=139.199.132.157:8877&path=/api
+
 func Reverse(c *gin.Context) {
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
@@ -62,6 +61,7 @@ func Reverse(c *gin.Context) {
 	c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
 
 	// create a new url from the raw RequestURI sent by the client
+
 	fullUrl := fmt.Sprintf("%s://%s%s?%s",c.Query("scheme"), c.Query("host"), c.Query("path"), c.Query("param"))
 	if c.Query("param") != "" {
 		fullUrl = fmt.Sprintf("%s://%s%s",c.Query("scheme"), c.Query("host"), c.Query("path"))
@@ -74,9 +74,11 @@ func Reverse(c *gin.Context) {
 		return
 	}
 
-	header := configService.GetHeader(c.Query("host"))
-	for key, value := range header {
-		proxyReq.Header.Set(key, value)
+	r,_ := configService.GetReverseHost(c.Query("host"))
+	if r != nil {
+		for key, value := range r.Header {
+			proxyReq.Header.Set(key, value)
+		}
 	}
 
 	client := &http.Client{}

@@ -1,7 +1,6 @@
 package robotServerLogic
 
 import (
-	"fmt"
 	jsoniter "github.com/json-iterator/go"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
@@ -21,7 +20,7 @@ func Add(configId int, name string) common.Result {
 		wblogger.Log.Error(err)
 		return common.SystemError.Errorf("%v", err)
 	}
-	fmt.Printf("%+v \n", server)
+
 	json, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(server)
 	if err != nil {
 		wblogger.Log.Error(err)

@@ -73,7 +73,15 @@ const routes = [
                     needLogin:true,
                 }
             },
-
+            {
+                path: 'config/reverse',
+                name: 'reverseConfig',
+                component: () => import('./views/config/Reverse.vue'),
+                meta: {
+                    keepAlive: false,
+                    needLogin:true,
+                }
+            },
             {
                 path: 'add-commission-product',
                 name: 'addCommissionProduct',

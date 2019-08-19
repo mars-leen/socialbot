@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"socialbot/internal/web/service/configService"
+	"socialbot/internal/web/wblogger"
 	"strconv"
 	"strings"
 )
@@ -17,7 +18,11 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func applyCORS(c *gin.Context )  {
-	cfg := configService.GetCors()
+	cfg,err := configService.GetCors()
+	if err != nil {
+		wblogger.Log.Error(err)
+		return
+	}
 	if cfg.Enable == false {
 		return
 	}

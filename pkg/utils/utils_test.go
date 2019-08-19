@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	jsoniter "github.com/json-iterator/go"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -30,4 +32,27 @@ func DeleteSlice2(dst int, a []int) []int {
 		}
 	}
 	return a[:j]
+}
+
+func TestEnDe(t *testing.T) {
+	hostMapHeader := map[string]map[string]string{
+		"qq":{
+			"Referer":        "https://www.qq.com",
+			"Sec-Fetch-Mode": "no-cors",
+			"User-Agent":     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36",
+		},
+	}
+	rs, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(hostMapHeader)
+	if err!= nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(string(rs))
+	temp := map[string]map[string]string{}
+
+	err =  jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(rs, &temp)
+	if err!= nil {
+		log.Fatal(err)
+	}
+	fmt.Println(temp["qq"])
 }

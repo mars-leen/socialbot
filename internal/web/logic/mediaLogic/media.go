@@ -470,7 +470,12 @@ func DecodeMedias(medias string) ([]*model.SubmitMediaForm, error) {
 }
 
 func DownLoadMedias(medias []*model.SubmitMediaForm) error {
-	storage := configService.GetStorage()
+	storage,err := configService.GetStorage()
+	if err != nil {
+		wblogger.Log.Error(err)
+		return err
+	}
+
 	f := &http.Client{
 		Timeout: 300 * time.Second,
 	}

@@ -1,33 +1,33 @@
 import api from './index'
 import {axios} from '../utils/request'
 
-export function addServerConfigApi (parameter) {
+export function addReverseConfigApi (parameter) {
     return axios({
-        url: api.AddServerConfig,
+        url: api.AddReverseConfig,
         method: 'post',
         data: parameter
     })
 }
 
-export function updateServerConfigApi (parameter) {
+export function updateReverseConfigApi (parameter) {
     return axios({
-        url: api.UpdateServerConfig,
+        url: api.UpdateReverseConfig,
         method: 'post',
         data: parameter
     })
 }
 
-export function deleteServerConfigApi (parameter) {
+export function deleteReverseConfigApi (parameter) {
     return axios({
-        url: api.DeleteServerConfig,
+        url: api.DeleteReverseConfig,
         method: 'post',
         data: parameter
     })
 }
 
-export function listServerConfigApi (parameter) {
+export function listReverseConfigApi (parameter) {
     return axios({
-        url: api.ListServerConfig,
+        url: api.ListReverseConfig,
         method: 'get',
         params: parameter,
     })

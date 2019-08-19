@@ -74,7 +74,7 @@ func (c *Category) GetColsOneById(id int, cols ...string) (rs bool, err error) {
 }
 
 func (cl *CategoryList) GetList() (err error) {
-	err = orm.SocialBotOrm.Where("is_del=?", 0).Find(cl)
+	err = orm.SocialBotOrm.Where("is_del=?", 0).OrderBy("sort ASC").Find(cl)
 	if err != nil {
 		return errors.Wrap(err, "get list failed")
 	}

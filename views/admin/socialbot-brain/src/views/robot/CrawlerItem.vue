@@ -42,7 +42,6 @@
         created() {
             this.listCrawlerItem();
             this.listCategory();
-           /* this.listCrawlerItemConfig();*/
         },
         data() {
             return {
