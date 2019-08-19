@@ -1,12 +1,11 @@
 import axios from 'axios'
-import api from '../api/index'
 import store from "../store/";
 import {router} from '../router'
 import { notification } from 'ant-design-vue';
 const service = axios.create({
-    baseURL: api.Host, // api base_url
     timeout: 30000 // 请求超时时间
 });
+
 
 const err = (error) => {
     if (error.response) {

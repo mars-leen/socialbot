@@ -39,7 +39,6 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	// admin
 	adminApi := g.Group("/v1/adminApi")
 	adminApi.POST("/login", admin.Login)
-
 	adminApi.GET("/reverse", admin.Reverse)
 
 	adminApi.Use(middlewares.AuthAdmin())

@@ -4,10 +4,10 @@
             <a-button :loading="delLoading" class="btn" type="danger" @click="delContent">删除</a-button>
         </div>
         <div class="card-body">
-            <masonry :cols="{default: 3, 1200: 3, 768: 3, 576: 1}" :gutter="{default: '1rem'}">
+            <masonry :cols="{default: 3, 1200: 3, 768: 3, 576: 1}" :gutter="{default: '1rem'}" >
                 <div v-for="(v, i) in media.Medias" :key="i" class="card-img" :class="imgClass(v)"
-                     @click="toggleImg(v)">
-                    <img :src="v" alt="img" class="relative-img">
+                     @click="toggleImg(v)" v-lazy-container="{ selector: 'img' }">
+                   <img  :data-src="v" alt="img" class="relative-img">
                 </div>
             </masonry>
         </div>
@@ -58,11 +58,12 @@
 <script>
     import Vue from 'vue'
     import VueMasonry from 'vue-masonry-css'
+    import VueLazyload from 'vue-lazyload'
     import {Button, Radio, Tag, Input, Checkbox, Select} from 'ant-design-vue'
     import {deleteCrawlerItemApi, addSocialMediaFromCrawlerApi} from "../../api/robotCrawler";
     import {searchCopywriterApi} from "../../api/copywriter";
-
     Vue.use(VueMasonry);
+    Vue.use(VueLazyload);
 
     export default {
         name: "CrawlerCard",

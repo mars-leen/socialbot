@@ -5,7 +5,6 @@ import (
 	"net/url"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
-	"socialbot/internal/web/service/configService"
 	"socialbot/internal/web/wblogger"
 	"strings"
 )
@@ -68,7 +67,6 @@ func ListRandItem(crwid int) common.Result{
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
-
 	// format
 	l := len(conList)
 	conMediaList := make([]*model.ConCrawlerItem, 0, l)
@@ -110,7 +108,7 @@ func FormatContent(content string) []string {
 	list := strings.Split(content, ",")
 	for i,v := range list  {
 		u,_ := url.Parse(v)
-		list[i] = fmt.Sprintf("%s/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",configService.GetHost(),u.Scheme,u.Host,u.Path, "imageMogr2/thumbnail/!88p")
+		list[i] = fmt.Sprintf("/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",u.Scheme,u.Host,u.Path, "imageMogr2/thumbnail/!88p")
 	}
 	return list
 }

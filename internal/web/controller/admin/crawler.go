@@ -49,7 +49,7 @@ func DeleteCrawlerItem(c *gin.Context) {
 	crawlerLogic.DeleteItem(id).Out(c)
 }
 //http://localhost:8080/v1/adminApi/reverse?scheme=https&host=qnm.hunliji.com&path=/o_1d8ke0df31ftk1tj81p49kh315r9p.jpg&param=imageMogr2/thumbnail/!88p
-//http://localhost:8080/v1/adminApi/reverse?scheme=http&host=139.199.132.157:8877&path=/api
+//http://localhost:8081/v1/adminApi/reverse?scheme=http&host=139.199.132.157:8877&path=/api
 func Reverse(c *gin.Context) {
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {

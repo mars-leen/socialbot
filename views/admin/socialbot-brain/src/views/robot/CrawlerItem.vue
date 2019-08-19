@@ -1,5 +1,5 @@
 <template>
-    <a-spin :spinning="spinning" :size="large">
+    <a-spin :spinning="spinning" size="large">
         <div class="crawler-item">
             <crawler-card v-for="c in crawlerItem" :key="c.Id" :media="c" :category-list="category"></crawler-card>
             <a-back-top :visibilityHeight="10"  @click="top"/>
