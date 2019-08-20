@@ -54,3 +54,29 @@ socailbot/
         http://localhost:8081 (前台)
         http://localhost:8081/dashboard （后台管理）
 6. 配置参数。除了配置文件外，运行时配置 存放于 mysql 中，需要进入管理后台更改。
+
+### 开发
+1. 前台 后台 基于vue-cli3构建，考虑到部署成本，代码中并没有写死host，默认无host,会默认请求当前域名。vue.config.js中默认配置了8081的反向代理开发服务器（vue-cli自带公共，讲请求代理到需要的接口地址上，避免跨域等）。
+` 
+// 设置代理
+        proxy: {
+            "/v1": {
+                target: "http://127.0.0.1:8081/", // 域名
+                ws: true, // 是否启用websockets
+                changOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+                pathRequiresRewrite: {
+                    "^/v1": "/"
+                }
+            },
+            "/storage": {
+                target: "http://127.0.0.1:8081/", // 域名
+                ws: true, // 是否启用websockets
+                changOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+                pathRequiresRewrite: {
+                    "^/storage": "/"
+                }
+            }
+        }
+ `
+2.项目还在开发中，部分功能页面比较粗糙。待优化
+        
