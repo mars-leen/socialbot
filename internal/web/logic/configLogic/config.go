@@ -1,6 +1,7 @@
 package configLogic
 
 import (
+	"socialbot/internal/web/cache"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
 	"socialbot/internal/web/service/configService"
@@ -13,6 +14,10 @@ func Add(form *model.ConfigForm) common.Result {
 		Title:   form.Title,
 		Value:   form.Value,
 	}
+
+	// del cache 为了防止缓存穿透，首次访问数据库内不存在的host,会设置空值，此处需要删掉
+	DelCache(config.KeyMark, config.Title)
+
 	_, err := config.Insert()
 	if err != nil {
 		wblogger.Log.Error(err)
@@ -31,6 +36,8 @@ func Delete(id int) common.Result {
 	if !isExist {
 		return common.DataIsNotExist
 	}
+	// del cache
+	DelCache(config.KeyMark, config.Title)
 
 	config.IsDel = 1
 	_, err = config.UpdateColsById(id, "is_del")
@@ -53,6 +60,10 @@ func Update(form *model.ConfigForm) common.Result {
 		return common.DataIsNotExist
 	}
 
+	// del cache
+	DelCache(config.KeyMark, config.Title)
+
+	// update
 	config.KeyMark = form.Key
 	config.Title = form.Title
 	config.Value = form.Value
@@ -126,4 +137,12 @@ func Base() common.Result {
 		"cors": cors,
 		"storage": storage,
 	})
+}
+
+func DelCache(key,title string)  {
+	switch key {
+	case configService.ReserveHostKey:
+		cache.DelReverseHost(title)
+		break
+	}
 }

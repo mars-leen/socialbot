@@ -93,3 +93,17 @@ func (cl *ConfigList) GetListByKey(key string) (err error) {
 	}
 	return nil
 }
+
+
+type ReserveHost struct {
+	EnableReserve bool
+	Header        map[string]string
+	ReserveRule     ReserveRule
+}
+
+type ReserveRule struct {
+	ImgThumbInPath  bool
+	ImgShowRule     string
+	ImgDownloadRule string
+	VideoRule       string
+}
