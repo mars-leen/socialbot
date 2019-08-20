@@ -79,4 +79,12 @@ socailbot/
         }
  `
 2.项目还在开发中，部分功能页面比较粗糙。待优化
-        
+
+### 预览
+后台管理
+![dashboard.png](https://github.com/lukeyMing/socialbot/blob/master/doc/dashboard.png)
+前台pc
+![front2.png](https://github.com/lukeyMing/socialbot/blob/master/doc/front2.png)
+前台手机 （自适应）
+![mobile.png](https://github.com/lukeyMing/socialbot/blob/master/doc/mobile.png)
+
