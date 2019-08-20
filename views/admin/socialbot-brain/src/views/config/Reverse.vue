@@ -5,18 +5,20 @@
             <div slot="body">
                 <a-row :gutter="16">
                     <a-col v-for="s in ReverseHost" :key="s.Id" :sm="1" :md="12" class="ReverseHost-card">
-                        <a-card :title="s.Title">
-                            <template class="ant-card-actions" slot="actions">
-                                <a-icon type="edit" @click="showHandleReverseHost(true, s)"/>
-                                <a-icon type="delete" @click="deleteReverseHost(s.Id)"/>
-                            </template>
-                            <p style="word-wrap: break-word"><strong>是否开启反向代理</strong>: {{s.EnableReserve}}</p>
-                            <div><strong>图片缩率参数是否在路径内</strong>: {{s.ReserveRule.ImgThumbInPath}}</div>
-                            <div><strong>图片后台管理展示参数规则</strong>: {{s.ReserveRule.ImgShowRule}}</div>
-                            <div><strong>图片发布时下载展示参数规则</strong>: {{s.ReserveRule.ImgDownloadRule}}</div>
-                            <div><strong>视频展示参数规则</strong>: {{s.ReserveRule.VideoRule}}</div>
-                            <div><strong>反向代理Header</strong>: {{s.HeaderStr}}</div>
-                        </a-card>
+                        <a-spin :spinning="s.Loading">
+                            <a-card :title="s.Title">
+                                <template class="ant-card-actions" slot="actions">
+                                    <a-icon type="edit" @click="showHandleReverseHost(true, s)"/>
+                                    <a-icon  type="delete" @click="deleteReverseHost(s.Id)"/>
+                                </template>
+                                <p style="word-wrap: break-word"><strong>是否开启反向代理</strong>: {{s.EnableReserve}}</p>
+                                <div><strong>图片缩率参数是否在路径内</strong>: {{s.ReserveRule.ImgThumbInPath}}</div>
+                                <div><strong>图片后台管理展示参数规则</strong>: {{s.ReserveRule.ImgShowRule}}</div>
+                                <div><strong>图片发布时下载展示参数规则</strong>: {{s.ReserveRule.ImgDownloadRule}}</div>
+                                <div><strong>视频展示参数规则</strong>: {{s.ReserveRule.VideoRule}}</div>
+                                <div><strong>反向代理Header</strong>: {{s.HeaderStr}}</div>
+                            </a-card>
+                        </a-spin>
                     </a-col>
                 </a-row>
             </div>
@@ -66,7 +68,7 @@
 </template>
 
 <script>
-    import {Button, Icon, Modal, Form, Input, List, Card, Row, Col, Switch} from 'ant-design-vue'
+    import {Button, Icon, Modal, Form, Input, List, Card, Row, Col, Switch,Spin} from 'ant-design-vue'
     import ContentItem from '../../components/content/Content'
     import {
         listReverseConfigApi,
@@ -80,6 +82,7 @@
         components: {
             ContentItem,
             [Switch.name]: Switch,
+            [Spin.name]: Spin,
             [List.name]: List,
             [Card.name]: Card,
             [Row.name]: Row,
@@ -165,6 +168,7 @@
                     for (let i in result) {
                         let s = JSON.parse(result[i].Value);
                         s.Id = result[i].Id;
+                        s.Loading = false;
                         list.push(s)
                     }
                     this.ReverseHost = list
@@ -191,15 +195,21 @@
                 })
             },
             deleteReverseHost(id) {
+                const index = this.ReverseHost.findIndex((c) => {
+                    return c.Id === id;
+                });
+                if (this.ReverseHost[index].Loading){
+                    return
+                }
+                this.ReverseHost[index].Loading = true;
+
                 const form = new FormData;
                 form.append("id", id);
                 deleteReverseConfigApi(form).then(res => {
+                    this.ReverseHost[index].loading = false;
                     if (!res) {
                         return
                     }
-                    const index = this.ReverseHost.findIndex((c) => {
-                        return c.Id === id;
-                    });
                     this.ReverseHost.splice(index, 1);
                 })
             },
@@ -209,7 +219,7 @@
                 form.append("title", this.ReverseHostForm.Title);
                 form.append("value", JSON.stringify(this.ReverseHostForm));
                 return form
-            }
+            },
         }
     }
 </script>

@@ -10,8 +10,8 @@
             </template>
 
             <div class="list" slot="body">
-                <a-list itemLayout="horizontal" :dataSource="Tag" >
-                    <a-list-item slot="renderItem" slot-scope="item,index">
+                <a-list itemLayout="horizontal" :dataSource="Tag"  :loading="loading">
+                    <a-list-item slot="renderItem" slot-scope="item,index" >
                         <a-list-item-meta :description="item.Description">
                             <h4 slot="title">图板：{{item.BoardName}}</h4>
                             <h4 slot="title">简称：{{item.ShortName}}</h4>
@@ -81,6 +81,7 @@
         },
         data() {
             return {
+                loading:false,
                 addTagVisible: false,
                 addTagLoading: false,
                 Tag : [],
@@ -110,10 +111,8 @@
                 if (!isUpdate) {
                     this.DefaultTagForm.Cid = this.activeCategory;
                     this.TagForm = Object.assign({},this.DefaultTagForm);
-                    console.log("add",data);
                     return
                 }
-                console.log("update",data);
                 this.TagForm = data
             },
             handleTag(){
@@ -180,7 +179,9 @@
                 return form
             },
             listCategory(){
+                this.loading = true;
                 listCategoryApi().then(res => {
+                    this.loading = false;
                     if (!res) {
                         return
                     }

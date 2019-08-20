@@ -3,7 +3,8 @@
         <content-item>
             <a-button slot="header" type="primary" @click="showHandleCategory(false)" icon="plus">添加</a-button>
             <div class="list" slot="body">
-                <a-list  itemLayout="vertical"  :dataSource="category" >
+
+                <a-list  itemLayout="vertical"  :dataSource="category"  :loading="loading">
                     <a-list-item  slot="renderItem" slot-scope="item,index">
                         <a-list-item-meta :description="item.Description">
                             <h4 slot="title">简称：{{item.ShortName}} </h4>
@@ -14,6 +15,7 @@
                         <a slot="actions" @click="deleteCategory(item.Id)">删除</a>
                     </a-list-item>
                 </a-list>
+
             </div>
         </content-item>
         <a-modal title="添加分类" :visible="addCategoryVisible" :footer="null"  @cancel="()=> this.addCategoryVisible = false">
@@ -75,6 +77,7 @@
         },
         data() {
             return {
+                loading:false,
                 addCategoryVisible: false,
                 addCategoryLoading: false,
                 category : [],
@@ -119,7 +122,9 @@
                 }
             },
             listCategory(){
+                this.loading=true;
                 listCategoryApi().then(res => {
+                    this.loading=false;
                     if (!res) {
                         return
                     }

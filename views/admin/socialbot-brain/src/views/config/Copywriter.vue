@@ -3,7 +3,7 @@
         <content-item>
             <a-button slot="header" type="primary" @click="showHandleCopywriter(false)" icon="plus">添加</a-button>
             <div class="list" slot="body">
-                <a-list itemLayout="horizontal" :dataSource="Copywriter" >
+                <a-list itemLayout="horizontal" :dataSource="Copywriter" :loading="loading" >
                     <a-list-item slot="renderItem" slot-scope="item,index">
                         <a-list-item-meta :description="item.Description">
                             <h4 slot="title">{{item.Title}}</h4>
@@ -58,6 +58,7 @@
         },
         data() {
             return {
+                loading:false,
                 addCopywriterVisible: false,
                 addCopywriterLoading: false,
                 Copywriter : [],
@@ -94,7 +95,9 @@
                 }
             },
             listCopywriter(){
+                this.loading = true
                 listCopywriterApi().then(res => {
+                    this.loading = false
                     if (!res) {
                         return
                     }

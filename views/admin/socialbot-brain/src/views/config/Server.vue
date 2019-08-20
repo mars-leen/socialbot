@@ -5,58 +5,60 @@
             <div slot="body">
                 <a-row :gutter="16">
                     <a-col v-for="s in server" :key="s.Id" :sm="1" :md="8" class="server-card">
-                        <a-card  :title="s.Title">
-                            <template class="ant-card-actions" slot="actions">
-                                <a-icon type="edit" @click="showHandleServer(true, s)"/>
-                                <a-icon type="delete" @click="deleteServer(s.Id)" />
-                            </template>
-                            <p style="word-wrap: break-word"><strong>ApiKey</strong>: {{s.ApiKey}}</p>
-                            <div><strong>RegionID</strong>: {{s.RegionID}}</div>
-                            <div><strong>PlanId</strong>: {{s.PlanId}}</div>
-                            <div><strong>OsId</strong>: {{s.OsId}}</div>
-                            <div><strong>scriptName</strong>: {{s.ScriptName}}</div>
-                            <div><strong>scriptType</strong>: {{s.ScriptType}}</div>
-                        </a-card>
+                        <a-spin :spinning="s.Loading">
+                            <a-card :title="s.Title">
+                                <template class="ant-card-actions" slot="actions">
+                                    <a-icon type="edit" @click="showHandleServer(true, s)"/>
+                                    <a-icon type="delete" @click="deleteServer(s.Id)"/>
+                                </template>
+                                <p style="word-wrap: break-word"><strong>ApiKey</strong>: {{s.ApiKey}}</p>
+                                <div><strong>RegionID</strong>: {{s.RegionID}}</div>
+                                <div><strong>PlanId</strong>: {{s.PlanId}}</div>
+                                <div><strong>OsId</strong>: {{s.OsId}}</div>
+                                <div><strong>scriptName</strong>: {{s.ScriptName}}</div>
+                                <div><strong>scriptType</strong>: {{s.ScriptType}}</div>
+                            </a-card>
+                        </a-spin>
                     </a-col>
                 </a-row>
             </div>
         </content-item>
         <a-modal title="添加分类" :visible="addServerVisible" :footer="null" @cancel="()=> this.addServerVisible = false">
             <a-form>
-                <a-form-item   label="标题">
+                <a-form-item label="标题">
                     <a-input v-model="serverForm.Title" type="string">
                     </a-input>
                 </a-form-item>
-                <a-form-item  label="apiKey">
+                <a-form-item label="apiKey">
                     <a-input v-model="serverForm.ApiKey" type="string">
                     </a-input>
                 </a-form-item>
-                <a-form-item  label="地区id">
+                <a-form-item label="地区id">
                     <a-input v-model="serverForm.RegionID" type="string">
                     </a-input>
                 </a-form-item>
-                <a-form-item  label="计划id">
+                <a-form-item label="计划id">
                     <a-input v-model="serverForm.PlanId" type="integer">
                     </a-input>
                 </a-form-item>
-                <a-form-item  label="系统id">
+                <a-form-item label="系统id">
                     <a-input v-model="serverForm.OsId" type="string">
                     </a-input>
                 </a-form-item>
 
-                <a-form-item  label="startScript名称">
+                <a-form-item label="startScript名称">
                     <a-input v-model="serverForm.ScriptName" type="string">
                     </a-input>
                 </a-form-item>
-                <a-form-item  label="startScript类型">
+                <a-form-item label="startScript类型">
                     <a-input v-model="serverForm.ScriptType" type="integer">
                     </a-input>
                 </a-form-item>
-                <a-form-item  label="startScript内容">
+                <a-form-item label="startScript内容">
                     <a-textarea v-model="serverForm.ScriptContent" placeholder="script content"
                                 :autosize="{ minRows: 6, maxRows: 16 }"></a-textarea>
                 </a-form-item>
-                <a-form-item  >
+                <a-form-item>
                     <a-button type="primary" html-type="submit" class="login-form-button" :loading="addServerLoading"
                               @click.prevent="handleServer">提交
                     </a-button>
@@ -67,7 +69,7 @@
 </template>
 
 <script>
-    import {Button, Icon, Modal, Form, Input, List,Card, Row, Col} from 'ant-design-vue'
+    import {Button, Icon, Modal, Form, Input, List, Card, Row, Col,Spin} from 'ant-design-vue'
     import ContentItem from '../../components/content/Content'
     import {
         listServerConfigApi,
@@ -80,6 +82,7 @@
         name: "ConfigServer",
         components: {
             ContentItem,
+            [Spin.name]: Spin,
             [List.name]: List,
             [Card.name]: Card,
             [Row.name]: Row,
@@ -193,6 +196,7 @@
                     for (let i in result) {
                         let s = JSON.parse(result[i].Value);
                         s.Id = result[i].Id;
+                        s.Loading = false;
                         list.push(s)
                     }
                     this.server = list
@@ -219,15 +223,21 @@
                 })
             },
             deleteServer(id) {
+                const index = this.server.findIndex((c) => {
+                    return c.Id === id;
+                });
+                if (this.server[index].Loading) {
+                    return
+                }
+                this.server[index].Loading = true;
+
                 const form = new FormData;
                 form.append("id", id);
                 deleteServerConfigApi(form).then(res => {
+                    this.server[index].Loading = false;
                     if (!res) {
                         return
                     }
-                    const index = this.server.findIndex((c) => {
-                        return c.Id === id;
-                    });
                     this.server.splice(index, 1);
                 })
             },
