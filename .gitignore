@@ -18,7 +18,6 @@ log/
 vendor/
 config/config.json
 
-internal/web/service/configService/crawler.go
 cmd/pinbot/pinbot
 cmd/web/web
 storage/
