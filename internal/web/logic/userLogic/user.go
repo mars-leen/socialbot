@@ -163,7 +163,8 @@ func EditProfile(c *gin.Context,nickname, intro string) common.Result {
 
 func getDefaultNickName(email string) string {
 	ns := strings.Split(email, "@")
-	return configService.GetHostName() + "-" + ns[0]
+	w,_:= configService.GetWebsite()
+	return w.HostName + "-" + ns[0]
 }
 
 

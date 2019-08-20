@@ -30,3 +30,12 @@ const (
 	MediaTypeArticle          = 3
 	MediaTypeSocial           = 2
 )
+
+
+const (
+	WebsiteConfigKey = "website"
+	ServerConfigKey= "server"
+	CorsConfigKey = "cors"
+	StorageConfigKey = "storage"
+	ReserveHostConfigKey = "reserve_host"
+)

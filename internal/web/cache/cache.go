@@ -6,5 +6,3 @@ import (
 )
 
 var LikeLock = cache.New(time.Minute, time.Minute)
-
-

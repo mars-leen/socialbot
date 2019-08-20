@@ -6,23 +6,11 @@ import (
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/logic/configLogic"
 	"socialbot/internal/web/model"
-	"socialbot/internal/web/service/configService"
 	"strconv"
 )
 
 func BaseConfig(c *gin.Context) {
 	configLogic.Base().Out(c)
-}
-
-func AddConfig(c *gin.Context) {
-	var form model.ConfigForm
-	if err := c.ShouldBind(&form); err != nil {
-		fmt.Println(form, err)
-		common.ParamError.Out(c)
-		return
-	}
-	result := configLogic.Add(&form)
-	result.Out(c)
 }
 
 func UpdateConfig(c *gin.Context) {
@@ -35,10 +23,6 @@ func UpdateConfig(c *gin.Context) {
 	result.Out(c)
 }
 
-func ListConfig(c *gin.Context) {
-	configLogic.List("").Out(c)
-}
-
 func AddServer(c *gin.Context) {
 	var form model.ConfigForm
 	if err := c.ShouldBind(&form); err != nil {
@@ -46,7 +30,7 @@ func AddServer(c *gin.Context) {
 		common.ParamError.Out(c)
 		return
 	}
-	form.Key = configService.ServerKey
+	form.Key = common.ServerConfigKey
 	configLogic.Add(&form).Out(c)
 }
 
@@ -72,7 +56,7 @@ func UpdateServer(c *gin.Context) {
 }
 
 func ListServer(c *gin.Context) {
-	configLogic.List(configService.ServerKey).Out(c)
+	configLogic.List(common.ServerConfigKey).Out(c)
 }
 
 func AddReverseHost(c *gin.Context) {
@@ -82,7 +66,7 @@ func AddReverseHost(c *gin.Context) {
 		common.ParamError.Out(c)
 		return
 	}
-	form.Key = configService.ReserveHostKey
+	form.Key = common.ReserveHostConfigKey
 	configLogic.Add(&form).Out(c)
 }
 
@@ -107,5 +91,5 @@ func UpdateReverseHost(c *gin.Context) {
 }
 
 func ListReverseHost(c *gin.Context) {
-	configLogic.List(configService.ReserveHostKey).Out(c)
+	configLogic.List(common.ReserveHostConfigKey).Out(c)
 }

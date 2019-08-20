@@ -95,6 +95,10 @@ func (cl *ConfigList) GetListByKey(key string) (err error) {
 }
 
 
+type Website struct {
+	HostName   string
+}
+
 type ReserveHost struct {
 	EnableReserve bool
 	Header        map[string]string
@@ -106,4 +110,21 @@ type ReserveRule struct {
 	ImgShowRule     string
 	ImgDownloadRule string
 	VideoRule       string
+}
+
+type Cors struct {
+	Enable           bool     `json:"Enable"`
+	AllowOrigins     []string `json:"AllowOrigins"`
+	AllowMethods     []string `json:"AllowMethods"`
+	AllowHeaders     []string `json:"AllowHeaders"`
+	AllowCredentials bool     `json:"AllowCredentials"`
+	MaxAge           int      `json:"MaxAge"`
+}
+
+
+type Storage struct {
+	Source               int    `json:"Source"`
+	ServeHost            string `json:"ServeHost"`
+	UploadLocalPath      string `json:"UploadLocalPath"`
+	UploadLocalServePath string `json:"UploadLocalServePath"`
 }

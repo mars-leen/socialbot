@@ -45,9 +45,7 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.POST("/upload/single", admin.UploadSingle)
 
 	adminApi.GET("/config/base", admin.BaseConfig)
-	adminApi.POST("/config/add", admin.AddConfig)
 	adminApi.POST("/config/update", admin.UpdateConfig)
-	adminApi.GET("/config/list", admin.ListConfig)
 
 	adminApi.POST("/config/addServer", admin.AddServer)
 	adminApi.POST("/config/updateServer", admin.UpdateServer)

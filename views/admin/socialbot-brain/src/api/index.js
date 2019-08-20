@@ -4,7 +4,6 @@ const api = {
     Login: '/v1/adminApi/login',
     Logout: '/v1/adminApi/logout',
 
-    AddConfig: '/v1/adminApi/config/add',
     UpdateConfig: '/v1/adminApi/config/update',
     BaseConfig: '/v1/adminApi/config/base',
 

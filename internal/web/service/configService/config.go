@@ -3,69 +3,37 @@ package configService
 import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/pkg/errors"
+	"socialbot/internal/web/cache"
+	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
 )
 
-const (
-	WebsiteKey = "website"
-	ServerKey= "server"
-	CorsKey = "cors"
-	StorageKey = "storage"
-	ReserveHostKey = "reserve_host"
-)
-
 var (
-	defaultWebsite = &Website{
+	defaultWebsite = &model.Website{
 		HostName:"century",
 	}
 )
 
-type Website struct {
-	HostName   string
-}
-
-func GetHostName() string {
-	return defaultWebsite.HostName
-}
-
-func GetWebsite() (*Website, error){
+func GetWebsite() (*model.Website, error){
+	f, r := cache.GetWebsite()
+	if f {
+		return r, nil
+	}
 	m := model.Config{}
-	isExist,err := m.GetOneByKeyKeyMark(WebsiteKey)
+	isExist,err := m.GetOneByKeyKeyMark(common.WebsiteConfigKey)
 	if err != nil {
 		return nil, err
 	}
 	if !isExist {
+		cache.SetWebsite(defaultWebsite)
 		return defaultWebsite, nil
 	}
 	err = jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal([]byte(m.Value), defaultWebsite)
 	if err != nil {
 		return nil, errors.Wrap(err, "decode error")
 	}
-	return defaultWebsite, nil
-}
 
-func UpdateWebsite(value string) (*Website, error){
-	err := jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal([]byte(value), defaultWebsite)
-	if err != nil {
-		return nil, errors.Wrap(err, "decode error")
-	}
-	m := model.Config{}
-	isExist,err := m.GetOneByKeyKeyMark(WebsiteKey)
-	if err != nil {
-		return nil, err
-	}
-	if isExist {
-		m.Value = value
-		_, err = m.UpdateColsById(m.Id, "value")
-	}else{
-		m.KeyMark = WebsiteKey
-		m.Value = value
-		m.Title = WebsiteKey
-		_, err = m.Insert()
-	}
-	if err != nil {
-		return nil, err
-	}
+	cache.SetWebsite(defaultWebsite)
 	return defaultWebsite, nil
 }
 
