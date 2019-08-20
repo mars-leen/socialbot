@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"socialbot/internal/web/cache"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
 	"socialbot/internal/web/orm"
@@ -223,6 +224,12 @@ func ListByCategory(lastId int64, category, sort int) common.Result {
 }
 
 func Like(c *gin.Context, uri int64, delStatus int) common.Result {
+	user, err := userService.MustGetTokenUser(c)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
 	mid, err := mediaService.GetMediaIdByUri(uri)
 	if err != nil {
 		wblogger.Log.Error(err)
@@ -232,10 +239,9 @@ func Like(c *gin.Context, uri int64, delStatus int) common.Result {
 		return common.DataIsNotExist
 	}
 
-	user, err := userService.MustGetTokenUser(c)
-	if err != nil {
-		wblogger.Log.Error(err)
-		return common.SystemError
+	lock := cache.LockUserLikeMedia(user.Id, mid)
+	if lock {
+		return common.RepeatOperation
 	}
 
 	likeModel := model.UserLikeMedia{}

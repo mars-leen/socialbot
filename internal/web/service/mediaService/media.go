@@ -1,6 +1,7 @@
 package mediaService
 
 import (
+	"socialbot/internal/web/cache"
 	"socialbot/internal/web/common"
 	"socialbot/internal/web/model"
 	"socialbot/internal/web/service/configService"
@@ -66,7 +67,11 @@ func GetMapWithMediaSourceTag(list model.MediaSourceTagList) (map[int64][]*model
 }
 
 func GetMediaIdByUri(uri int64) (int64, error) {
-	// todo cache
+	mid := cache.GetMidByUri(uri)
+	if mid != 0 {
+		return mid, nil
+	}
+
 	media := model.Media{}
 	b, err := media.GetIdByUri(uri)
 	if err != nil {
@@ -75,6 +80,8 @@ func GetMediaIdByUri(uri int64) (int64, error) {
 	if !b {
 		return 0, nil
 	}
+
+	cache.SetMidByUri(uri, media.Id)
 	return media.Id, nil
 }
 
