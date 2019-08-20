@@ -36,7 +36,7 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 	if !isExist {
 		return common.DataIsNotExist
 	}
-
+	fmt.Println(111111111)
 	// add view num
 	go func() {
 		_, err := media.IncrById(media.Id, "view_num", nil)
@@ -50,14 +50,14 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
-
+	fmt.Println(2222222)
 	// get media source
 	medias, err := mediaService.GetMediaSourceList(media.Id)
 	if err != nil {
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
-
+	fmt.Println(3333)
 	// get media tags
 	mediaTagList := &model.MediaTagList{}
 	err = mediaTagList.GetMediaTagListByMidList([]int64{media.Id})
@@ -65,11 +65,13 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
+	fmt.Println(4444)
 	mediaTagListMap,err := GetMediaTagMidMap(mediaTagList)
 	if err != nil {
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
+	fmt.Println(555)
 	tagsValue, ok := mediaTagListMap[media.Id]
 	if !ok {
 		tagsValue = []model.ConTag{}
@@ -81,6 +83,7 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 		wblogger.Log.Error(err)
 		return common.SystemError
 	}
+	fmt.Println(6666)
 
 	// commission product
 	comProduct := model.ConComProduct{}
@@ -92,14 +95,8 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 			return common.SystemError
 		}
 		comProduct.Link = cp.PromoteLink
-		comProduct.CutOff = cp.CutOff
-		comProduct.OriginPrice = cp.OriginPrice
-		comProduct.NowPrice = cp.NowPrice
-		comProduct.TotalStar = cp.TotalStar
-		comProduct.NowStar = cp.NowStar
-		comProduct.Reviews = cp.Reviews
 	}
-
+	fmt.Println(7777)
 	// add view num
 	return common.SUCCESS(model.ConMedia{
 		Uri:         strconv.FormatInt(media.Uri, 10),
@@ -333,12 +330,6 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	// commission product
 	product := model.CommissionProduct{
 		Mid:         media.Id,
-		CutOff:      form.CutOff,
-		NowPrice:    form.NowPrice,
-		OriginPrice: form.OriginPrice,
-		TotalStar:   form.TotalStar,
-		NowStar:     form.NowStar,
-		Reviews:     form.Reviews,
 		DetailLink:  form.DetailLink,
 		PromoteLink: form.PromoteLink,
 	}

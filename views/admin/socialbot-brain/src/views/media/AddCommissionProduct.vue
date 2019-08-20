@@ -8,36 +8,6 @@
                                  placeholder="标题">
                         </a-textarea>
                     </a-form-item>
-                    <!--<a-form-item  label="原价">
-                        <a-input v-decorator="['origin_price',{ initialValue:0,rules: [{ required: true, message: '原价!' }] }]"
-                                 type="string" placeholder="原价">
-                        </a-input>
-                    </a-form-item>
-                    <a-form-item  label="现价">
-                        <a-input v-decorator="['now_price',{ rules: [{ required: true, message: '现价!' }] }]"
-                                 type="string" placeholder="现价">
-                        </a-input>
-                    </a-form-item>
-                    <a-form-item  label="优惠">
-                        <a-input v-decorator="['cut_off',{ type:'integer',rules: [{ required: true, message: '优惠!' }] }]"
-                                 type="number" placeholder="优惠">
-                        </a-input>
-                    </a-form-item>
-                    <a-form-item  label="评价总分">
-                        <a-input v-decorator="['total_star',{type:'integer', rules: [{ required: true, message: '评价总分!' }] }]"
-                                 type="number" placeholder="评价总分">
-                        </a-input>
-                    </a-form-item>
-                    <a-form-item  label="评价分">
-                        <a-input v-decorator="['now_star',{ type:'integer',rules: [{ required: true, message: '评价分!' }] }]"
-                                 type="number" placeholder="评价分">
-                        </a-input>
-                    </a-form-item>
-                    <a-form-item  label="用户评价数量">
-                        <a-input v-decorator="['reviews',{ type:'integer',rules: [{ required: true, message: '用户评价数量!' }] }]"
-                                 type="integer" placeholder="用户评价数量">
-                        </a-input>
-                    </a-form-item>-->
                     <a-form-item  label="商品链接">
                         <a-input v-decorator="['detail_link',{ rules: [{ required: true, message: '商品链接!' }] }]"
                                  type="string" placeholder="商品链接">
@@ -94,7 +64,6 @@
             [Row.name]: Row,
             [Col.name]: Col,
             [Tag.name]: Tag,
-
             [Button.name]: Button,
             [Input.name]: Input,
             [Input.TextArea.name]: Input.TextArea,
@@ -107,7 +76,7 @@
         data: () => ({
             submitLoading: false,
             previewVisible: false,
-            action: api.Host + api.UploadSingle,
+            action: api.UploadSingle,
             fileList: [],
             headers: {},
             category: [],
@@ -138,13 +107,6 @@
                     param.tags = this.activeTags.join(',');
                     param.cid = this.activeCategory;
                     param.medias = this.activeMedias.join(',');
-                    param.origin_price = parseInt(param.origin_price*100);
-                    param.now_price = parseInt(param.now_price*100);
-                    param.cut_off = parseInt(param.cut_off*100);
-                    param.total_star = parseInt(param.total_star*10);
-                    param.now_star = parseInt(param.now_star*10);
-                    param.reviews = parseInt(param.reviews);
-
                     addCommissionProductApi(param).then(res=>{
                         this.submitLoading = false;
                         if (!res){

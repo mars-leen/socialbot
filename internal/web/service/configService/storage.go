@@ -55,5 +55,5 @@ func GetUploadFullUrl(base string) string {
 		return base
 	}
 	r,_ := GetStorage()
-	return strings.ReplaceAll(r.ServeHost + r.UploadLocalServePath + base, `\`, `/`)
+	return strings.ReplaceAll(r.UploadLocalServePath + base, `\`, `/`)
 }

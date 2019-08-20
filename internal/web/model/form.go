@@ -13,12 +13,6 @@ type CommissionProductForm struct {
 	Medias      string `form:"medias" json:"medias" binding:"required"`
 	Tags        string `form:"tags" json:"tags"`
 	Cid         int    `form:"cid" json:"cid" binding:"required"`
-	OriginPrice int    `form:"origin_price" json:"origin_price" binding:"required"`
-	NowPrice    int    `form:"now_price" json:"now_price" binding:"required"`
-	CutOff      int    `form:"cut_off" json:"cut_off" binding:"required"`
-	TotalStar   int    `form:"total_star" json:"total_star" binding:"required"`
-	NowStar     int    `form:"now_star" json:"now_star" binding:"required"`
-	Reviews     int    `form:"reviews" json:"reviews"`
 	PromoteLink string `form:"promote_link" json:"promote_link" binding:"required"`
 	DetailLink  string `form:"detail_link" json:"detail_link" binding:"required"`
 }

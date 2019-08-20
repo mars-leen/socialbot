@@ -15,27 +15,12 @@ type CommissionProduct struct {
 	Id          int64
 	IsDel       int
 	Mid         int64
-
-	CutOff      int
-	OriginPrice int
-	NowPrice    int
-	TotalStar   int
-	NowStar     int
-	Reviews     int
-
 	PromoteLink string
-
 	UpdateAt    int64
 }
 
 type ConComProduct struct {
 	Link   string
-	CutOff      int
-	OriginPrice int
-	NowPrice    int
-	TotalStar   int
-	NowStar     int
-	Reviews     int
 }
 
 func (c *CommissionProduct) Insert(session *xorm.Session) (rs int64, err error) {

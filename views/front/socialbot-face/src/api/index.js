@@ -1,5 +1,4 @@
 const api = {
-    Host: 'http://149.28.210.141:8081',
     Login: '/v1/api/user/login',
     Register: '/v1/api/user/register',
     EditProfile: '/v1/api/user/editProfile',
