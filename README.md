@@ -1,5 +1,5 @@
 # socialbot
-**socialbot可以快速建立媒体资源型网站，集成vultr api 自动化创建部署爬虫程序。**
+**socialbot可以快速建立媒体资源型网站，集成vultr api 自动化创建部署爬虫程序，对爬取的资源链接可配置反向代理，防止被禁**
 
 ### 目录说明
 项目结构按照 [golang-standards ](https://github.com/golang-standards/project-layout)构建。
@@ -82,19 +82,24 @@ socailbot/
 
 2.项目还在开发中，todo list
 - [x] 前台 登陆、首页、分类 列表
-- []  前台 标签 列表
-- []  前台 评论 
+- [ ]  前台 标签 列表
+- [ ]  前台 评论 
 
 - [x] 后台 登陆、配置、资源媒体反向代理（防被禁）、爬虫列表、发布爬虫资源到media库、vultr创建服务器等相关操作..
-- []  后台 发布机器人爬虫
-- []  完善 资源媒体 操作
+- [ ]  后台 发布机器人爬虫
+- [ ]  完善 资源媒体 操作
 
 
 ### 预览
 后台管理
+
 ![dashboard.png](https://github.com/lukeyMing/socialbot/blob/master/doc/dashboard.png)
+
 前台pc
+
 ![front2.png](https://github.com/lukeyMing/socialbot/blob/master/doc/front2.png)
+
 前台手机 （自适应）
+
 ![mobile.png](https://github.com/lukeyMing/socialbot/blob/master/doc/mobile.png)
 
