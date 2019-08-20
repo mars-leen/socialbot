@@ -1,0 +1,23 @@
+{
+  "log": {
+    "level": "info"
+  },
+  "server": {
+    "mode": "",
+    "listen": ":8081",
+    "readTimeout": 120,
+    "writeTimeout": 120,
+    "idleTimeout": 120,
+    "shutdownTimeout": 120
+  },
+  "db": {
+    "socialbot": {
+      "driver": "mysql",
+      "dataSource": "root:password@tcp(127.0.0.1:22388)/socialbot?charset=utf8mb4&parseTime=True&loc=Local",
+      "prefix": "s_",
+      "maxLifetime": 7200,
+      "maxOpenCon": 150,
+      "maxIdleCon": 50
+    }
+  }
+}
