@@ -112,15 +112,18 @@ func FormatContent(content string) []model.CrawlerMedia {
 	for i,v := range list  {
 		u,_ := url.Parse(v)
 		r, _ := configService.GetReverseHost(u.Host)
-		if r == nil || r.EnableReserve != true{
+		if r == nil {
 			result[i].Show = v
 			result[i].Download = v
 			continue
 		}
-		if !r.ReserveRule.ImgThumbInPath {
+		if r.EnableReserve && !r.ReserveRule.ImgThumbInPath{
 			result[i].Show = fmt.Sprintf("/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",u.Scheme,u.Host,u.Path,r.ReserveRule.ImgShowRule)
 			result[i].Download = fmt.Sprintf("/v1/adminApi/reverse?scheme=%s&host=%s&path=%s&param=%s",u.Scheme,u.Host,u.Path, r.ReserveRule.ImgDownloadRule)
+			continue
 		}
+		result[i].Show = v + "?" + r.ReserveRule.ImgShowRule
+		result[i].Download = v + "?" + r.ReserveRule.ImgDownloadRule
 	}
 	return result
 }

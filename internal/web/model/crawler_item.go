@@ -68,9 +68,7 @@ func (c *CrawlerItem) UpdateColsById(id int64, session *xorm.Session, cols ...st
 }
 
 func (c *CrawlerItem) GetOneById(id int64) (rs bool, err error) {
-	orm.SocialBotOrm.ShowSQL()
 	rs, err = orm.SocialBotOrm.Where("id=?", id).Where("is_del=?", 0).Get(c)
-	orm.SocialBotOrm.ShowSQL(false)
 	if err != nil {
 		return rs, errors.Wrap(err, fmt.Sprintf("GetOneById(%d) failed", id))
 	}
