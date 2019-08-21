@@ -1,8 +1,10 @@
 # socialbot
 **socialbot可以快速建立媒体资源型网站，自动化爬虫、自动化pinterest引流**
 
-### summery & todo
-1.master分支目前主要包含web功能 和 vultr服务器功能
+
+### 概要 & todo
+
+* master分支目前主要包含web功能 和 vultr服务器功能
 1. 前台
 - [x] 登陆注册
 - [x] 首页最新   
@@ -20,7 +22,8 @@
 - [x] 媒体床（发布的图片和视频单独存放于 media_source表中）
 - [x] 爬虫列表、发布、删除 
 
-2.develop 分支 
+* develop 分支 
+1. 前台
 - [ ] 用户评论列表 用户评论
 - [ ] 搜索列表
 - [ ] 标签列表
