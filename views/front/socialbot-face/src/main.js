@@ -12,14 +12,6 @@ Vue.config.productionTip = false;
 Vue.use(VueMasonry);
 Vue.use(VueStorage);
 
-/*
-Vue.prototype.isClick = false;
-Vue.prototype.linkTo = function(linkTo){
-  Vue.isClick = true;
-  router.push(linkTo)
-};
-*/
-
 new Vue({
   router,
   store,

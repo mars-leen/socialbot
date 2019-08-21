@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div class="card-con">
+    <div :class="isTopRank? 'card-con top': 'card-con'">
         <div class="card">
             <div class="card-body">
                 <router-link :to="'/media/detail/' + media.Uri">
@@ -149,6 +149,34 @@
 
     .extra .item .icon {
         width: 4rem;
+    }
+
+    @media (min-width: 768px) {
+        .top .card {padding: 0;}
+        .top .left .card-bottom {position: absolute;bottom:0; left: 1.6rem;right:1.6rem;}
+        .top .right .card-bottom {position: absolute;bottom:0; left: 1rem;right:1rem;}
+
+        .top .card-bottom .title {font-size: 1.2rem; color: #ffffff; ; font-weight: 600;    text-shadow: 1px 1px 0 rgba(0,0,0,.6); margin-bottom: 1rem}
+        .top .extra .item span {color:#ffffff!important; font-size:1rem; font-weight: 600; }
+
+        .top .left .card-body .img {height: 25rem;}
+        .top .right .card-body .img {height: 12rem;}
+    }
+
+    @media (min-width: 992px) {
+        .detail .nav-header .nav-user {display: none}
+    }
+
+    @media (min-width: 1200px) {
+        .top .card {padding: 0;}
+        .top .left .card-bottom {position: absolute;bottom:0; left: 1.6rem;right:1.6rem;}
+        .top .right .card-bottom {position: absolute;bottom:0; left: 1rem;right:1rem;}
+
+        .top .card-bottom .title {font-size: 1.2rem;color: #ffffff; ; font-weight: 600;    text-shadow: 1px 1px 0 rgba(0,0,0,.6); margin-bottom: 1rem}
+        .top .extra .item span {color:#ffffff!important; font-size:1rem; font-weight: 600; }
+
+        .top .left .card-body .img {height: 25rem;}
+        .top .right .card-body .img {height: 12rem;}
     }
 
 </style>
