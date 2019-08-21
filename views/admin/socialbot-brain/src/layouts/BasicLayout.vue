@@ -136,11 +136,16 @@
                         child: [
                             {
                                 key: 41,
+                                title: "媒体列表",
+                                link:"/dashboard/media/list"
+                            },
+                            {
+                                key: 42,
                                 title: "添加推广商品",
                                 link:"/dashboard/add-commission-product"
                             },
                             {
-                                key: 42,
+                                key: 43,
                                 title: "媒体床",
                                 link:"/dashboard/media/gallery"
                             },

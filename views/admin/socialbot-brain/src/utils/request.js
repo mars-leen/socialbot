@@ -3,7 +3,7 @@ import store from "../store/";
 import {router} from '../router'
 import { notification } from 'ant-design-vue';
 const service = axios.create({
-    timeout: 30000 // 请求超时时间
+    timeout: 120000 // 请求超时时间
 });
 
 

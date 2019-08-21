@@ -33,8 +33,8 @@ type Media struct {
 
 type ConMedia struct {
 	Uri        string
-	Title      string
 	Cover      string
+	Title      string
 	MediaMum   int
 	LikeNum    int
 	ViewNum    int
@@ -42,6 +42,8 @@ type ConMedia struct {
 	MediaType  int
 	PublishAt  int64
 	LastId     string
+	Cid        int
+	Recommend  int
 	Tags       []ConTag
 	IsLike     bool
 	Medias     []ConMediaSource
@@ -74,8 +76,16 @@ func (m *Media) Insert(session *xorm.Session) (rs int64, err error) {
 	return rs, nil
 }
 
-func (m *Media) UpdateByCols(id int64, cols ...string) (rs int64, err error) {
+func (m *Media) UpdateByCols( session *xorm.Session, id int64, cols ...string) (rs int64, err error) {
 	m.UpdateAt = time.Now().UnixNano()
+	if session != nil {
+		rs, err = session.Cols(cols...).Where("id = ? ", id).Update(m)
+		if err != nil {
+			return rs, errors.Wrap(err, "UpdateByCols failed")
+		}
+		return rs, nil
+	}
+
 	rs, err = orm.SocialBotOrm.Cols(cols...).Where("id = ? ", id).Update(m)
 	if err != nil {
 		return rs, errors.Wrap(err, "UpdateByCols failed")

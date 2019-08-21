@@ -46,7 +46,9 @@ const api = {
     ListCrawlerItem: '/v1/adminApi/crawler/listRandItem',
     DeleteCrawlerItem: '/v1/adminApi/crawler/deleteItem',
 
-
+    MediaDetail: '/v1/adminApi/media/detail',
+    EditMedia: '/v1/adminApi/media/edit',
+    ListMedias: '/v1/adminApi/media/list',
     AddCommissionProduct: '/v1/adminApi/media/addCommissionProduct',
     AddSocialMediaFromCrawler: '/v1/adminApi/media/addSocialMediaFromCrawler',
 

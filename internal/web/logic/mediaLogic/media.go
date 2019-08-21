@@ -26,7 +26,7 @@ import (
 )
 
 //detail
-func Detail(c *gin.Context,  uri int64) common.Result {
+func Detail(c *gin.Context, uri int64) common.Result {
 	media := model.Media{}
 	isExist, err := media.GetOneByUri(uri)
 	if err != nil {
@@ -66,7 +66,7 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 		return common.SystemError
 	}
 
-	mediaTagListMap,err := GetMediaTagMidMap(mediaTagList)
+	mediaTagListMap, err := GetMediaTagMidMap(mediaTagList)
 	if err != nil {
 		wblogger.Log.Error(err)
 		return common.SystemError
@@ -88,7 +88,7 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 	comProduct := model.ConComProduct{}
 	if media.MediaType == common.MediaTypePromotionProduct {
 		cp := model.CommissionProduct{}
-		_,err := cp.GetOneByMid(media.Id)
+		_, err := cp.GetOneByMid(media.Id)
 		if err != nil {
 			wblogger.Log.Error(err)
 			return common.SystemError
@@ -98,20 +98,75 @@ func Detail(c *gin.Context,  uri int64) common.Result {
 
 	// add view num
 	return common.SUCCESS(model.ConMedia{
-		Uri:         strconv.FormatInt(media.Uri, 10),
-		Title:       media.Title,
-		Medias:      medias,
-		LikeNum:     media.LikeNum,
-		ViewNum:     media.ViewNum,
-		CommentNum:  media.CommentNum,
-		MediaType:   media.MediaType,
-		PublishAt:   media.PublishAt,
-		Tags:        tagsValue,
-		IsLike:      isLike,
-		ComProduct:  comProduct,
+		Uri:        strconv.FormatInt(media.Uri, 10),
+		Title:      media.Title,
+		Cover:      configService.GetUploadFullUrl(media.Cover),
+		Medias:     medias,
+		LikeNum:    media.LikeNum,
+		ViewNum:    media.ViewNum,
+		CommentNum: media.CommentNum,
+		MediaType:  media.MediaType,
+		PublishAt:  media.PublishAt,
+		Tags:       tagsValue,
+		Cid:        media.Cid,
+		Recommend:  media.Recommend,
+		IsLike:     isLike,
+		ComProduct: comProduct,
 	})
 }
 
+func Edit(form *model.EditMediaForm) common.Result {
+	media := model.Media{}
+	isExist, err := media.GetOneByUri(form.Uri)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+	if !isExist {
+		return common.DataIsNotExist
+	}
+
+	mt := model.MediaTag{}
+	_, err = mt.DeleteByMid(media.Id, nil)
+	if err != nil {
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	// insert to db
+	session := orm.SocialBotOrm.NewSession()
+	defer session.Close()
+	err = session.Begin()
+	if err != nil {
+		wblogger.Log.Error(errors.Wrap(err, "session.Begin failed"))
+		return common.SystemError
+	}
+
+	media.Title = form.Title
+	media.Cid = form.Cid
+	if form.Recommend {
+		media.Recommend = 1
+	} else {
+		media.Recommend = 0
+	}
+	_, err = media.UpdateByCols(session, media.Id, "title", "cid", "recommend")
+	if err != nil {
+		_ = session.Rollback()
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	// tag
+	err = tagService.InsertMediaTag(form.Tags, media.Id, media.PublishAt, media.MediaStatus, form.Cid, session)
+	if err != nil {
+		_ = session.Rollback()
+		wblogger.Log.Error(err)
+		return common.SystemError
+	}
+
+	_ = session.Commit()
+	return common.SUCCESS(nil)
+}
 
 // list
 func ListByRecommend(lastId int64, limit int) common.Result {
@@ -157,11 +212,11 @@ func GetMediaTagMidMap(mtl *model.MediaTagList) (map[int64][]model.ConTag, error
 	}
 
 	for _, value := range *mtl {
-		if  tagValue, ok := tagsAll[value.Tid]; ok {
+		if tagValue, ok := tagsAll[value.Tid]; ok {
 			mediaTagList[value.Mid] = append(mediaTagList[value.Mid], model.ConTag{
-				Id:   tagValue.Id,
-				Title: tagValue.Title,
-				ShortName:tagValue.ShortName,
+				Id:        tagValue.Id,
+				Title:     tagValue.Title,
+				ShortName: tagValue.ShortName,
 			})
 		}
 	}
@@ -181,7 +236,7 @@ func GetIsLike(mid, uid int64) (bool, error) {
 }
 
 func ListByCategory(lastId int64, category, sort int) common.Result {
-	ml :=model.MediaList{}
+	ml := model.MediaList{}
 	var err error
 	if sort == common.SortNew {
 		err = ml.GetListNewestByCid(lastId, category)
@@ -292,8 +347,8 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 
 	//  cover
 	var cover string
-	for _,v := range mediaSourceList{
-		if v.SourceType== common.SourceTypeImage {
+	for _, v := range mediaSourceList {
+		if v.SourceType == common.SourceTypeImage {
 			cover = v.Url
 			break
 		}
@@ -301,7 +356,6 @@ func AddCommissionProduct(form *model.CommissionProductForm) common.Result {
 	if cover == "" {
 		return common.ParamError.Errorf("%s", "first img of uploaded file will be cover")
 	}
-
 
 	session := orm.SocialBotOrm.NewSession()
 	defer session.Close()
@@ -405,7 +459,7 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 		Title:       form.Title,
 		Cover:       cover,
 		Cid:         form.Cid,
-		MediaNum:  len(mediaArr),
+		MediaNum:    len(mediaArr),
 		MediaStatus: common.MediaStatusPublished,
 		MediaType:   common.MediaTypePromotionProduct,
 	}
@@ -436,8 +490,8 @@ func AddSocialMediaFromCrawler(form *model.SocialProductForm) common.Result {
 		}
 	}
 
-	ci := model.CrawlerItem{ItemStatus:common.CrawlerItemPublished}
-	_, err =ci.UpdateColsById(form.CrawlerItemId, session, "item_status")
+	ci := model.CrawlerItem{ItemStatus: common.CrawlerItemPublished}
+	_, err = ci.UpdateColsById(form.CrawlerItemId, session, "item_status")
 	if err != nil {
 		wblogger.Log.Error(err)
 		_ = session.Rollback()
@@ -466,7 +520,7 @@ func DecodeMedias(medias string) ([]*model.SubmitMediaForm, error) {
 }
 
 func DownLoadMedias(medias []*model.SubmitMediaForm) error {
-	storage,err := configService.GetStorage()
+	storage, err := configService.GetStorage()
 	if err != nil {
 		wblogger.Log.Error(err)
 		return err

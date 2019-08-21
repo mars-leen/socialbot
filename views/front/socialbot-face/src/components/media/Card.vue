@@ -12,7 +12,7 @@
                 <span v-if="media.MediaMum > 1" class="media-num">{{media.MediaMum}}</span>
             </div>
             <div class="card-bottom">
-                <link-to class="title" :to="'/media/detail/' + media.Uri"  :keep="false">{{media.Title}}</link-to>
+                <router-link class="title" :to="'/media/detail/' + media.Uri" >{{media.Title}}</router-link>
                 <div class="extra">
                     <div class="item">
                         <span class="user-name"></span>

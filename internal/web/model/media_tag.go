@@ -38,6 +38,21 @@ func (mt MediaTag) Insert(session *xorm.Session) (rs int64, err error) {
 	return rs, nil
 }
 
+func (mt *MediaTag) DeleteByMid(mid int64, session *xorm.Session) (rs int64, err error) {
+	if session != nil {
+		rs, err = session.Where("mid=?", mid).Delete(mt)
+		if err != nil {
+			return 0, errors.Wrap(err, "DeleteByMid failed")
+		}
+		return rs, nil
+	}
+	rs, err = orm.SocialBotOrm.Where("mid=?", mid).Delete(mt)
+	if err != nil {
+		return 0, errors.Wrap(err, "DeleteByMid failed")
+	}
+	return rs, nil
+}
+
 func (mtl *MediaTagList) GetMediaTagList(lastId int64) error {
 	where := "mid > ?"
 	orderBy := "mid ASC"
@@ -55,3 +70,5 @@ func (mtl *MediaTagList) GetMediaTagListByTidList(page, limit int, tidList []int
 func (mtl *MediaTagList) GetMediaTagListByTid(tid, limit int) error {
 	return orm.SocialBotOrm.Where("tid = ? ", tid).Limit(limit).GroupBy("mid").Where("is_del=?", 0).Find(mtl)
 }
+
+

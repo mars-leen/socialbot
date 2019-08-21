@@ -100,7 +100,25 @@ const routes = [
                     needLogin:true,
                 }
             },
-
+            {
+                path: 'media/list',
+                name: 'mediaList',
+                component: () => import('./views/media/List.vue'),
+                meta: {
+                    keepAlive: false,
+                    needLogin:true,
+                }
+            },
+            {
+                path: 'media/edit/:uri',
+                name: 'editMedia',
+                props:true,
+                component: () => import('./views/media/Edit.vue'),
+                meta: {
+                    keepAlive: false,
+                    needLogin:true,
+                }
+            },
             {
                 path: 'robot/server',
                 name: 'robotServer',

@@ -2,3 +2,14 @@
     margin-bottom: 0 !important;
 }
 .ant-layout-content {min-height: auto}
+
+.ant-card-meta-description{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    height: 38px;
+}
+
+.mr8 {margin-right: 8px;}

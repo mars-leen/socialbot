@@ -80,7 +80,7 @@ func (m *MediaSourceTag) DeleteByMsid(msid int64, session *xorm.Session) (rs int
 		}
 		return rs, nil
 	}
-	rs, err = orm.SocialBotOrm.Where("msid=?", msid).Cols("msid").Delete(m)
+	rs, err = orm.SocialBotOrm.Where("msid=?", msid).Delete(m)
 	if err != nil {
 		return 0, errors.Wrap(err, "DeleteByMsid failed")
 	}

@@ -1,11 +1,11 @@
 <template>
-    <div v-if="isShow" class="top">
+    <div class="top">
         <div class="left">
-            <media-card class="card-item" :media="this.topData[0]" :isTopRank="1"></media-card>
+            <media-card v-if="this.topData[0]"  class="card-item" :media="this.topData[0]" :isTopRank="1"></media-card>
         </div>
         <div class="right">
-            <media-card class="card-item" :media="this.topData[1]"  :isTopRank="2"></media-card>
-            <media-card class="card-item" :media="this.topData[2]"  :isTopRank="3"></media-card>
+            <media-card v-if="this.topData[1]" class="card-item" :media="this.topData[1]"  :isTopRank="2"></media-card>
+            <media-card v-if="this.topData[2]" class="card-item" :media="this.topData[2]"  :isTopRank="3"></media-card>
         </div>
     </div>
 </template>
@@ -19,7 +19,6 @@
         name: "Top",
         data() {
             return {
-                isShow: false,
                 topData: []
             }
         },
@@ -33,17 +32,10 @@
         methods: {
             getTop() {
                 homeRecommendApi().then((res) => {
-                    console.log(res)
                     if (!res) {
                         return
                     }
-                    let l = res.data.length;
-                    if (l < 3) {
-                        this.isShow = false;
-                        return;
-                    }
                     this.topData = res.data;
-                    this.isShow = true;
                 })
             }
         }

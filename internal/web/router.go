@@ -87,6 +87,10 @@ func RegisterRouter(g *gin.Engine) *gin.Engine{
 	adminApi.GET("/crawler/listRandItem", admin.ListRandCrawlerItem)
 	adminApi.POST("/crawler/deleteItem", admin.DeleteCrawlerItem)
 
+	adminApi.GET("/media/detail", admin.MediaDetail)
+	adminApi.POST("/media/edit", admin.EditMedia)
+
+	adminApi.GET("/media/list", admin.ListMedias)
 	adminApi.POST("/media/addCommissionProduct", admin.AddCommissionProduct)
 	adminApi.POST("/media/addSocialMediaFromCrawler", admin.AddSocialMediaFromCrawler)
 

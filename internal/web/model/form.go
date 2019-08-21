@@ -29,6 +29,15 @@ type SocialProductForm struct {
 	CrawlerItemId int64 `form:"crawlerItemId" json:"crawlerItemId"`
 }
 
+type EditMediaForm struct {
+	Uri        int64    `form:"uri" json:"uri"`
+	Title     string `form:"title" json:"title"`
+	Tags      string `form:"tags" json:"tags"`
+	Cid       int    `form:"cid" json:"cid"`
+	Recommend bool   `form:"recommend" json:"recommend"`
+}
+
+
 type SubmitMediaForm struct {
 	Uri      string  `json:"uri"`
 	URL      string `json:"url"`
